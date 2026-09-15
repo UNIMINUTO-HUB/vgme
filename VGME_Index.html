@@ -36,37 +36,6 @@ a{color:inherit;text-decoration:none}
 button,input{font:inherit}
 .wrap{max-width:1480px;margin:0 auto;padding:0 28px}
 
-/* acceso */
-#gate{
-  position:fixed;inset:0;z-index:9999;
-  display:flex;align-items:center;justify-content:center;padding:24px;
-  background:
-    radial-gradient(820px 480px at 18% -10%,rgba(30,91,180,.45),transparent 65%),
-    linear-gradient(145deg,#0a234b,#031022 72%);
-}
-#gate.hidden{display:none}
-.gate-card{width:min(430px,100%);text-align:center}
-.gate-logo{
-  padding:8px 18px 18px;margin-bottom:20px
-}
-.gate-logo img{
-  display:block;width:100%;max-width:320px;max-height:86px;
-  margin:0 auto;object-fit:contain
-}
-.gate-card h2{margin:0 0 8px;color:#fff;font:800 27px/1.1 Archivo,sans-serif}
-.gate-card p{margin:0 0 22px;color:#b7c5da;font-size:13px;line-height:1.6}
-.gate-card input{
-  width:100%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);
-  color:#fff;border-radius:8px;padding:13px 15px;outline:none;text-align:center
-}
-.gate-card input:focus{border-color:var(--yellow)}
-.gate-card button{
-  width:100%;margin-top:11px;border:0;border-radius:8px;padding:13px 15px;
-  background:var(--yellow);color:#07172f;font-weight:800;cursor:pointer
-}
-.gate-err{height:18px;margin-top:10px;color:#f3a6a6;font-size:12px}
-body.locked{overflow:hidden}
-
 /* barra institucional */
 .top{
   background:var(--blue-deep);color:#fff;border-bottom:3px solid var(--yellow)
@@ -202,24 +171,119 @@ footer{
   .principle{align-items:flex-start;flex-direction:column}
 }
 </style>
+
+<style id="vgme-environment">
+:root{--vgme-bg:#f4f7fb;--vgme-panel:#ffffff;--vgme-line:#d9e3ef;--vgme-ink:#10253f;--vgme-muted:#62758b;--vgme-gold:#d4a11e;--vgme-shadow:0 5px 18px rgba(9,30,66,.05)}
+html,body{font-family:Inter,"Segoe UI",Arial,Helvetica,sans-serif}
+body{background:var(--vgme-bg)}
+button,select,input,textarea{font-family:inherit}
+button,select,input{transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid rgba(45,107,179,.28);outline-offset:1px}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#c4d0dd;border:2px solid transparent;background-clip:padding-box;border-radius:999px}::-webkit-scrollbar-track{background:transparent}
+</style>
+<style id="vgme-family">
+body{background:var(--vgme-bg)!important;color:var(--vgme-ink)!important}
+.top{box-shadow:0 7px 22px rgba(9,30,66,.14)!important;border-bottom:3px solid var(--vgme-gold)!important}
+.card{border-color:var(--vgme-line)!important;border-radius:12px!important;box-shadow:var(--vgme-shadow)!important}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(9,30,66,.09)!important}
+</style>
+
+<style id="vgme-auth-lock">html{visibility:hidden!important;background:#061a3a!important}</style>
+<script>
+(function(){
+  'use strict';
+  const KEY='vgme_auth_v2';
+  const TTL=8*60*60*1000;
+  const HASH='2702ec432139d1a0eefd778b203463c5d2b602dcf2f1be2c7e970dba9a9ec57f';
+  const TOKEN='a461f362';
+
+  function storageGet(){
+    try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}
+  }
+  function storageSet(){
+    try{localStorage.setItem(KEY,JSON.stringify({token:TOKEN,exp:Date.now()+TTL}));return true}catch(e){return false}
+  }
+  function storageClear(){try{localStorage.removeItem(KEY)}catch(e){}}
+  function valid(){
+    const s=storageGet();
+    if(!s||s.token!==TOKEN||!Number.isFinite(+s.exp)||Date.now()>=+s.exp){storageClear();return false}
+    return true;
+  }
+  function fnv1a(s){
+    let h=0x811c9dc5,b=new TextEncoder().encode(s);
+    for(let i=0;i<b.length;i++){h^=b[i];h=Math.imul(h,0x01000193)>>>0}
+    return ('0000000'+h.toString(16)).slice(-8);
+  }
+  async function sha256(t){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  async function verify(v){
+    try{if(window.crypto&&crypto.subtle&&await sha256(v)===HASH)return true}catch(e){}
+    return fnv1a(v)===TOKEN;
+  }
+  function unlock(){
+    const lock=document.getElementById('vgme-auth-lock');
+    if(lock)lock.remove();
+    document.documentElement.style.visibility='';
+  }
+  function addLogout(){
+    if(document.getElementById('vgme-auth-logout'))return;
+    const b=document.createElement('button');
+    b.id='vgme-auth-logout';
+    b.type='button';
+    b.textContent='Cerrar sesión';
+    b.setAttribute('aria-label','Cerrar sesión del Portal VGME');
+    Object.assign(b.style,{position:'fixed',right:'14px',bottom:'12px',zIndex:'2147483000',border:'1px solid rgba(40,58,82,.16)',borderRadius:'7px',background:'rgba(255,255,255,.92)',color:'#526176',padding:'6px 9px',font:'600 10px Inter,Arial,sans-serif',boxShadow:'0 4px 16px rgba(15,33,58,.08)',cursor:'pointer',opacity:'.55',backdropFilter:'blur(6px)'});
+    b.onmouseenter=()=>b.style.opacity='1';
+    b.onmouseleave=()=>b.style.opacity='.55';
+    b.onclick=()=>{storageClear();location.reload()};
+    document.body.appendChild(b);
+  }
+  function gate(){
+    unlock();
+    document.body.style.overflow='hidden';
+    const style=document.createElement('style');
+    style.id='vgme-auth-style';
+    style.textContent=`
+      .vgme-auth-overlay{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(780px 460px at 18% -10%,rgba(28,88,174,.42),transparent 65%),linear-gradient(145deg,#0a234b,#031022 72%);font-family:Inter,Arial,sans-serif}
+      .vgme-auth-card{width:min(410px,100%);text-align:center}
+      .vgme-auth-logo{display:block;width:min(310px,82%);max-height:82px;object-fit:contain;margin:0 auto 23px}
+      .vgme-auth-card h2{margin:0 0 7px;color:#fff;font-size:26px;line-height:1.12;font-weight:800}
+      .vgme-auth-card p{margin:0 0 20px;color:#b9c6d9;font-size:12.5px;line-height:1.55}
+      .vgme-auth-card input{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:13px 14px;outline:none;text-align:center;font-size:14px}
+      .vgme-auth-card input:focus{border-color:#ffc800;box-shadow:0 0 0 3px rgba(255,200,0,.08)}
+      .vgme-auth-card button{width:100%;margin-top:10px;border:0;border-radius:8px;padding:12px 14px;background:#ffc800;color:#07172f;font-size:13px;font-weight:800;cursor:pointer}
+      .vgme-auth-error{height:18px;margin-top:9px;color:#f4aaaa;font-size:11.5px}
+    `;
+    document.head.appendChild(style);
+    const o=document.createElement('div');
+    o.className='vgme-auth-overlay';
+    o.innerHTML=`<div class="vgme-auth-card"><img class="vgme-auth-logo" src="https://www.uniminuto.edu/sites/default/files/2023-02/uniminuto%20blanco_1.png" alt="UNIMINUTO"><h2>Portal VGME</h2><p>Acceso interno · Vicerrectoría de Mercadeo y Experiencia</p><input type="password" autocomplete="current-password" placeholder="Clave de acceso" aria-label="Clave de acceso"><button type="button">Entrar</button><div class="vgme-auth-error" aria-live="polite"></div></div>`;
+    document.body.appendChild(o);
+    const input=o.querySelector('input'),btn=o.querySelector('button'),err=o.querySelector('.vgme-auth-error');
+    let busy=false;
+    async function submit(){
+      if(busy)return;busy=true;btn.disabled=true;
+      const ok=await verify(input.value.trim());
+      if(ok){storageSet();o.remove();style.remove();document.body.style.overflow='';addLogout()}
+      else{err.textContent='Clave incorrecta';input.value='';input.focus()}
+      btn.disabled=false;busy=false;
+    }
+    btn.addEventListener('click',submit);
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')submit()});
+    setTimeout(()=>input.focus(),50);
+  }
+  function start(){
+    if(valid()){unlock();addLogout()}
+    else gate();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+
+</script>
 </head>
 <body>
-
-<div id="gate">
-  <div class="gate-card">
-    <div class="gate-logo">
-      <img src="https://www.uniminuto.edu/sites/default/files/2023-02/uniminuto%20blanco_1.png"
-           onerror="this.src='https://www.uniminuto.edu/sites/default/files/logo-para-web-2024.png'"
-           alt="UNIMINUTO">
-    </div>
-    <h2>Portal VGME</h2>
-    <p>Vicerrectoría de Mercadeo y Experiencia<br>Ingresa la clave para continuar.</p>
-    <input id="gate-input" type="password" placeholder="Clave de acceso" autocomplete="off">
-    <button id="gate-btn">Entrar</button>
-    <div class="gate-err" id="gate-err"></div>
-  </div>
-</div>
-
 <header class="top">
   <div class="top-inner">
     <div class="brand">
@@ -242,7 +306,7 @@ footer{
     <div class="toolbar">
       <div class="toolbar-copy">
         <h2>Módulos de información y gestión</h2>
-        <p>Los 12 frentes definidos se mantienen como estructura del portal. Usa el buscador o filtra por estado.</p>
+        <p>Información, análisis y herramientas de gestión.</p>
       </div>
       <div class="tools">
         <label class="search">
@@ -257,17 +321,18 @@ footer{
 
     <section class="modules" id="modules">
 
-      <article class="card" data-state="live" data-search="vgme presentaciones comité fundadores resultados vicerrectoría">
+      <article class="card" data-state="live" data-search="vgme presentaciones avance mercadeo semanal resultados vicerrectoría">
         <div class="card-head"><div class="number">01</div><div class="state live"><i></i>Disponible</div></div>
         <div class="card-body">
           <h3>VGME</h3>
           <p>Presentaciones ejecutivas y entregables institucionales de seguimiento para la Vicerrectoría.</p>
-          <div class="tags"><span class="tag">Resultados</span><span class="tag">Presentaciones</span><span class="tag">Comités</span></div>
+          <div class="tags"><span class="tag">Resultados</span><span class="tag">Presentaciones</span><span class="tag">Seguimiento</span></div>
         </div>
         <div class="quick">
-          <a href="vgme/comite-fundadores.html"><span>Comité de Fundadores<small>Avance y seguimiento ejecutivo</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Presentacion%20Avance%20Mercadeo.html"><span>Avance Mercadeo y Experiencia<small>Seguimiento ejecutivo de resultados</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Presentacion%20Semanal.html"><span>Presentación Semanal<small>Seguimiento periódico de resultados</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>Contenido publicado</span><a class="open" href="vgme/index.html">Abrir módulo →</a></div>
+        <div class="card-foot"><span>2 accesos publicados</span></div>
       </article>
 
       <article class="card" data-state="live" data-search="snies mercado rectorías mercadeo oferta demanda competencia portafolio">
@@ -278,10 +343,10 @@ footer{
           <div class="tags"><span class="tag">Mercado</span><span class="tag">Rectorías</span><span class="tag">Portafolio</span></div>
         </div>
         <div class="quick">
-          <a href="snies/snies-rectorias.html"><span>SNIES Rectorías<small>Territorio · competencia · oportunidad</small></span><b>↗</b></a>
-          <a href="snies/snies-mercadeo.html"><span>SNIES Mercadeo<small>Mercado · portafolio · demanda</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/SNIES_Mercadeo_2025.html"><span>SNIES Mercadeo<small>Mercado · portafolio · demanda</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/SNIES_Rectorias_2025.html"><span>SNIES Rectorías<small>Territorio · competencia · oportunidad</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>2 accesos publicados</span><a class="open" href="snies/index.html">Abrir módulo →</a></div>
+        <div class="card-foot"><span>2 accesos publicados</span></div>
       </article>
 
       <article class="card" data-state="live" data-search="educon educación continua ingresos matrículas ticket portafolio crecimiento">
@@ -292,12 +357,12 @@ footer{
           <div class="tags"><span class="tag">Ingresos</span><span class="tag">Matrículas</span><span class="tag">Portafolio</span></div>
         </div>
         <div class="quick">
-          <a href="educon/ingresos.html"><span>Ingresos EduCon<small>Evolución histórica y lectura comercial</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/EduCon.html"><span>EduCon<small>Ingresos · matrículas · ticket · portafolio</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>Contenido publicado</span><a class="open" href="educon/index.html">Abrir módulo →</a></div>
+        <div class="card-foot"><span>Contenido publicado</span><a class="open" href="https://uniminuto-hub.github.io/vgme/EduCon.html">Abrir módulo →</a></div>
       </article>
 
-      <article class="card" data-state="live" data-search="repositorio información resoluciones normatividad documentos originales línea tiempo">
+      <article class="card" data-state="live" data-search="repositorio información resoluciones normatividad documentos originales línea tiempo salario variable">
         <div class="card-head"><div class="number">04</div><div class="state live"><i></i>Disponible</div></div>
         <div class="card-body">
           <h3>Repositorio de Información</h3>
@@ -305,22 +370,23 @@ footer{
           <div class="tags"><span class="tag">Resoluciones</span><span class="tag">Documentos</span><span class="tag">Trazabilidad</span></div>
         </div>
         <div class="quick">
-          <a href="repositorio/linea-tiempo.html"><span>Línea de resoluciones<small>Historia, resumen y documentación</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Repositorio_Normativo.html"><span>Repositorio Normativo<small>Resoluciones · historia · documentación</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>Repositorio activo</span><a class="open" href="repositorio/index.html">Abrir módulo →</a></div>
+        <div class="card-foot"><span>Repositorio activo</span><a class="open" href="https://uniminuto-hub.github.io/vgme/Repositorio_Normativo.html">Abrir módulo →</a></div>
       </article>
 
-      <article class="card" data-state="live" data-search="seguimiento matrículas estudiantes nuevos continuos candidatos metas cumplimiento tendencia cortes">
+      <article class="card" data-state="live" data-search="seguimiento matrículas estudiantes metas cumplimiento interanual programas ticket ingresos crecimiento">
         <div class="card-head"><div class="number">05</div><div class="state live"><i></i>Disponible</div></div>
         <div class="card-body">
           <h3>Seguimiento a Matrículas</h3>
-          <p>Avance de matrícula, cumplimiento de metas, comparativos entre años, comportamiento por corte y lectura territorial.</p>
-          <div class="tags"><span class="tag">Matrículas</span><span class="tag">Metas</span><span class="tag">Tendencias</span></div>
+          <p>Seguimiento de metas y análisis interanual de matrícula, ingresos, ticket, programas y comportamiento territorial.</p>
+          <div class="tags"><span class="tag">Matrículas</span><span class="tag">Metas</span><span class="tag">Interanual</span></div>
         </div>
         <div class="quick">
-          <a href="seguimiento-matriculas/index.html"><span>Informe de Matrículas<small>Resultado · comparación · evolución</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Informe_Matriculas_Seguimiento_Metas.html"><span>Seguimiento de Metas<small>Meta · cumplimiento · evolución</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Informe_Matriculas_Analisis_Interanual.html"><span>Análisis Interanual<small>Programa · crecimiento · ingresos · ticket</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>Tablero publicado</span><a class="open" href="seguimiento-matriculas/index.html">Abrir módulo →</a></div>
+        <div class="card-foot"><span>2 tableros publicados</span></div>
       </article>
 
       <article class="card" data-state="dev" data-search="marketing demanda campañas funnel leads atl btl conversión">
@@ -343,17 +409,18 @@ footer{
         <div class="card-foot"><span>Estructura definida</span><a class="open" href="comercial/index.html">Ver módulo →</a></div>
       </article>
 
-      <article class="card" data-state="live" data-search="convenios matrículas entidad crecimiento comparativo corte top rectoría centro carrera">
+      <article class="card" data-state="live" data-search="convenios sena matrículas entidad crecimiento comparativo corte top rectoría centro programa">
         <div class="card-head"><div class="number">08</div><div class="state live"><i></i>Disponible</div></div>
         <div class="card-body">
           <h3>Convenios</h3>
-          <p>Lectura de matrículas por convenio, evolución, comparativos al mismo corte, entidades y programas con mayor aporte.</p>
-          <div class="tags"><span class="tag">Convenios</span><span class="tag">Comparativos</span><span class="tag">Top</span></div>
+          <p>Lectura de matrículas por convenio y análisis específico de SENA por territorio, programa, modalidad y valor.</p>
+          <div class="tags"><span class="tag">Convenios</span><span class="tag">SENA</span><span class="tag">Comparativos</span></div>
         </div>
         <div class="quick">
-          <a href="convenios/index.html"><span>Matrículas por Convenio<small>Entidad · rectoría · programa · crecimiento</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Convenios.html"><span>Convenios<small>Entidad · rectoría · programa · crecimiento</small></span><b>↗</b></a>
+          <a href="https://uniminuto-hub.github.io/vgme/Convenio%20SENA.html"><span>Convenio SENA<small>Territorio · modalidad · programa · valor</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>Tablero publicado</span><a class="open" href="convenios/index.html">Abrir módulo →</a></div>
+        <div class="card-foot"><span>2 tableros publicados</span></div>
       </article>
 
       <article class="card" data-state="dev" data-search="contact center call center contactabilidad efectividad volumen">
@@ -417,46 +484,6 @@ footer{
 </footer>
 
 <script>
-/* Conserva el esquema de acceso del archivo base */
-(function(){
-  var HASH = "2702ec432139d1a0eefd778b203463c5d2b602dcf2f1be2c7e970dba9a9ec57f";
-  var HASH2 = "a461f362";
-  function fnv1a(s){
-    var h = 0x811c9dc5, b = new TextEncoder().encode(s);
-    for (var i=0;i<b.length;i++){ h ^= b[i]; h = Math.imul(h, 0x01000193) >>> 0; }
-    return ('0000000' + h.toString(16)).slice(-8);
-  }
-  async function sha256(t){
-    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
-    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-  }
-  async function verificar(txt){
-    try {
-      if (window.crypto && crypto.subtle && crypto.subtle.digest) {
-        if (await sha256(txt) === HASH) return true;
-      }
-    } catch(e) {}
-    return fnv1a(txt) === HASH2;
-  }
-  function guardar(v){ try { sessionStorage.setItem('vgme_ok', v); } catch(e){} }
-  function leer(){ try { return sessionStorage.getItem('vgme_ok'); } catch(e){ return null; } }
-  var gate = document.getElementById('gate');
-  function abrir(){ gate.classList.add('hidden'); document.body.classList.remove('locked'); }
-  if (leer() === HASH2) { abrir(); return; }
-  document.body.classList.add('locked');
-  var input = document.getElementById('gate-input');
-  var err = document.getElementById('gate-err');
-  var btn = document.getElementById('gate-btn');
-  async function intentar(){
-    var ok = await verificar(input.value.trim());
-    if (ok) { guardar(HASH2); abrir(); }
-    else { err.textContent='Clave incorrecta'; input.value=''; input.focus(); }
-  }
-  btn.addEventListener('click', intentar);
-  input.addEventListener('keydown', function(e){ if(e.key==='Enter') intentar(); });
-  setTimeout(function(){ input.focus(); },60);
-})();
-
 /* búsqueda y estado */
 (function(){
   const cards = [...document.querySelectorAll('.card')];
