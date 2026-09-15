@@ -3,986 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plataforma de Inteligencia y Planeación VGME</title>
+<title>Portal VGME · Información y Gestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f3f6fa;
+  --blue:#003b8f;
+  --blue-deep:#061a3a;
+  --blue-mid:#0a2f68;
+  --yellow:#ffc800;
+  --bg:#f4f6f9;
   --surface:#ffffff;
-  --navy:#0e2f4f;
-  --navy-2:#143b60;
-  --blue:#1769d2;
-  --blue-soft:#edf4fc;
-  --text:#1d2732;
-  --muted:#6c7885;
-  --line:#dfe6ee;
-  --green:#1a8a66;
-  --amber:#d58a1f;
-  --red:#bd4c4c;
-  --sidebar:278px;
+  --line:#dfe5ee;
+  --line-soft:#edf1f6;
+  --text:#10213a;
+  --muted:#6c7b91;
+  --green:#167866;
+  --green-bg:#e8f4f1;
+  --amber:#99610d;
+  --amber-bg:#fbf2e4;
+  --shadow:0 10px 28px rgba(15,33,58,.06);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  font-family:Inter,"Segoe UI",Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased
 }
 a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+.wrap{max-width:1480px;margin:0 auto;padding:0 28px}
 
-/* SIDEBAR */
-.sidebar{
-  position:fixed;
-  inset:0 auto 0 0;
-  width:var(--sidebar);
-  background:linear-gradient(180deg,#0d2d4b 0%,#0b2741 100%);
-  color:white;
-  display:flex;
-  flex-direction:column;
-  z-index:30;
-  box-shadow:8px 0 28px rgba(10,32,52,.08);
+/* acceso */
+#gate{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  background:
+    radial-gradient(820px 480px at 18% -10%,rgba(30,91,180,.45),transparent 65%),
+    linear-gradient(145deg,#0a234b,#031022 72%);
 }
-.side-brand{
-  min-height:118px;
-  padding:26px 24px 22px;
-  border-bottom:1px solid rgba(255,255,255,.11);
+#gate.hidden{display:none}
+.gate-card{width:min(430px,100%);text-align:center}
+.gate-logo{
+  padding:8px 18px 18px;margin-bottom:20px
 }
-.side-brand small{
-  display:block;
-  color:#8eabc4;
-  font-size:9px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  margin-bottom:8px;
+.gate-logo img{
+  display:block;width:100%;max-width:320px;max-height:86px;
+  margin:0 auto;object-fit:contain
 }
-.side-brand h1{
-  margin:0;
-  font-size:23px;
-  letter-spacing:-.035em;
+.gate-card h2{margin:0 0 8px;color:#fff;font:800 27px/1.1 Archivo,sans-serif}
+.gate-card p{margin:0 0 22px;color:#b7c5da;font-size:13px;line-height:1.6}
+.gate-card input{
+  width:100%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);
+  color:#fff;border-radius:8px;padding:13px 15px;outline:none;text-align:center
 }
-.side-brand p{
-  margin:5px 0 0;
-  color:#a9bccd;
-  font-size:10.5px;
-  line-height:1.4;
+.gate-card input:focus{border-color:var(--yellow)}
+.gate-card button{
+  width:100%;margin-top:11px;border:0;border-radius:8px;padding:13px 15px;
+  background:var(--yellow);color:#07172f;font-weight:800;cursor:pointer
 }
-.side-section-title{
-  padding:19px 24px 8px;
-  color:#7f9bb5;
-  font-size:8.5px;
-  font-weight:850;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-}
-.side-nav{
-  padding:0 12px 18px;
-  overflow:auto;
-  flex:1;
-}
-.side-nav a{
-  display:grid;
-  grid-template-columns:28px 1fr;
-  gap:10px;
-  align-items:center;
-  min-height:39px;
-  padding:7px 11px;
-  border-radius:8px;
-  color:#c8d5e0;
-  font-size:10.5px;
-  margin:2px 0;
-  transition:.15s ease;
-}
-.side-nav a:hover{
-  background:rgba(255,255,255,.06);
-  color:#fff;
-}
-.side-nav a.active{
-  background:#ffffff;
-  color:var(--navy);
-  font-weight:750;
-}
-.nav-icon{
-  width:25px;
-  height:25px;
-  display:grid;
-  place-items:center;
-  border-radius:7px;
-  background:rgba(255,255,255,.07);
-}
-.active .nav-icon{
-  background:var(--blue-soft);
-  color:var(--blue);
-}
-.nav-icon svg{width:14px;height:14px}
+.gate-err{height:18px;margin-top:10px;color:#f3a6a6;font-size:12px}
+body.locked{overflow:hidden}
 
-.side-owner{
-  padding:18px 24px 22px;
-  border-top:1px solid rgba(255,255,255,.10);
+/* barra institucional */
+.top{
+  background:var(--blue-deep);color:#fff;border-bottom:3px solid var(--yellow)
 }
-.side-owner small{
-  display:block;
-  color:#6f8ca6;
-  font-size:8px;
-  font-weight:850;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  margin-bottom:7px;
+.top-inner{
+  max-width:1480px;margin:auto;padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:22px
 }
-.side-owner strong{
-  display:block;
-  font-size:10.5px;
-  line-height:1.45;
-}
-.side-owner span{
-  display:block;
-  margin-top:8px;
-  color:#7f9bb5;
-  font-size:8.5px;
-}
+.brand{display:flex;align-items:center;gap:18px;min-width:0}
+.brand img{height:43px;width:auto;max-width:245px;object-fit:contain}
+.brand-sep{width:1px;height:34px;background:rgba(255,255,255,.22)}
+.brand-copy{min-width:0}
+.brand-copy b{display:block;font-size:13px;font-weight:700}
+.brand-copy span{display:block;margin-top:3px;color:#9fb1cc;font-size:11.5px}
+.top-meta{display:flex;align-items:center;gap:9px;color:#adbdd4;font-size:11.5px;white-space:nowrap}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#38b79d;box-shadow:0 0 0 4px rgba(56,183,157,.12)}
 
+/* content */
+.main{padding:30px 0 42px}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-bottom:18px
+}
+.toolbar-copy h2{margin:0;font:700 21px Archivo,sans-serif}
+.toolbar-copy p{margin:5px 0 0;color:var(--muted);font-size:12.5px;line-height:1.55}
+.tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.search{
+  position:relative;min-width:270px
+}
+.search input{
+  width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;
+  padding:10px 12px 10px 36px;color:var(--text);outline:none
+}
+.search input:focus{border-color:#9eb6d7;box-shadow:0 0 0 3px rgba(0,59,143,.07)}
+.search svg{position:absolute;left:12px;top:11px;width:16px;height:16px;color:#8a98ad}
+.filter-btn{
+  border:1px solid var(--line);background:#fff;color:#516078;border-radius:8px;
+  padding:9px 12px;cursor:pointer;font-size:12px;font-weight:600
+}
+.filter-btn.active{border-color:#9bb0cf;background:#eef3fa;color:#173e77}
 
-/* ACCORDION SIDEBAR */
-.nav-group{
-  margin:4px 0 7px;
+.modules{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px
 }
-.nav-group-toggle{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:#d6e0e9;
-  min-height:43px;
-  padding:8px 11px;
-  border-radius:8px;
-  display:grid;
-  grid-template-columns:30px 1fr 18px;
-  align-items:center;
-  gap:9px;
-  text-align:left;
-  cursor:pointer;
-  font:inherit;
-  transition:.15s ease;
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  min-height:260px;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 1px 1px rgba(15,33,58,.02);
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease
 }
-.nav-group-toggle:hover{
-  background:rgba(255,255,255,.06);
-  color:#fff;
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#ccd6e4}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 18px 0}
+.number{
+  font:800 28px/1 Archivo,sans-serif;color:#d8e0eb;letter-spacing:-.03em
 }
-.nav-group-toggle .group-icon{
-  width:27px;
-  height:27px;
-  border-radius:7px;
-  display:grid;
-  place-items:center;
-  background:rgba(255,255,255,.08);
-  color:#b9cbd9;
-  font-size:9px;
-  font-weight:850;
+.state{
+  display:flex;align-items:center;gap:6px;border-radius:5px;padding:5px 8px;
+  font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.045em
 }
-.nav-group-toggle .group-copy strong{
-  display:block;
-  font-size:11px;
-  line-height:1.15;
+.state i{width:6px;height:6px;border-radius:50%}
+.state.live{background:var(--green-bg);color:var(--green)}
+.state.live i{background:#24a68d}
+.state.dev{background:var(--amber-bg);color:var(--amber)}
+.state.dev i{background:#d58a20}
+.card-body{padding:15px 18px 16px;flex:1}
+.card h3{margin:0;font:700 18px/1.2 Archivo,sans-serif;letter-spacing:-.015em}
+.card p{margin:8px 0 0;color:var(--muted);font-size:12.2px;line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.tag{
+  border:1px solid var(--line-soft);background:#f8fafc;border-radius:5px;
+  padding:5px 7px;color:#6b7890;font-size:10px;font-weight:600
 }
-.nav-group-toggle .group-copy span{
-  display:block;
-  margin-top:3px;
-  color:#819db6;
-  font-size:8px;
+.quick{
+  margin:0 18px 15px;border-top:1px solid var(--line-soft);padding-top:11px;
+  display:flex;flex-direction:column;gap:7px
 }
-.nav-group-toggle .chevron{
-  justify-self:end;
-  color:#7591aa;
-  font-size:12px;
-  transform:rotate(-90deg);
-  transition:transform .18s ease;
+.quick a{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid var(--line);border-radius:7px;padding:8px 10px;
+  color:#24466f;background:#fff;font-size:11px;font-weight:700
 }
-.nav-group.open .nav-group-toggle{
-  background:rgba(255,255,255,.055);
+.quick a span small{display:block;font-weight:500;color:#8a97aa;margin-top:2px}
+.quick a:hover{background:#f6f9fc;border-color:#cdd8e6}
+.card-foot{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  border-top:1px solid var(--line-soft);background:#fbfcfe;padding:11px 18px
 }
-.nav-group.open .nav-group-toggle .chevron{
-  transform:rotate(0deg);
+.card-foot span{font-size:10.5px;color:#8794a7}
+.open{
+  font-size:11px;font-weight:800;color:var(--blue);white-space:nowrap
 }
-.nav-group.open .nav-group-toggle .group-icon{
-  background:#fff;
-  color:var(--navy);
+.open:hover{text-decoration:underline}
+.disabled{color:#9ca8b8!important;pointer-events:none}
+
+/* bottom */
+.principle{
+  margin-top:20px;border:1px solid var(--line);border-left:4px solid var(--yellow);
+  border-radius:0 11px 11px 0;background:#fff;padding:17px 19px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px
 }
-.nav-group-items{
-  display:none;
-  padding:4px 0 6px 18px;
+.principle small{
+  display:block;color:#8b98aa;font-size:9.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:5px
 }
-.nav-group.open .nav-group-items{
-  display:block;
+.principle h3{margin:0;font:700 15px Archivo,sans-serif}
+.principle p{margin:5px 0 0;color:var(--muted);font-size:11.5px;line-height:1.5}
+.principle a{font-size:11.5px;font-weight:800;color:var(--blue);white-space:nowrap}
+
+footer{
+  border-top:1px solid var(--line);background:#eef2f6;color:#7a879a;
+  font-size:10.5px
 }
-.nav-group-items a{
-  grid-template-columns:25px 1fr;
-  min-height:35px;
-  padding:6px 9px;
-  font-size:9.8px;
-  color:#adc0d0;
-}
-.nav-group-items a .nav-icon{
-  width:22px;
-  height:22px;
-  font-size:8px;
-}
-.nav-group-items a.active{
-  background:#fff;
-  color:var(--navy);
-}
-.nav-separator{
-  height:1px;
-  background:rgba(255,255,255,.08);
-  margin:7px 10px 10px;
+.footer-inner{
+  max-width:1480px;margin:auto;padding:17px 28px 22px;
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap
 }
 
-/* PAGE */
-.page{
-  margin-left:var(--sidebar);
-  min-height:100vh;
-}
-.topbar{
-  height:74px;
-  background:white;
-  border-bottom:1px solid var(--line);
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  gap:24px;
-  padding:0 30px;
-  position:sticky;
-  top:0;
-  z-index:20;
-}
-.logos{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-.uniminuto-logo{
-  height:35px;
-  width:auto;
-  display:block;
-}
-.divider{
-  width:1px;
-  height:32px;
-  background:var(--line);
-}
-.vgme-lockup{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-.vgme-mini{
-  width:31px;height:31px;border-radius:8px;
-  background:var(--navy);
-  color:white;
-  display:grid;place-items:center;
-  font-size:8px;font-weight:850;
-}
-.vgme-lockup div:last-child strong{
-  display:block;
-  font-size:10.5px;
-  color:var(--navy);
-}
-.vgme-lockup div:last-child span{
-  display:block;
-  margin-top:2px;
-  font-size:8.5px;
-  color:var(--muted);
-}
-.top-title{
-  justify-self:center;
-  color:#566575;
-  font-size:10px;
-  font-weight:750;
-}
-.top-meta{
-  text-align:right;
-  font-size:8.5px;
-  color:var(--muted);
-  text-transform:uppercase;
-  line-height:1.5;
-  letter-spacing:.07em;
-}
-.top-meta strong{
-  display:block;
-  color:var(--navy);
-  font-size:9.5px;
-}
+.hidden-card{display:none!important}
 
-/* CONTENT */
-.content{
-  padding:28px 30px 54px;
-  max-width:1500px;
-  margin:0 auto;
-}
-.hero{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:28px;
-  align-items:end;
-  margin-bottom:22px;
-}
-.hero small{
-  display:block;
-  color:var(--blue);
-  font-size:8.5px;
-  font-weight:850;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-.hero h2{
-  margin:0;
-  color:var(--navy);
-  font-size:36px;
-  letter-spacing:-.045em;
-}
-.hero p{
-  margin:7px 0 0;
-  color:var(--muted);
-  font-size:11.5px;
-  max-width:720px;
-}
-.summary{
-  display:flex;
-  gap:10px;
-}
-.summary-box{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:12px;
-  min-width:125px;
-  padding:12px 14px;
-}
-.summary-box small{
-  margin:0 0 7px;
-  font-size:7.5px;
-  color:#98a4b1;
-}
-.summary-box strong{
-  display:block;
-  color:var(--navy);
-  font-size:15px;
-}
-
-/* OVERVIEW */
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  margin:26px 0 12px;
-}
-.section-head h3{
-  margin:0;
-  color:var(--navy);
-  font-size:18px;
-  letter-spacing:-.03em;
-}
-.section-head span{
-  color:var(--muted);
-  font-size:9px;
-}
-
-/* MODULE CARDS */
-.module-list{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-}
-.module-card{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 4px 14px rgba(14,47,79,.025);
-}
-.module-card-head{
-  min-height:82px;
-  padding:16px 18px;
-  display:grid;
-  grid-template-columns:38px minmax(0,1fr) auto;
-  align-items:center;
-  gap:13px;
-  border-bottom:1px solid var(--line);
-}
-.mod-icon{
-  width:36px;height:36px;
-  border-radius:9px;
-  display:grid;place-items:center;
-  background:var(--blue-soft);
-  color:var(--blue);
-}
-.mod-icon svg{width:18px;height:18px}
-.mod-title h4{
-  margin:0;
-  color:var(--navy);
-  font-size:14.5px;
-}
-.mod-title p{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:9.5px;
-  line-height:1.4;
-}
-.badge{
-  white-space:nowrap;
-  font-size:7.5px;
-  font-weight:850;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  padding:5px 7px;
-  border-radius:999px;
-  background:#f1f4f7;
-  color:#8996a3;
-}
-.badge.live{
-  background:#edf8f3;
-  color:var(--green);
-}
-.report-table{
-  width:100%;
-  border-collapse:collapse;
-}
-.report-table th{
-  text-align:left;
-  padding:9px 18px;
-  font-size:7.5px;
-  color:#94a0ad;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  border-bottom:1px solid var(--line);
-  background:#fbfcfe;
-}
-.report-table td{
-  padding:10px 18px;
-  border-bottom:1px solid #edf1f5;
-  font-size:9.7px;
-  vertical-align:middle;
-}
-.report-table tr:last-child td{border-bottom:0}
-.report-name strong{
-  display:block;
-  color:#2d3a46;
-  font-size:10px;
-}
-.report-name span{
-  display:block;
-  color:#8793a0;
-  font-size:8.5px;
-  margin-top:2px;
-}
-.report-status{
-  color:#8c98a5;
-  font-size:8px;
-  white-space:nowrap;
-}
-.report-status.published{
-  color:var(--green);
-  font-weight:750;
-}
-.report-action{
-  text-align:right;
-  white-space:nowrap;
-}
-.report-action a{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  color:var(--blue);
-  font-size:8.5px;
-  font-weight:800;
-}
-.snies-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:6px;
-  flex-wrap:wrap;
-}
-.snies-actions a{
-  padding:5px 7px;
-  border-radius:999px;
-  background:var(--blue-soft);
-  color:var(--blue);
-  font-size:7.5px;
-  font-weight:850;
-}
-
-/* GLOSSARY FOOT */
-.governance{
-  margin-top:14px;
-  background:linear-gradient(145deg,#102f4f,#164a73);
-  color:white;
-  border-radius:14px;
-  padding:20px 22px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:28px;
-  align-items:center;
-}
-.governance h4{
-  margin:0 0 5px;
-  font-size:15px;
-}
-.governance p{
-  margin:0;
-  color:#b3c5d4;
-  font-size:9.5px;
-  line-height:1.5;
-  max-width:850px;
-}
-.governance a{
-  padding:9px 12px;
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:9px;
-  font-size:8.5px;
-  font-weight:800;
-  color:#dbe8f2;
-}
-
-.footer{
-  margin-top:20px;
-  color:#8b97a4;
-  font-size:8px;
-  display:flex;
-  justify-content:space-between;
-  gap:18px;
-}
-
-@media(max-width:1120px){
-  .module-list{grid-template-columns:1fr}
-  .hero{grid-template-columns:1fr}
-  .summary{justify-content:flex-start}
+@media(max-width:1180px){
+  .modules{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:850px){
-  :root{--sidebar:0px}
-  .sidebar{display:none}
-  .page{margin-left:0}
-  .topbar{grid-template-columns:1fr auto}
-  .top-title{display:none}
+  .top-meta{display:none}
+  .modules{grid-template-columns:1fr}
 }
 @media(max-width:620px){
-  .content{padding:22px 14px 40px}
-  .topbar{padding:0 14px}
-  .vgme-lockup{display:none}
-  .divider{display:none}
-  .uniminuto-logo{height:30px}
-  .hero h2{font-size:30px}
-  .summary{flex-wrap:wrap}
-  .summary-box{flex:1;min-width:115px}
-  .module-card-head{grid-template-columns:34px 1fr}
-  .badge{grid-column:2}
-  .report-table th:nth-child(2),
-  .report-table td:nth-child(2){display:none}
-  .governance{grid-template-columns:1fr}
+  .wrap,.top-inner,.footer-inner{padding-left:18px;padding-right:18px}
+  .brand-sep,.brand-copy{display:none}
+  .brand img{height:38px;max-width:210px}
+  .search{min-width:100%;width:100%}
+  .tools{width:100%}
+  .principle{align-items:flex-start;flex-direction:column}
 }
 </style>
 </head>
 <body>
 
-<aside class="sidebar">
-  <div class="side-brand">
-    <small>Vicerrectoría de Mercadeo y Experiencia</small>
-    <h1>Inteligencia y Planeación</h1>
-    <p>Plataforma interna de información, análisis y planeación.</p>
-  </div>
-
-  <div class="side-section-title">Áreas</div>
-  <nav class="side-nav">
-
-    <a class="active" href="#panel">
-      <span class="nav-icon">⌂</span>
-      <span>Panel general</span>
-    </a>
-
-    <div class="nav-separator"></div>
-
-    <div class="nav-group open" data-group="analitica">
-      <button class="nav-group-toggle" type="button" aria-expanded="true">
-        <span class="group-icon">01</span>
-        <span class="group-copy">
-          <strong>Analítica</strong>
-          <span>Información y seguimiento</span>
-        </span>
-        <span class="chevron">⌄</span>
-      </button>
-
-      <div class="nav-group-items">
-        <a href="#vgme"><span class="nav-icon">VG</span><span>Resultados VGME</span></a>
-        <a href="#snies"><span class="nav-icon">S</span><span>SNIES</span></a>
-        <a href="#matriculas"><span class="nav-icon">M</span><span>Seguimiento a Matrículas</span></a>
-        <a href="#marketing"><span class="nav-icon">MK</span><span>Marketing</span></a>
-        <a href="#comercial"><span class="nav-icon">C</span><span>Comercial</span></a>
-        <a href="#educon"><span class="nav-icon">E</span><span>EduCon</span></a>
-        <a href="#convenios"><span class="nav-icon">V</span><span>Convenios</span></a>
-        <a href="#contact"><span class="nav-icon">CC</span><span>Contact Center</span></a>
-        <a href="#bases"><span class="nav-icon">B</span><span>Análisis de Bases</span></a>
-      </div>
-    </div>
-
-    <div class="nav-group" data-group="incentivos">
-      <button class="nav-group-toggle" type="button" aria-expanded="false">
-        <span class="group-icon">02</span>
-        <span class="group-copy">
-          <strong>Incentivos</strong>
-          <span>Compensación y modelos</span>
-        </span>
-        <span class="chevron">⌄</span>
-      </button>
-
-      <div class="nav-group-items">
-        <a href="#comisiones"><span class="nav-icon">$</span><span>Contact Center</span></a>
-        <a href="#comisiones-presencial"><span class="nav-icon">$</span><span>Canales Presenciales</span></a>
-        <a href="#repositorio"><span class="nav-icon">R</span><span>Repositorio de Información</span></a>
-        <a href="#glosario"><span class="nav-icon">G</span><span>Fuentes e Indicadores</span></a>
-      </div>
-    </div>
-
-    <div class="nav-group" data-group="presupuesto">
-      <button class="nav-group-toggle" type="button" aria-expanded="false">
-        <span class="group-icon">03</span>
-        <span class="group-copy">
-          <strong>Presupuesto</strong>
-          <span>Ejecución y planeación</span>
-        </span>
-        <span class="chevron">⌄</span>
-      </button>
-
-      <div class="nav-group-items">
-        <a href="#presupuesto-ejecucion"><span class="nav-icon">E</span><span>Ejecución Presupuestal</span></a>
-        <a href="#presupuesto-forecast"><span class="nav-icon">F</span><span>Forecast</span></a>
-        <a href="#presupuesto-planeacion"><span class="nav-icon">P</span><span>Planeación 2027</span></a>
-      </div>
-    </div>
-
-  </nav>
-
-  <div class="side-owner">
-    <small>Dueño del dato</small>
-    <strong>Subdirección de Planeación Comercial y Experiencia</strong>
-    <span>UNIMINUTO</span>
-  </div>
-</aside>
-
-<div class="page">
-  <header class="topbar">
-    <div class="logos">
-      <img class="uniminuto-logo"
-           src="https://inscripciones.uniminuto.edu/hs-fs/hubfs/01%20-%20Campa%C3%B1a%20sombrilla%202026/Logo%20azul%20total.png?height=60&name=Logo+azul+total.png&width=452"
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">
+      <img src="https://www.uniminuto.edu/sites/default/files/2023-02/uniminuto%20blanco_1.png"
+           onerror="this.src='https://www.uniminuto.edu/sites/default/files/logo-para-web-2024.png'"
            alt="UNIMINUTO">
-      <div class="divider"></div>
-      <div class="vgme-lockup">
-        <div class="vgme-mini">VGME</div>
-        <div>
-          <strong>Vicerrectoría de Mercadeo y Experiencia</strong>
-          <span>Planeación Comercial y Experiencia</span>
-        </div>
-      </div>
     </div>
-    <div class="top-title">Plataforma de inteligencia y planeación</div>
-    <div class="top-meta">
-      <strong>Periodo 2026-B</strong>
-      Actualización institucional
-    </div>
-  </header>
-
-  <main class="content" id="panel">
-    <section class="hero">
-      <div>
-        <small>Panel general</small>
-        <h2>Plataforma de Inteligencia y Planeación</h2>
-        <p>Acceso central a los productos de información, analítica, planeación, compensación y documentación de la Vicerrectoría.</p>
-      </div>
-      <div class="summary">
-        <div class="summary-box">
-          <small>Periodo</small>
-          <strong>2026-B</strong>
-        </div>
-        <div class="summary-box">
-          <small>Estado</small>
-          <strong>4 / 12</strong>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-head">
-      <h3>Módulos</h3>
-      <span>12 módulos · 27 reportes</span>
-    </div>
-
-    <section class="module-list">
-
-      <article class="module-card" id="vgme">
-        <div class="module-card-head">
-          <div class="mod-icon">VG</div>
-          <div class="mod-title">
-            <h4>VGME · Presentación de Resultados Semanal</h4>
-            <p>Seguimiento semanal de resultados de la Vicerrectoría.</p>
-          </div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table">
-          <thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead>
-          <tbody>
-            <tr><td class="report-name"><strong>S2</strong><span>Presentación de resultados — semestre 2</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-            <tr><td class="report-name"><strong>Q3</strong><span>Presentación de resultados — tercer trimestre</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          </tbody>
-        </table>
-      </article>
-
-      <article class="module-card">
-        <div class="module-card-head">
-          <div class="mod-icon">V</div>
-          <div class="mod-title">
-            <h4>VGME</h4>
-            <p>Presentaciones y entregables de la Vicerrectoría.</p>
-          </div>
-          <span class="badge live">Activo</span>
-        </div>
-        <table class="report-table">
-          <thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead>
-          <tbody>
-            <tr><td class="report-name"><strong>Presentación Comité de Fundadores</strong><span>Avance S2 y Q3 2026, modalidad y rectoría</span></td><td class="report-status published">Publicado</td><td class="report-action"><a href="#">Abrir ↗</a></td></tr>
-          </tbody>
-        </table>
-      </article>
-
-      <article class="module-card" id="snies">
-        <div class="module-card-head">
-          <div class="mod-icon">S</div>
-          <div class="mod-title">
-            <h4>SNIES</h4>
-            <p>Lectura de mercado, portafolio, oferta, demanda y competencia.</p>
-          </div>
-          <span class="badge live">Activo</span>
-        </div>
-        <table class="report-table">
-          <thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="report-name"><strong>SNIES 2025</strong><span>Tableros de mercado y competencia</span></td>
-              <td class="report-status published">Publicado</td>
-              <td class="report-action">
-                <div class="snies-actions">
-                  <a href="https://uniminuto-hub.github.io/SNIES_2025/SNIES_Rectorias_2025" target="_blank">Rectorías ↗</a>
-                  <a href="https://uniminuto-hub.github.io/SNIES_2025/SNIES_Mercadeo_2025" target="_blank">Mercadeo ↗</a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
-
-      <article class="module-card" id="matriculas">
-        <div class="module-card-head">
-          <div class="mod-icon">M</div>
-          <div class="mod-title">
-            <h4>Seguimiento a Matrículas</h4>
-            <p>Avance de matrícula, estudiantes nuevos y embudo de candidatos.</p>
-          </div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table">
-          <thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead>
-          <tbody>
-            <tr><td class="report-name"><strong>Seguimiento Matrículas Banner</strong><span>Avance frente a la meta</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-            <tr><td class="report-name"><strong>Seguimiento de Nuevos</strong><span>Por programa</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-            <tr><td class="report-name"><strong>Seguimiento de Candidatos</strong><span>Embudo por programa y etapa</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          </tbody>
-        </table>
-      </article>
-
-      <article class="module-card" id="marketing">
-        <div class="module-card-head">
-          <div class="mod-icon">MK</div>
-          <div class="mod-title"><h4>Marketing</h4><p>Demanda, campañas y conversión a lo largo del embudo.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Funnel de Marketing</strong><span>Tráfico, leads y conversión por campaña y canal</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="comercial">
-        <div class="module-card-head">
-          <div class="mod-icon">C</div>
-          <div class="mod-title"><h4>Comercial</h4><p>Gestión comercial y conversión del equipo de ventas.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Funnel de Gestión Comercial</strong><span>Avance por etapa y responsable</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="educon">
-        <div class="module-card-head">
-          <div class="mod-icon">E</div>
-          <div class="mod-title"><h4>EduCon</h4><p>Educación Continua — ejecución de ingresos por rectoría.</p></div>
-          <span class="badge live">Activo</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Reporte de Ingresos</strong><span>Ejecución de ingresos, 2020–2026</span></td><td class="report-status published">Publicado</td><td class="report-action"><a href="#">Abrir ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="convenios">
-        <div class="module-card-head">
-          <div class="mod-icon">V</div>
-          <div class="mod-title"><h4>Convenios</h4><p>Vigentes, en negociación y por renovar.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Seguimiento a Convenios</strong><span>Entidad, vigencia y responsable</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="contact">
-        <div class="module-card-head">
-          <div class="mod-icon">CC</div>
-          <div class="mod-title"><h4>Contact Center</h4><p>Volumen, contactabilidad y efectividad del centro de contacto.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Inbound</strong><span>Llamadas y contactos entrantes</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Outbound</strong><span>Llamadas y contactos salientes</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Digital</strong><span>Canales digitales</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Gestión de Matrículas Contact</strong><span>Aporte a matrícula efectiva</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="comisiones">
-        <div class="module-card-head">
-          <div class="mod-icon">$</div>
-          <div class="mod-title"><h4>Esquemas de Comisión · Contact Center</h4><p>Promotor, coordinador y subdirector.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Promotor</strong><span>Esquema de comisión</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Coordinador</strong><span>Esquema de comisión</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Subdirector</strong><span>Esquema de comisión</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="comisiones-presencial">
-        <div class="module-card-head">
-          <div class="mod-icon">$</div>
-          <div class="mod-title"><h4>Esquemas de Comisión · Canales Presenciales</h4><p>Promotor, coordinador, subdirector y pilotos.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Promotor</strong></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Coordinador</strong></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Subdirector</strong></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Piloto Bogotá / Bucaramanga</strong></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Profesionales</strong></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="bases">
-        <div class="module-card-head">
-          <div class="mod-icon">B</div>
-          <div class="mod-title"><h4>Análisis de Bases</h4><p>Lectura de las bases que alimentan la gestión comercial.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Análisis SENA Agosto 2026</strong><span>Caracterización y potencial comercial</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="repositorio">
-        <div class="module-card-head">
-          <div class="mod-icon">R</div>
-          <div class="mod-title"><h4>Repositorio de Información</h4><p>Documentos normativos y trazabilidad en el tiempo.</p></div>
-          <span class="badge live">Activo</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Resoluciones</strong><span>Resoluciones vigentes de comisiones e incentivos</span></td><td class="report-status">En construcción</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          <tr><td class="report-name"><strong>Línea de Tiempo de Resoluciones</strong><span>Trazabilidad histórica</span></td><td class="report-status published">Publicado</td><td class="report-action"><a href="#">Abrir ↗</a></td></tr>
-        </tbody></table>
-      </article>
-
-      <article class="module-card" id="glosario">
-        <div class="module-card-head">
-          <div class="mod-icon">G</div>
-          <div class="mod-title"><h4>Glosario de Fuentes e Indicadores</h4><p>Qué significa cada indicador, de dónde sale y cómo se calcula.</p></div>
-          <span class="badge">En preparación</span>
-        </div>
-        <table class="report-table"><thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead><tbody>
-          <tr><td class="report-name"><strong>Sin reportes cargados todavía</strong></td><td class="report-status">Pendiente</td><td></td></tr>
-        </tbody></table>
-      </article>
-
-
-      <article class="module-card" id="presupuesto-ejecucion">
-        <div class="module-card-head">
-          <div class="mod-icon">P</div>
-          <div class="mod-title"><h4>Presupuesto</h4><p>Ejecución, forecast y planeación presupuestal.</p></div>
-          <span class="badge">En estructuración</span>
-        </div>
-        <table class="report-table">
-          <thead><tr><th>Reporte</th><th>Estado</th><th></th></tr></thead>
-          <tbody>
-            <tr id="presupuesto-forecast"><td class="report-name"><strong>Forecast Presupuestal</strong><span>Proyección de cierre y desviaciones</span></td><td class="report-status">Pendiente</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-            <tr id="presupuesto-planeacion"><td class="report-name"><strong>Planeación 2027</strong><span>Escenario presupuestal y seguimiento</span></td><td class="report-status">Pendiente</td><td class="report-action"><a href="#">Ver ↗</a></td></tr>
-          </tbody>
-        </table>
-      </article>
-
-    </section>
-
-    <section class="governance">
-      <div>
-        <h4>Gobierno de información</h4>
-        <p>Fuentes, responsables, definiciones y periodicidades asociadas a los principales indicadores publicados en el portal.</p>
-      </div>
-      <a href="#glosario">Ver glosario de indicadores ↗</a>
-    </section>
-
-    <div class="footer">
-      <span>UNIMINUTO · Corporación Universitaria Minuto de Dios · Vigilada MinEducación</span>
-      <span>Subdirección de Planeación Comercial y Experiencia · 2026</span>
-    </div>
-
-  </main>
+    <h2>Portal VGME</h2>
+    <p>Vicerrectoría de Mercadeo y Experiencia<br>Ingresa la clave para continuar.</p>
+    <input id="gate-input" type="password" placeholder="Clave de acceso" autocomplete="off">
+    <button id="gate-btn">Entrar</button>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
 </div>
 
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <img src="https://www.uniminuto.edu/sites/default/files/2023-02/uniminuto%20blanco_1.png"
+           onerror="this.src='https://www.uniminuto.edu/sites/default/files/logo-para-web-2024.png'"
+           alt="UNIMINUTO">
+      <div class="brand-sep"></div>
+      <div class="brand-copy">
+        <b>Vicerrectoría de Mercadeo y Experiencia</b>
+        <span>Planeación Comercial y Experiencia</span>
+      </div>
+    </div>
+    <div class="top-meta"><i class="live-dot"></i> Portal de información · 2026 B</div>
+  </div>
+</header>
+
+
+<main class="main">
+  <div class="wrap">
+    <div class="toolbar">
+      <div class="toolbar-copy">
+        <h2>Módulos de información y gestión</h2>
+        <p>Los 12 frentes definidos se mantienen como estructura del portal. Usa el buscador o filtra por estado.</p>
+      </div>
+      <div class="tools">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="search" type="search" placeholder="Buscar módulo, tema o tablero…">
+        </label>
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="live">Disponibles</button>
+        <button class="filter-btn" data-filter="dev">En desarrollo</button>
+      </div>
+    </div>
+
+    <section class="modules" id="modules">
+
+      <article class="card" data-state="live" data-search="vgme presentaciones comité fundadores resultados vicerrectoría">
+        <div class="card-head"><div class="number">01</div><div class="state live"><i></i>Disponible</div></div>
+        <div class="card-body">
+          <h3>VGME</h3>
+          <p>Presentaciones ejecutivas y entregables institucionales de seguimiento para la Vicerrectoría.</p>
+          <div class="tags"><span class="tag">Resultados</span><span class="tag">Presentaciones</span><span class="tag">Comités</span></div>
+        </div>
+        <div class="quick">
+          <a href="vgme/comite-fundadores.html"><span>Comité de Fundadores<small>Avance y seguimiento ejecutivo</small></span><b>↗</b></a>
+        </div>
+        <div class="card-foot"><span>Contenido publicado</span><a class="open" href="vgme/index.html">Abrir módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="live" data-search="snies mercado rectorías mercadeo oferta demanda competencia portafolio">
+        <div class="card-head"><div class="number">02</div><div class="state live"><i></i>Disponible</div></div>
+        <div class="card-body">
+          <h3>SNIES</h3>
+          <p>Lectura de mercado, oferta, demanda, competencia y oportunidad para rectorías y estrategia de mercadeo.</p>
+          <div class="tags"><span class="tag">Mercado</span><span class="tag">Rectorías</span><span class="tag">Portafolio</span></div>
+        </div>
+        <div class="quick">
+          <a href="snies/snies-rectorias.html"><span>SNIES Rectorías<small>Territorio · competencia · oportunidad</small></span><b>↗</b></a>
+          <a href="snies/snies-mercadeo.html"><span>SNIES Mercadeo<small>Mercado · portafolio · demanda</small></span><b>↗</b></a>
+        </div>
+        <div class="card-foot"><span>2 accesos publicados</span><a class="open" href="snies/index.html">Abrir módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="live" data-search="educon educación continua ingresos matrículas ticket portafolio crecimiento">
+        <div class="card-head"><div class="number">03</div><div class="state live"><i></i>Disponible</div></div>
+        <div class="card-body">
+          <h3>EduCon</h3>
+          <p>Seguimiento de Educación Continua: ingresos, matrículas, ticket medio, evolución histórica y comportamiento del portafolio.</p>
+          <div class="tags"><span class="tag">Ingresos</span><span class="tag">Matrículas</span><span class="tag">Portafolio</span></div>
+        </div>
+        <div class="quick">
+          <a href="educon/ingresos.html"><span>Ingresos EduCon<small>Evolución histórica y lectura comercial</small></span><b>↗</b></a>
+        </div>
+        <div class="card-foot"><span>Contenido publicado</span><a class="open" href="educon/index.html">Abrir módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="live" data-search="repositorio información resoluciones normatividad documentos originales línea tiempo">
+        <div class="card-head"><div class="number">04</div><div class="state live"><i></i>Disponible</div></div>
+        <div class="card-body">
+          <h3>Repositorio de Información</h3>
+          <p>Documentación institucional, trazabilidad normativa y consulta de resoluciones con acceso a sus documentos originales.</p>
+          <div class="tags"><span class="tag">Resoluciones</span><span class="tag">Documentos</span><span class="tag">Trazabilidad</span></div>
+        </div>
+        <div class="quick">
+          <a href="repositorio/linea-tiempo.html"><span>Línea de resoluciones<small>Historia, resumen y documentación</small></span><b>↗</b></a>
+        </div>
+        <div class="card-foot"><span>Repositorio activo</span><a class="open" href="repositorio/index.html">Abrir módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="live" data-search="seguimiento matrículas estudiantes nuevos continuos candidatos metas cumplimiento tendencia cortes">
+        <div class="card-head"><div class="number">05</div><div class="state live"><i></i>Disponible</div></div>
+        <div class="card-body">
+          <h3>Seguimiento a Matrículas</h3>
+          <p>Avance de matrícula, cumplimiento de metas, comparativos entre años, comportamiento por corte y lectura territorial.</p>
+          <div class="tags"><span class="tag">Matrículas</span><span class="tag">Metas</span><span class="tag">Tendencias</span></div>
+        </div>
+        <div class="quick">
+          <a href="seguimiento-matriculas/index.html"><span>Informe de Matrículas<small>Resultado · comparación · evolución</small></span><b>↗</b></a>
+        </div>
+        <div class="card-foot"><span>Tablero publicado</span><a class="open" href="seguimiento-matriculas/index.html">Abrir módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="dev" data-search="marketing demanda campañas funnel leads atl btl conversión">
+        <div class="card-head"><div class="number">06</div><div class="state dev"><i></i>En desarrollo</div></div>
+        <div class="card-body">
+          <h3>Marketing</h3>
+          <p>Demanda, campañas, leads, ATL/BTL y conversión a lo largo del funnel de mercadeo.</p>
+          <div class="tags"><span class="tag">Demanda</span><span class="tag">Campañas</span><span class="tag">Funnel</span></div>
+        </div>
+        <div class="card-foot"><span>Estructura definida</span><a class="open" href="marketing/index.html">Ver módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="dev" data-search="comercial ventas gestión conversión funnel productividad equipos">
+        <div class="card-head"><div class="number">07</div><div class="state dev"><i></i>En desarrollo</div></div>
+        <div class="card-body">
+          <h3>Comercial</h3>
+          <p>Gestión del equipo comercial, conversión, productividad y seguimiento integral del funnel de ventas.</p>
+          <div class="tags"><span class="tag">Ventas</span><span class="tag">Conversión</span><span class="tag">Productividad</span></div>
+        </div>
+        <div class="card-foot"><span>Estructura definida</span><a class="open" href="comercial/index.html">Ver módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="live" data-search="convenios matrículas entidad crecimiento comparativo corte top rectoría centro carrera">
+        <div class="card-head"><div class="number">08</div><div class="state live"><i></i>Disponible</div></div>
+        <div class="card-body">
+          <h3>Convenios</h3>
+          <p>Lectura de matrículas por convenio, evolución, comparativos al mismo corte, entidades y programas con mayor aporte.</p>
+          <div class="tags"><span class="tag">Convenios</span><span class="tag">Comparativos</span><span class="tag">Top</span></div>
+        </div>
+        <div class="quick">
+          <a href="convenios/index.html"><span>Matrículas por Convenio<small>Entidad · rectoría · programa · crecimiento</small></span><b>↗</b></a>
+        </div>
+        <div class="card-foot"><span>Tablero publicado</span><a class="open" href="convenios/index.html">Abrir módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="dev" data-search="contact center call center contactabilidad efectividad volumen">
+        <div class="card-head"><div class="number">09</div><div class="state dev"><i></i>En desarrollo</div></div>
+        <div class="card-body">
+          <h3>Contact Center</h3>
+          <p>Volumen, contactabilidad, efectividad y desempeño de la operación de atención y gestión comercial.</p>
+          <div class="tags"><span class="tag">Contactabilidad</span><span class="tag">Efectividad</span><span class="tag">Operación</span></div>
+        </div>
+        <div class="card-foot"><span>Estructura definida</span><a class="open" href="contact-center/index.html">Ver módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="dev" data-search="incentivos comisiones metas liquidación simulación costo retorno canal rol">
+        <div class="card-head"><div class="number">10</div><div class="state dev"><i></i>En desarrollo</div></div>
+        <div class="card-body">
+          <h3>Incentivos</h3>
+          <p>Metas, modelos de comisión, simulación de escenarios, control del gasto y trazabilidad de liquidaciones.</p>
+          <div class="tags"><span class="tag">Comisiones</span><span class="tag">Metas</span><span class="tag">Escenarios</span></div>
+        </div>
+        <div class="card-foot"><span>Estructura definida</span><a class="open" href="esquemas-comision/index.html">Ver módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="dev" data-search="análisis bases calidad fuentes depuración homologación datos">
+        <div class="card-head"><div class="number">11</div><div class="state dev"><i></i>En desarrollo</div></div>
+        <div class="card-body">
+          <h3>Análisis de Bases</h3>
+          <p>Calidad, consistencia, homologación y lectura de las fuentes utilizadas para la gestión comercial y de experiencia.</p>
+          <div class="tags"><span class="tag">Fuentes</span><span class="tag">Calidad</span><span class="tag">Datos</span></div>
+        </div>
+        <div class="card-foot"><span>Estructura definida</span><a class="open" href="analisis-bases/index.html">Ver módulo →</a></div>
+      </article>
+
+      <article class="card" data-state="dev" data-search="gobierno información glosario fuentes definiciones indicadores reglas">
+        <div class="card-head"><div class="number">12</div><div class="state dev"><i></i>En desarrollo</div></div>
+        <div class="card-body">
+          <h3>Gobierno de Información</h3>
+          <p>Fuentes oficiales, definiciones, reglas de cálculo, indicadores y criterios comunes para la lectura de la información.</p>
+          <div class="tags"><span class="tag">Indicadores</span><span class="tag">Definiciones</span><span class="tag">Gobierno</span></div>
+        </div>
+        <div class="card-foot"><span>Estructura definida</span><a class="open" href="glosario/index.html">Ver módulo →</a></div>
+      </article>
+
+    </section>
+
+    <section class="principle">
+      <div>
+        <small>Principio del portal</small>
+        <h3>Una fuente común para facilitar la lectura y orientar las decisiones.</h3>
+        <p>La información publicada conserva la responsabilidad de cada fuente y busca hacer comparable, trazable y reutilizable la gestión de la Vicerrectoría.</p>
+      </div>
+      <a href="glosario/index.html">Fuentes e indicadores →</a>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>Portal VGME · Vicerrectoría de Mercadeo y Experiencia</span>
+    <span>UNIMINUTO · Uso interno</span>
+  </div>
+</footer>
 
 <script>
-document.querySelectorAll('.nav-group-toggle').forEach(button => {
-  button.addEventListener('click', () => {
-    const group = button.closest('.nav-group');
-    const isOpen = group.classList.contains('open');
+/* Conserva el esquema de acceso del archivo base */
+(function(){
+  var HASH = "2702ec432139d1a0eefd778b203463c5d2b602dcf2f1be2c7e970dba9a9ec57f";
+  var HASH2 = "a461f362";
+  function fnv1a(s){
+    var h = 0x811c9dc5, b = new TextEncoder().encode(s);
+    for (var i=0;i<b.length;i++){ h ^= b[i]; h = Math.imul(h, 0x01000193) >>> 0; }
+    return ('0000000' + h.toString(16)).slice(-8);
+  }
+  async function sha256(t){
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+  }
+  async function verificar(txt){
+    try {
+      if (window.crypto && crypto.subtle && crypto.subtle.digest) {
+        if (await sha256(txt) === HASH) return true;
+      }
+    } catch(e) {}
+    return fnv1a(txt) === HASH2;
+  }
+  function guardar(v){ try { sessionStorage.setItem('vgme_ok', v); } catch(e){} }
+  function leer(){ try { return sessionStorage.getItem('vgme_ok'); } catch(e){ return null; } }
+  var gate = document.getElementById('gate');
+  function abrir(){ gate.classList.add('hidden'); document.body.classList.remove('locked'); }
+  if (leer() === HASH2) { abrir(); return; }
+  document.body.classList.add('locked');
+  var input = document.getElementById('gate-input');
+  var err = document.getElementById('gate-err');
+  var btn = document.getElementById('gate-btn');
+  async function intentar(){
+    var ok = await verificar(input.value.trim());
+    if (ok) { guardar(HASH2); abrir(); }
+    else { err.textContent='Clave incorrecta'; input.value=''; input.focus(); }
+  }
+  btn.addEventListener('click', intentar);
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter') intentar(); });
+  setTimeout(function(){ input.focus(); },60);
+})();
 
-    document.querySelectorAll('.nav-group').forEach(g => {
-      g.classList.remove('open');
-      const b = g.querySelector('.nav-group-toggle');
-      if (b) b.setAttribute('aria-expanded','false');
+/* búsqueda y estado */
+(function(){
+  const cards = [...document.querySelectorAll('.card')];
+  const search = document.getElementById('search');
+  const buttons = [...document.querySelectorAll('.filter-btn')];
+  let filter = 'all';
+
+  function apply(){
+    const q = search.value.trim().toLowerCase();
+    cards.forEach(card=>{
+      const stateOk = filter === 'all' || card.dataset.state === filter;
+      const hay = (card.dataset.search + ' ' + card.innerText).toLowerCase();
+      const searchOk = !q || hay.includes(q);
+      card.classList.toggle('hidden-card', !(stateOk && searchOk));
     });
+  }
 
-    if (!isOpen) {
-      group.classList.add('open');
-      button.setAttribute('aria-expanded','true');
-    }
-  });
-});
-
-/* Al seleccionar un acceso, conserva abierto su grupo */
-document.querySelectorAll('.nav-group-items a').forEach(link => {
-  link.addEventListener('click', () => {
-    document.querySelectorAll('.side-nav a').forEach(a => a.classList.remove('active'));
-    link.classList.add('active');
-
-    const group = link.closest('.nav-group');
-    document.querySelectorAll('.nav-group').forEach(g => {
-      g.classList.toggle('open', g === group);
-      const b = g.querySelector('.nav-group-toggle');
-      if (b) b.setAttribute('aria-expanded', g === group ? 'true' : 'false');
-    });
-  });
-});
+  search.addEventListener('input', apply);
+  buttons.forEach(btn=>btn.addEventListener('click', ()=>{
+    filter = btn.dataset.filter;
+    buttons.forEach(b=>b.classList.toggle('active', b===btn));
+    apply();
+  }));
+})();
 </script>
-
 </body>
 </html>
