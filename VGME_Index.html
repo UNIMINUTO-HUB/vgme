@@ -203,7 +203,7 @@ html.vgme-auth-pending{visibility:hidden!important}
   // En GitHub / servidor se conserva el bloqueo de acceso.
   document.documentElement.classList.add('vgme-auth-pending');
   var s=document.createElement('script');
-  s.src=(location.hostname==='uniminuto-hub.github.io'?'/auth-vgme.js':'./auth-vgme.js');
+  s.src='./auth-vgme.js';
   s.defer=true;
   s.onload=function(){
     // auth-vgme.js administra el acceso; si por algo no quita la clase, la quitamos
@@ -311,7 +311,7 @@ html.vgme-auth-pending{visibility:hidden!important}
         <div class="card-foot"><span>Repositorio activo</span></div>
       </article>
 
-      <article class="card" data-state="live" data-search="seguimiento matrículas estudiantes nuevos continuos candidatos metas cumplimiento tendencia cortes">
+      <article class="card" data-state="live" data-search="seguimiento matrículas estudiantes nuevos continuos candidatos metas cumplimiento tendencia cortes interanual análisis comparación años">
         <div class="card-head"><div class="number">05</div><div class="state live"><i></i>Disponible</div></div>
         <div class="card-body">
           <h3>Seguimiento a Matrículas</h3>
@@ -319,9 +319,10 @@ html.vgme-auth-pending{visibility:hidden!important}
           <div class="tags"><span class="tag">Matrículas</span><span class="tag">Metas</span><span class="tag">Tendencias</span></div>
         </div>
         <div class="quick">
-          <a href="Informe_Matriculas_Seguimiento_Metas.html"><span>Informe de Matrículas<small>Resultado · comparación · evolución</small></span><b>↗</b></a>
+          <a href="Informe_Matriculas_Seguimiento_Metas.html"><span>Seguimiento vs. Meta<small>Avance, cumplimiento y cortes</small></span><b>↗</b></a>
+          <a href="Informe_Matriculas_Analisis_Interanual.html"><span>Análisis Interanual<small>Comparación entre años · tendencias</small></span><b>↗</b></a>
         </div>
-        <div class="card-foot"><span>Tablero publicado</span></div>
+        <div class="card-foot"><span>2 tableros publicados</span></div>
       </article>
 
       <article class="card" data-state="dev" data-search="marketing demanda campañas funnel leads atl btl conversión">

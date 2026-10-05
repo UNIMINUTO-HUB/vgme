@@ -622,7 +622,7 @@ html.vgme-auth-pending{visibility:hidden!important}
   // En GitHub / servidor se conserva el bloqueo de acceso.
   document.documentElement.classList.add('vgme-auth-pending');
   var s=document.createElement('script');
-  s.src=(location.hostname==='uniminuto-hub.github.io'?'/auth-vgme.js':'./auth-vgme.js');
+  s.src='./auth-vgme.js';
   s.defer=true;
   s.onload=function(){
     // auth-vgme.js administra el acceso; si por algo no quita la clase, la quitamos
