@@ -1,7 +1,10 @@
 (function(){
   'use strict';
-  const KEY='vgme_auth_v2';
+  const KEY='vgme_auth_v3';
+  const HANDOFF='vgme_handoff_v1';
+  const TAB_PREFIX='vgme_tab_access:';
   const TTL=8*60*60*1000;
+  const HANDOFF_TTL=60*1000;
   const HASH='2702ec432139d1a0eefd778b203463c5d2b602dcf2f1be2c7e970dba9a9ec57f';
   const TOKEN='a461f362';
 
@@ -11,7 +14,12 @@
   function storageSet(){
     try{localStorage.setItem(KEY,JSON.stringify({token:TOKEN,exp:Date.now()+TTL}));return true}catch(e){return false}
   }
-  function storageClear(){try{localStorage.removeItem(KEY)}catch(e){}}
+  function storageClear(){
+    try{localStorage.removeItem(KEY);localStorage.removeItem(HANDOFF)}catch(e){}
+    try{
+      for(let i=sessionStorage.length-1;i>=0;i--){const k=sessionStorage.key(i);if(k&&k.startsWith(TAB_PREFIX))sessionStorage.removeItem(k)}
+    }catch(e){}
+  }
   function valid(){
     const s=storageGet();
     if(!s||s.token!==TOKEN||!Number.isFinite(+s.exp)||Date.now()>=+s.exp){storageClear();return false}
@@ -33,6 +41,7 @@
   function unlock(){
     const lock=document.getElementById('vgme-auth-lock');
     if(lock)lock.remove();
+    document.documentElement.classList.remove('vgme-auth-pending');
     document.documentElement.style.visibility='';
   }
   function addLogout(){
@@ -48,7 +57,7 @@
     b.onclick=()=>{storageClear();location.reload()};
     document.body.appendChild(b);
   }
-  function gate(){
+  function gate(afterSuccess){
     unlock();
     document.body.style.overflow='hidden';
     const style=document.createElement('style');
@@ -74,7 +83,7 @@
     async function submit(){
       if(busy)return;busy=true;btn.disabled=true;
       const ok=await verify(input.value.trim());
-      if(ok){storageSet();o.remove();style.remove();document.body.style.overflow='';addLogout()}
+      if(ok){storageSet();if(afterSuccess)afterSuccess();o.remove();style.remove();document.body.style.overflow='';addLogout()}
       else{err.textContent='Clave incorrecta';input.value='';input.focus()}
       btn.disabled=false;busy=false;
     }
@@ -82,9 +91,46 @@
     input.addEventListener('keydown',e=>{if(e.key==='Enter')submit()});
     setTimeout(()=>input.focus(),50);
   }
+
+  // Acceso heredado SOLO si viene de un clic real dentro del portal (referrer) o de un
+  // "handoff" reciente (nonce de un solo uso, 60s) escrito por la página de origen — nunca
+  // por el solo hecho de tener la clave guardada. Así, un enlace guardado y abierto después
+  // sin pasar por el índice vuelve a pedir la clave, aunque la sesión global siga vigente.
+  const TAB_KEY=TAB_PREFIX+location.pathname;
+  function tabGranted(){
+    try{return sessionStorage.getItem(TAB_KEY)===TOKEN}catch(e){return false}
+  }
+  function grantTab(){try{sessionStorage.setItem(TAB_KEY,TOKEN)}catch(e){}}
+  function portalReferrer(){
+    if(!document.referrer)return false;
+    try{
+      const r=new URL(document.referrer);
+      if(r.origin!==location.origin)return false;
+      // Basado solo en el nombre del archivo del índice (VGME_Index.html), sin asumir en qué
+      // carpeta del sitio vive — así funciona sin importar la profundidad de cada módulo.
+      const file=r.pathname.split('/').pop()||'';
+      return /^vgme_index(\.html)?$/i.test(file);
+    }catch(e){return false}
+  }
+  function consumeHandoff(){
+    let nonce='';
+    try{nonce=new URL(location.href).searchParams.get('vgme_handoff')||''}catch(e){}
+    if(!nonce)return false;
+    let h=null;
+    try{h=JSON.parse(localStorage.getItem(HANDOFF)||'null')}catch(e){}
+    let ok=!!(h&&h.token===TOKEN&&h.nonce===nonce&&h.path===location.pathname&&Number.isFinite(+h.exp)&&Date.now()<+h.exp&&valid());
+    try{localStorage.removeItem(HANDOFF)}catch(e){}
+    try{
+      const u=new URL(location.href);u.searchParams.delete('vgme_handoff');
+      history.replaceState(null,'',u.pathname+(u.search?u.search:'')+(u.hash?u.hash:''));
+    }catch(e){}
+    return ok;
+  }
   function start(){
-    if(valid()){unlock();addLogout()}
-    else gate();
+    const globalOk=valid();
+    const inherited=globalOk&&(consumeHandoff()||portalReferrer()||tabGranted());
+    if(inherited){grantTab();unlock();addLogout()}
+    else gate(grantTab);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

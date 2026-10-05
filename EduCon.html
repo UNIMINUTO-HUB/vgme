@@ -319,9 +319,32 @@ th{background:#f7f9fc!important;color:#66798e!important}
 </style>
 
 
+<style id="vgme-auth-lock">
+html{background:#061a3a!important}
+html.vgme-auth-pending{visibility:hidden!important}
+</style>
 <script>
-(function(){var s=document.createElement('script');s.src=(location.hostname==='uniminuto-hub.github.io'?'/auth-vgme.js':'./auth-vgme.js');s.defer=true;s.onerror=function(){};document.head.appendChild(s)})();
-</script><script src="./auth-vgme.js" defer=""></script>
+(function(){
+  // En vista local (file://) permitir la previsualizacion sin depender de auth-vgme.js.
+  if(location.protocol==='file:'){
+    document.documentElement.classList.remove('vgme-auth-pending');
+    document.documentElement.style.setProperty('visibility','visible','important');
+    return;
+  }
+  // En GitHub / servidor se conserva el bloqueo de acceso.
+  document.documentElement.classList.add('vgme-auth-pending');
+  var s=document.createElement('script');
+  s.src=(location.hostname==='uniminuto-hub.github.io'?'/auth-vgme.js':'./auth-vgme.js');
+  s.defer=true;
+  s.onload=function(){
+    setTimeout(function(){document.documentElement.classList.remove('vgme-auth-pending')},50);
+  };
+  s.onerror=function(){
+    document.documentElement.classList.remove('vgme-auth-pending');
+  };
+  document.head.appendChild(s);
+})();
+</script>
 </head>
 <body style="">
 <div class="top">
