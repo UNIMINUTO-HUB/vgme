@@ -3,10 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UNIMINUTO · Inteligencia de Mercado SNIES</title>
-<!-- Chart.js con varios CDN de respaldo (document.write síncrono: si uno falla, prueba el
-     siguiente antes de que el resto de la página se ejecute). Si todos fallan, el tablero
-     sigue funcionando: se muestran KPIs y tablas, solo se omiten los gráficos. -->
+<title>Portal VGME · SNIES · Rectorías</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>if (typeof Chart === 'undefined') { document.write('<script src="https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/Chart.js\/4.4.1\/chart.umd.min.js"><\/script>'); }</script>
 <script>if (typeof Chart === 'undefined') { document.write('<script src="https:\/\/unpkg.com\/chart.js@4.4.1\/dist\/chart.umd.min.js"><\/script>'); }</script>
@@ -191,6 +189,10 @@ table.dtable tr.danger{background:rgba(226,99,92,.13)}
 table.dtable tr.danger td{color:var(--ink)}
 table.dtable tr.danger:hover{background:rgba(226,99,92,.19)}
 table.dtable tbody tr:hover{background:var(--bg-panel-raised)}
+table.dtable tfoot tr.totals-row td, .x-table tfoot tr.totals-row td{
+  font-weight:700!important; color:var(--ink)!important; border-top:2px solid var(--gold)!important; border-bottom:none!important;
+  background:var(--bg-panel-raised)!important; position:sticky; bottom:0;
+}
 .tablewrap{max-height:480px; overflow-y:auto; border-radius:6px}
 .tag{display:inline-block; font-family:var(--font-mono); font-size:10px; padding:2px 6px; border-radius:3px; background:var(--bg-panel-raised); color:var(--ink-faint); border:1px solid var(--line)}
 .tag.gold{color:var(--gold); border-color:var(--gold-soft); background:var(--gold-soft)}
@@ -586,6 +588,54 @@ span.pos,span.neg,span.neu{font-weight:700}
 canvas{filter:none}
 
 </style>
+
+<style id="vgme-environment">
+:root{--vgme-bg:#f4f7fb;--vgme-panel:#ffffff;--vgme-line:#d9e3ef;--vgme-ink:#10253f;--vgme-muted:#62758b;--vgme-gold:#d4a11e;--vgme-shadow:0 5px 18px rgba(9,30,66,.05)}
+html,body{font-family:Inter,"Segoe UI",Arial,Helvetica,sans-serif}
+body{background:var(--vgme-bg)}
+button,select,input,textarea{font-family:inherit}
+button,select,input{transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid rgba(45,107,179,.28);outline-offset:1px}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#c4d0dd;border:2px solid transparent;background-clip:padding-box;border-radius:999px}::-webkit-scrollbar-track{background:transparent}
+</style>
+<style id="vgme-family">
+body{background:var(--vgme-bg)!important;color:var(--vgme-ink)!important}
+.masthead{box-shadow:0 7px 22px rgba(9,30,66,.14)!important}
+.tabbar{background:#fff!important;border-bottom:1px solid var(--vgme-line)!important;box-shadow:0 3px 12px rgba(9,30,66,.035)!important}
+.tabbar button,.tabbar .tab{background:transparent!important;border-radius:0!important;color:var(--vgme-muted)!important}
+.tabbar button.active,.tabbar .tab.active{background:transparent!important;color:var(--vgme-ink)!important;box-shadow:inset 0 -3px 0 var(--vgme-gold)!important}
+.card,.panel,.kpi{border-color:var(--vgme-line)!important;box-shadow:var(--vgme-shadow)!important}
+</style>
+
+<style id="vgme-auth-lock">
+html{background:#061a3a!important}
+html.vgme-auth-pending{visibility:hidden!important}
+</style>
+<script>
+(function(){
+  // En vista local (file://) permitir la previsualizacion sin depender de auth-vgme.js.
+  if(location.protocol==='file:'){
+    document.documentElement.classList.remove('vgme-auth-pending');
+    document.documentElement.style.setProperty('visibility','visible','important');
+    return;
+  }
+  // En GitHub / servidor se conserva el bloqueo de acceso.
+  document.documentElement.classList.add('vgme-auth-pending');
+  var s=document.createElement('script');
+  s.src=(location.hostname==='uniminuto-hub.github.io'?'/auth-vgme.js':'./auth-vgme.js');
+  s.defer=true;
+  s.onload=function(){
+    // auth-vgme.js administra el acceso; si por algo no quita la clase, la quitamos
+    // igual al terminar de cargar para evitar pantallas bloqueadas.
+    setTimeout(function(){document.documentElement.classList.remove('vgme-auth-pending')},50);
+  };
+  s.onerror=function(){
+    // Evita una pantalla azul permanente si el archivo de auth no esta disponible.
+    document.documentElement.classList.remove('vgme-auth-pending');
+  };
+  document.head.appendChild(s);
+})();
+</script>
 </head>
 <body>
 <div class="loading-screen" id="loading-screen">
@@ -715,13 +765,37 @@ for (let i=0;i<N;i++){
   COLS.rectoria[i] = RECTORIA_IDX[rectoriaOfDeptoId(COLS.departamento[i])];
 }
 
+/* ============================================================
+   MODALIDAD (derivada de Metodología) — el catálogo crudo de SNIES trae
+   muchas variantes de metodología (presencial, distintos tipos de distancia,
+   híbridas, etc.), demasiadas para un filtro usable. Se homologa a las 3
+   categorías oficiales del tablero (misma regla que bucketModalidadLabel más
+   abajo, duplicada aquí porque este bloque corre antes de que esa función
+   exista) y se expone como columna propia para el panel de filtros, dejando
+   intacta la columna 'metodologia' cruda que ya usa la sección de Modalidad.
+   ============================================================ */
+function bucketModalidadLabelEarly(raw){
+  const s = String(raw).toUpperCase();
+  if (s.includes('VIRTUAL')) return 'Virtual';
+  if (s.includes('DISTANCIA')) return 'Distancia';
+  return 'Presencial';
+}
+const MODALIDAD_DICT = ['Presencial','Distancia','Virtual'];
+const MODALIDAD_IDX = {}; MODALIDAD_DICT.forEach((v,i)=>MODALIDAD_IDX[v]=i);
+DICTS.modalidad = MODALIDAD_DICT;
+const METODOLOGIA_TO_MODALIDAD = DICTS.metodologia.map(m => MODALIDAD_IDX[bucketModalidadLabelEarly(m)]);
+COLS.modalidad = new Int32Array(N);
+for (let i=0;i<N;i++){
+  COLS.modalidad[i] = METODOLOGIA_TO_MODALIDAD[COLS.metodologia[i]];
+}
+
 
 const FILTER_FIELDS = [
   {key:'nivel', label:'Nivel académico'},
   {key:'ano', label:'Año'},
   {key:'semestre', label:'Semestre'},
   {key:'institucion', label:'Institución (IES)'},
-  {key:'metodologia', label:'Metodología'},
+  {key:'modalidad', label:'Modalidad'},
   {key:'sector', label:'Sector IES'},
   {key:'programa', label:'Programa académico'},
   {key:'acreditado', label:'Acreditado'},
@@ -1212,6 +1286,7 @@ function buildYearCompareRows(colKey, metric, bucketFn){
   }).filter(r=> r.mkt2024>0 || r.mkt2025>0 || r.uni2024>0 || r.uni2025>0)
     .sort((a,b)=>b.mkt2025-a.mkt2025);
 }
+window.__UNIMINUTO_APP__.buildYearCompareRows = buildYearCompareRows;
 
 function renderYearCompareTable(tbl, rows, labelHeader, opts){
   const APP = window.__UNIMINUTO_APP__;
@@ -1258,7 +1333,38 @@ function renderYearCompareTable(tbl, rows, labelHeader, opts){
       <td class="num" style="border-left:1px solid var(--line-soft)">${(share25*100).toFixed(1)}%</td>
       <td class="num">${ppArrowHtml(deltaPP)}</td>
     </tr>`;
-  }).join('') + '</tbody>';
+  }).join('') + '</tbody>' + buildTotalsFoot(rows, opts, APP) + '';
+}
+
+/* Fila de totales reutilizable para las tablas MERCADO|UNIMINUTO|PARTICIPACIÓN.
+   Suma cada columna base (no promedia %) y recalcula crecimiento y participación
+   a partir de las sumas, para que la fila cierre matemáticamente con el detalle. */
+function buildTotalsFoot(rows, opts, APP){
+  const { fmtInt, growthPct, growthArrowHtml, ppArrowHtml, safeDiv } = APP;
+  opts = opts || {};
+  const sum = rows.reduce((t,r)=>{
+    t.mkt2024+=r.mkt2024||0; t.mkt2025+=r.mkt2025||0; t.uni2024+=r.uni2024||0; t.uni2025+=r.uni2025||0; return t;
+  }, {mkt2024:0,mkt2025:0,uni2024:0,uni2025:0});
+  const hasGrandTotal = !!opts.grandTotal25;
+  const isFullBreakdown = hasGrandTotal && Math.abs(sum.mkt2025 - opts.grandTotal25) <= Math.max(1, opts.grandTotal25*0.001);
+  const label = isFullBreakdown ? 'TOTAL MERCADO' : (rows.length>1 ? `TOTAL (${rows.length} filas mostradas)` : 'TOTAL');
+  const share24 = sum.mkt2024===0 ? null : safeDiv(sum.uni2024, sum.mkt2024);
+  const share25 = safeDiv(sum.uni2025, sum.mkt2025);
+  const deltaPP = share24===null ? null : (share25-share24)*100;
+  const pctTotal = hasGrandTotal ? safeDiv(sum.mkt2025, opts.grandTotal25)*100 : null;
+  return `<tfoot><tr class="totals-row">
+      <td>${label}</td>
+      ${opts.extraHeader ? `<td></td>` : ''}
+      <td class="num" style="border-left:1px solid var(--line-soft)">${fmtInt(sum.mkt2024)}</td>
+      <td class="num">${fmtInt(sum.mkt2025)}</td>
+      <td class="num">${growthArrowHtml(growthPct(sum.mkt2024,sum.mkt2025))}</td>
+      ${hasGrandTotal ? `<td class="num" style="color:var(--gold)">${pctTotal.toFixed(2)}%</td>` : ''}
+      <td class="num" style="border-left:1px solid var(--line-soft)">${fmtInt(sum.uni2024)}</td>
+      <td class="num">${fmtInt(sum.uni2025)}</td>
+      <td class="num">${growthArrowHtml(growthPct(sum.uni2024,sum.uni2025))}</td>
+      <td class="num" style="border-left:1px solid var(--line-soft)">${(share25*100).toFixed(1)}%</td>
+      <td class="num">${ppArrowHtml(deltaPP)}</td>
+    </tr></tfoot>`;
 }
 
 function renderPresentacion(){
@@ -1884,7 +1990,24 @@ function renderCompetencia(){
           <td class="num">${fmtInt(r.nuevos25)}</td>
           <td class="num">${fmtInt(r.continuos25)}</td>
         </tr>`;
-      }).join('') + '</tbody>';
+      }).join('') + '</tbody>' + (()=>{
+        const sum = shown.reduce((t,r)=>{t.y2024+=r.y2024||0;t.y2025+=r.y2025||0;t.nuevos25+=r.nuevos25||0;t.continuos25+=r.continuos25||0;return t;},{y2024:0,y2025:0,nuevos25:0,continuos25:0});
+        const partial = shown.length < rows.length;
+        const label = partial ? `TOTAL (${shown.length} de ${rows.length} instituciones)` : 'TOTAL MERCADO';
+        const share25 = safeDiv(sum.y2025, mktYear.y2025);
+        const share24 = mktYear.y2024===0 ? null : safeDiv(sum.y2024, mktYear.y2024);
+        const deltaPP = share24===null ? null : (share25-share24)*100;
+        return `<tfoot><tr class="totals-row">
+          <td></td><td>${label}</td>
+          <td class="num">${fmtInt(sum.y2024)}</td>
+          <td class="num">${fmtInt(sum.y2025)}</td>
+          <td class="num">${growthArrowHtml(growthPct(sum.y2024,sum.y2025))}</td>
+          <td class="num">${(share25*100).toFixed(1)}%</td>
+          <td class="num">${ppArrowHtml(deltaPP)}</td>
+          <td class="num">${fmtInt(sum.nuevos25)}</td>
+          <td class="num">${fmtInt(sum.continuos25)}</td>
+        </tr></tfoot>`;
+      })();
     tbl.querySelectorAll('th[data-col]').forEach(th=>{
       th.addEventListener('click', ()=>{
         const col = th.dataset.col;
@@ -2063,7 +2186,10 @@ function renderCompetencia(){
             <td class="num">${fmtInt(r.y2024)}</td><td class="num">${fmtInt(r.y2025)}</td>
             <td class="num">${growthArrowHtml(growthPct(r.y2024,r.y2025))}</td>
             <td class="num">${(share25*100).toFixed(1)}%</td><td class="num">${ppArrowHtml(deltaPP)}</td></tr>`;
-        }).join('') + '</tbody></table></div>';
+        }).join('') + '</tbody><tfoot><tr class="totals-row"><td></td><td>TOTAL MERCADO</td>'
+          + `<td class="num">${fmtInt(mktTot.y2024)}</td><td class="num">${fmtInt(mktTot.y2025)}</td>`
+          + `<td class="num">${growthArrowHtml(growthPct(mktTot.y2024,mktTot.y2025))}</td>`
+          + `<td class="num">100,0%</td><td class="num">—</td></tr></tfoot></table></div>`;
   }
   renderChips();
   renderCarreraResult();
@@ -2332,7 +2458,13 @@ function renderFunnel(){
       return `<tr><td>${r.label}</td><td class="num">${fmtInt(r.inscritos)}</td><td class="num">${fmtInt(r.admitidos)}</td>
         <td class="num">${fmtInt(r.matriculados_pc)}</td><td class="num">${fmtInt(r.matriculados_continuos)}</td><td class="num">${fmtInt(r.graduados)}</td>
         <td class="num">${fmtPct(r.conv)}${tag}</td></tr>`;
-    }).join('') + '</tbody>';
+    }).join('') + '</tbody>' + (()=>{
+      const sum = withConv.reduce((t,r)=>{t.inscritos+=r.inscritos;t.admitidos+=r.admitidos;t.matriculados_pc+=r.matriculados_pc;t.matriculados_continuos+=r.matriculados_continuos;t.graduados+=r.graduados;return t;},{inscritos:0,admitidos:0,matriculados_pc:0,matriculados_continuos:0,graduados:0});
+      const label = withConv.length < agg.size ? `TOTAL (${withConv.length} de ${agg.size})` : 'TOTAL';
+      return `<tfoot><tr class="totals-row"><td>${label}</td><td class="num">${fmtInt(sum.inscritos)}</td><td class="num">${fmtInt(sum.admitidos)}</td>
+        <td class="num">${fmtInt(sum.matriculados_pc)}</td><td class="num">${fmtInt(sum.matriculados_continuos)}</td><td class="num">${fmtInt(sum.graduados)}</td>
+        <td class="num">${fmtPct(safeDiv(sum.matriculados_pc,sum.inscritos))}</td></tr></tfoot>`;
+    })();
 }
 </script>
 
@@ -2376,7 +2508,20 @@ function renderSimpleRankTable(tbl, rows, labelHeader){
       <td class="num">${(r.share25*100).toFixed(2)}%</td>
       <td class="num">${ppArrowHtml(r.deltaPP)}</td>
     </tr>`;
-    }).join('') + '</tbody>';
+    }).join('') + '</tbody>' + (()=>{
+      // share25 y deltaPP de cada fila ya están calculados sobre el mismo total del universo
+      // completo (todas las filas de la dimensión, no solo el Top-N mostrado), así que sumarlos
+      // directamente da la participación y el delta combinados correctos del subconjunto visible.
+      const sum = rows.reduce((t,r)=>{t.y2024+=r.y2024||0;t.y2025+=r.y2025||0;t.deltaNominal+=r.deltaNominal||0;t.share25+=r.share25||0;t.deltaPP+=r.deltaPP||0;return t;},{y2024:0,y2025:0,deltaNominal:0,share25:0,deltaPP:0});
+      return `<tfoot><tr class="totals-row">
+        <td>TOTAL (${rows.length} mostrados)</td>
+        <td class="num">${fmtInt(sum.y2024)}</td>
+        <td class="num">${fmtInt(sum.y2025)}</td>
+        <td class="num"><span style="color:${sum.deltaNominal>0?'var(--teal)':sum.deltaNominal<0?'var(--rose)':'var(--ink-faint)'}">${sum.deltaNominal>0?'▲ ':sum.deltaNominal<0?'▼ ':'→ '}${fmtSignedInt(sum.deltaNominal)}</span></td>
+        <td class="num">${(sum.share25*100).toFixed(2)}%</td>
+        <td class="num">${ppArrowHtml(sum.deltaPP)}</td>
+      </tr></tfoot>`;
+    })();
 }
 
 function growthTileColor(g){
