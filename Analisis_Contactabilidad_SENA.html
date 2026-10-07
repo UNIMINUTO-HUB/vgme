@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reloj de matrícula · Diagnóstico de contactabilidad SENA 2025–2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1220; --panel:#111A29; --panel2:#0E1624; --line:#1E2A40; --line2:#2A3A56;
+  --text:#E6ECF4; --muted:#8494AC; --dim:#5E708C;
+  --gold:#E8B44A;   /* conversión / matrícula */
+  --ice:#56C8E0;    /* volumen / leads */
+  --rose:#D9556B;   /* pérdida */
+  --jade:#4FBF9A;   /* velocidad / ganancia */
+  --violet:#9B8CE0; /* modelo */
+  --r:3px;
+  --display:'Familjen Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --body:'Instrument Sans',ui-sans-serif,system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:var(--text);
+  font-family:var(--body);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 78% -8%,rgba(86,200,224,.09),transparent 46%),
+                   radial-gradient(circle at 4% 102%,rgba(232,180,74,.055),transparent 42%);
+  background-attachment:fixed;
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- estructura ---------- */
+.wrap{display:grid;grid-template-columns:232px minmax(0,1fr);max-width:1500px;margin:0 auto;gap:0}
+nav{position:sticky;top:0;height:100vh;padding:32px 20px 32px 28px;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+nav .brand{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;line-height:1.25;margin-bottom:4px}
+nav .brandsub{font-family:var(--mono);font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.13em;margin-bottom:26px}
+nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--muted);font-size:12.5px;
+      padding:5px 8px 5px 0;border-radius:var(--r);transition:color .15s}
+nav a b{font-family:var(--mono);font-size:9.5px;color:var(--dim);font-weight:500;min-width:15px;padding-top:1px}
+nav a:hover{color:var(--text)}
+nav a.on{color:var(--gold)} nav a.on b{color:var(--gold)}
+nav .navfoot{margin-top:auto;padding-top:24px;font-family:var(--mono);font-size:9.5px;color:var(--dim);line-height:1.7;border-top:1px solid var(--line)}
+main{padding:0 46px 120px;min-width:0}
+
+section{padding:64px 0 8px;border-top:1px solid var(--line);margin-top:44px}
+section:first-of-type{border-top:none;margin-top:0}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.eyebrow span{color:var(--gold)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,5.4vw,68px);line-height:.98;letter-spacing:-.035em;margin:0 0 20px}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(25px,2.9vw,36px);line-height:1.08;letter-spacing:-.025em;margin:0 0 12px}
+h3{font-family:var(--display);font-weight:600;font-size:16.5px;letter-spacing:-.01em;margin:0 0 8px}
+.lead{font-size:16.5px;color:#BFCBDC;max-width:74ch;margin:0 0 26px}
+p{max-width:78ch}
+.sub{color:var(--muted);font-size:13.5px;max-width:80ch}
+.mono{font-family:var(--mono)}
+em.hl{font-style:normal;color:var(--gold);font-weight:500}
+em.bad{font-style:normal;color:var(--rose);font-weight:500}
+em.good{font-style:normal;color:var(--jade);font-weight:500}
+
+/* ---------- hero ---------- */
+header.hero{padding:70px 0 20px}
+.tag{display:inline-flex;gap:8px;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+     text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);border-radius:100px;padding:5px 13px;margin-bottom:26px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--jade);box-shadow:0 0 8px var(--jade)}
+.thesis{font-family:var(--display);font-size:clamp(19px,2.1vw,25px);line-height:1.35;letter-spacing:-.018em;
+        font-weight:400;color:#CDD8E7;max-width:30ch;border-left:2px solid var(--gold);padding-left:18px;margin:0 0 8px}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:1px;background:var(--line);
+      border:1px solid var(--line);border-radius:var(--r);margin:38px 0 10px;overflow:hidden}
+.kpi{background:var(--panel);padding:17px 18px 15px}
+.kpi .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;line-height:1.4}
+.kpi .v{font-family:var(--display);font-weight:600;font-size:29px;letter-spacing:-.03em;line-height:1}
+.kpi .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:6px}
+.kpi.g .v{color:var(--gold)} .kpi.i .v{color:var(--ice)} .kpi.r .v{color:var(--rose)} .kpi.j .v{color:var(--jade)}
+
+/* ---------- cards ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px}
+.card.tight{padding:16px 18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-a{display:grid;grid-template-columns:1.45fr 1fr;gap:16px}
+.grid-b{display:grid;grid-template-columns:1fr 1.3fr;gap:16px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.ctitle{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+
+/* ---------- insight ---------- */
+.finding{border:1px solid var(--line2);border-left:2px solid var(--gold);border-radius:var(--r);
+         background:linear-gradient(90deg,rgba(232,180,74,.06),transparent 55%);padding:18px 22px;margin:22px 0}
+.finding.rose{border-left-color:var(--rose);background:linear-gradient(90deg,rgba(217,85,107,.07),transparent 55%)}
+.finding.jade{border-left-color:var(--jade);background:linear-gradient(90deg,rgba(79,191,154,.06),transparent 55%)}
+.finding .fl{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.finding p{margin:0;font-size:14.5px}
+
+/* ---------- tablas ---------- */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+   text-align:right;padding:0 9px 9px;border-bottom:1px solid var(--line2);font-weight:500;white-space:nowrap}
+th:first-child{text-align:left;padding-left:0}
+td{padding:8px 9px;border-bottom:1px solid rgba(30,42,64,.6);text-align:right;font-family:var(--mono);font-size:12px}
+td:first-child{text-align:left;font-family:var(--body);font-size:13px;padding-left:0}
+tbody tr:hover{background:rgba(86,200,224,.035)}
+th.s{cursor:pointer;user-select:none} th.s:hover{color:var(--text)}
+.bar-cell{position:relative}
+.bar-cell i{position:absolute;left:0;top:50%;transform:translateY(-50%);height:15px;background:rgba(232,180,74,.16);border-radius:1px;z-index:0}
+.bar-cell span{position:relative;z-index:1}
+
+/* ---------- controles ---------- */
+label.f{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+select,input[type=number],input[type=text]{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line2);
+  border-radius:var(--r);padding:8px 10px;font-family:var(--body);font-size:13.5px}
+select:focus,input:focus,button:focus-visible{outline:2px solid var(--ice);outline-offset:1px}
+input[type=range]{width:100%;accent-color:var(--gold);background:transparent}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;background:var(--panel2);border:1px solid var(--line2);
+      color:var(--muted);padding:5px 11px;border-radius:100px;cursor:pointer;transition:.15s}
+.chip:hover{color:var(--text);border-color:var(--dim)}
+.chip.on{background:rgba(232,180,74,.13);border-color:var(--gold);color:var(--gold)}
+button.act{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:transparent;
+  border:1px solid var(--line2);color:var(--muted);padding:8px 14px;border-radius:var(--r);cursor:pointer}
+button.act:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---------- svg ---------- */
+svg{display:block;width:100%;height:auto;overflow:visible}
+.gl{stroke:var(--line);stroke-width:1}
+.ax{font-family:var(--mono);font-size:9.5px;fill:var(--dim)}
+.axb{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+.vlabel{font-family:var(--mono);font-size:10px;fill:var(--text)}
+
+/* ---------- resultado priorizador ---------- */
+.gauge{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.gnum{font-family:var(--display);font-weight:700;font-size:60px;letter-spacing:-.045em;line-height:.9}
+.tier{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:100px;display:inline-block}
+.playbook{margin:16px 0 0;padding:0;list-style:none;font-size:13.5px}
+.playbook li{padding:7px 0 7px 20px;border-bottom:1px solid rgba(30,42,64,.7);position:relative}
+.playbook li:before{content:'';position:absolute;left:2px;top:15px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.playbook li:last-child{border-bottom:none}
+
+/* ---------- heatmap ---------- */
+.hm{display:grid;gap:2px;font-family:var(--mono);font-size:10.5px}
+.hm .hc{padding:9px 4px;text-align:center;border-radius:1px;position:relative;cursor:default}
+.hm .hh{color:var(--dim);font-size:9.5px;letter-spacing:.06em;text-align:center;padding-bottom:4px}
+.hm .hr{color:var(--muted);text-align:left;padding-right:10px;font-family:var(--body);font-size:12px;white-space:nowrap;align-self:center}
+
+/* ---------- plan ---------- */
+.plan{counter-reset:p;display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.pitem{background:var(--panel);padding:20px 24px;display:grid;grid-template-columns:34px 1fr 128px;gap:18px;align-items:start}
+.pitem .pn{font-family:var(--mono);font-size:11px;color:var(--gold);padding-top:3px}
+.pitem .pm{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;line-height:1.6}
+.pitem h3{margin-bottom:5px}
+.pitem p{margin:0;font-size:13.5px;color:#B6C3D6}
+
+.foot{margin-top:70px;padding-top:26px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.9}
+.tip{border:1px solid var(--line2);background:var(--panel2);border-radius:var(--r);padding:12px 14px;font-size:12.5px;color:var(--muted)}
+.tip b{color:var(--text);font-weight:500}
+
+@media(max-width:1080px){
+  .wrap{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);flex-direction:row;flex-wrap:wrap;align-items:center;padding:16px 20px}
+  nav .brand,nav .brandsub{width:100%;margin-bottom:6px}
+  nav .navfoot{display:none}
+  main{padding:0 20px 80px}
+  .grid2,.grid3,.grid-a,.grid-b{grid-template-columns:1fr}
+  .pitem{grid-template-columns:26px 1fr}
+  .pitem .pm{grid-column:2;text-align:left}
+}
+</style>
+<style id="vgme-auth-lock">
+html{background:#061a3a!important}
+html.vgme-auth-pending{visibility:hidden!important}
+</style>
+<script>
+(function(){
+  // En vista local (file://) permitir la previsualizacion sin depender de auth-vgme.js.
+  if(location.protocol==='file:'){
+    document.documentElement.classList.remove('vgme-auth-pending');
+    document.documentElement.style.setProperty('visibility','visible','important');
+    return;
+  }
+  // En GitHub / servidor se conserva el bloqueo de acceso.
+  document.documentElement.classList.add('vgme-auth-pending');
+  var s=document.createElement('script');
+  s.src='./auth-vgme.js';
+  s.defer=true;
+  s.onload=function(){
+    // auth-vgme.js administra el acceso; si por algo no quita la clase, la quitamos
+    // igual al terminar de cargar para evitar pantallas bloqueadas.
+    setTimeout(function(){document.documentElement.classList.remove('vgme-auth-pending')},50);
+  };
+  s.onerror=function(){
+    // Evita una pantalla azul permanente si el archivo de auth no esta disponible.
+    document.documentElement.classList.remove('vgme-auth-pending');
+  };
+  document.head.appendChild(s);
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="brand">El reloj de la matrícula</div>
+  <div class="brandsub">Base SENA · 2024–2026</div>
+  <a href="#s0" data-s="s0"><b>00</b>Lectura ejecutiva</a>
+  <a href="#s1" data-s="s1"><b>01</b>El embudo real</a>
+  <a href="#s2" data-s="s2"><b>02</b>El cierre financiero</a>
+  <a href="#s3" data-s="s3"><b>03</b>El benchmark interno</a>
+  <a href="#s4" data-s="s4"><b>04</b>La ventana crítica</a>
+  <a href="#s5" data-s="s5"><b>05</b>El denominador</a>
+  <a href="#s6" data-s="s6"><b>06</b>¿Mezcla o gestión?</a>
+  <a href="#s7" data-s="s7"><b>07</b>Dónde está la matrícula</a>
+  <a href="#s8" data-s="s8"><b>08</b>La bolsa dormida</a>
+  <a href="#s9" data-s="s9"><b>09</b>Residual de ejecución</a>
+  <a href="#s10" data-s="s10"><b>10</b>Canales de atracción</a>
+  <a href="#s11" data-s="s11"><b>11</b>Priorizador de bases</a>
+  <a href="#s12" data-s="s12"><b>12</b>Simulador de impacto</a>
+  <a href="#s13" data-s="s13"><b>13</b>Libro de oportunidad</a>
+  <a href="#s14" data-s="s14"><b>14</b>Lo que no sobrevivió</a>
+  <a href="#s15" data-s="s15"><b>15</b>Calidad del dato</a>
+  <a href="#s16" data-s="s16"><b>16</b>Plan de decisión</a>
+  <div class="navfoot"><span id="fmeta"></span></div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="s0">
+  <div class="tag"><span class="dot"></span> Diagnóstico de oportunidad de matrícula</div>
+  <h1>Hay 1.468 matrículas<br>sobre la mesa.</h1>
+  <p class="thesis" id="thesis"></p>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card" style="margin-top:34px">
+    <div class="ctitle">De dónde salen — cada palanca cuantificada en matrículas, no en puntos porcentuales</div>
+    <div id="waterfall"></div>
+    <p class="sub" style="margin-top:14px">Suma bruta de 2.259. La estimación neta descuenta 35% por solapamiento entre palancas: un lead que se rescata por SLA no se puede volver a contar en el cierre financiero. El detalle metodológico de cada cifra está en la sección 13, y las tres hipótesis que probé y <b style="color:var(--text);font-weight:500">no</b> resistieron el análisis están en la 14.</p>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="ctitle">Curva de cierre — qué porcentaje de las matrículas ya ocurrió al día N</div>
+    <div id="clock"></div>
+  </div>
+</header>
+
+<!-- ============ 01 EMBUDO ============ -->
+<section id="s1">
+  <div class="eyebrow"><span>01</span> El embudo</div>
+  <h2>El embudo estándar dice que el cierre está casi perfecto.<br>Es una ilusión de denominador.</h2>
+  <p class="lead">Con la definición correcta —Lead, Inscrito, Admitido, Matriculado, dejando las etapas de salida por fuera de la cadena— el paso de Admitido a Matriculado convierte al 91,7%. Leído así, el mensaje al comité sería «el cierre funciona, hay que trabajar arriba del embudo». <em class="bad">Es exactamente al revés</em>, y la razón está en cómo se reclasifica al que se cae.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Embudo acumulado — cada barra es quien alcanzó esa etapa o una posterior</div>
+      <div id="funnelChart"></div>
+    </div>
+    <div class="stack">
+      <div class="card tight">
+        <div class="ctitle">Etapa registrada hoy</div>
+        <div id="etapaTable"></div>
+      </div>
+      <div class="card tight" id="funnelTable"></div>
+    </div>
+  </div>
+
+  <div class="finding rose">
+    <div class="fl">La trampa del 91,7%</div>
+    <p id="trampaTxt"></p>
+  </div>
+
+  <div class="grid-b" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Anatomía real de los 6.036 que no llegan a Admitido — según hasta dónde alcanzaron a llegar</div>
+      <div id="anatChart"></div>
+      <p class="sub" style="margin-top:12px">Reconstruido cruzando la etapa con el sub estado, que sí conserva la huella de la profundidad alcanzada aunque la etapa ya se haya reclasificado.</p>
+    </div>
+    <div class="stack">
+      <div class="card tight">
+        <div class="ctitle">Dónde están hoy los 2.901 que no pagaron su liquidación</div>
+        <div id="nopagoTable"></div>
+      </div>
+      <div class="finding jade" style="margin:0">
+        <div class="fl">Consecuencia para tu reportería</div>
+        <p>Hay que reportar dos cierres distintos y nunca uno solo. <em class="good">Cierre sobre pipeline vivo</em> (Admitido → Matriculado, 91,7%) sirve para proyectar la matrícula de las próximas semanas. <em class="good">Cierre sobre liquidaciones emitidas</em> (64,8%) sirve para medir la gestión de cobro, y es el único que revela los 2.901 leads que se caen con recibo en la mano. Hoy solo existe el primero, y por eso la mayor palanca del negocio es invisible en el tablero.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 CIERRE FINANCIERO ============ -->
+<section id="s2">
+  <div class="eyebrow"><span>02</span> La mayor palanca individual</div>
+  <h2>Tolima Huila cobra el 80,7% de sus liquidaciones.<br>Bogotá el 60,5%. Mismo recibo.</h2>
+  <p class="lead">8.232 leads llegaron a liquidación y 5.331 pagaron: 64,8%. Pero ese promedio esconde un rango de 23 puntos entre rectorías. Si cada sede llegara solo al percentil 75 del grupo — 70,1%, que ya alcanzan tres sedes — son <em class="hl">543 matrículas</em> sin un peso más de inversión en atracción.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Tasa de pago sobre liquidaciones emitidas, por rectoría</div>
+      <div id="pagoChart"></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Oportunidad al percentil 75</div>
+      <div id="pagoTable"></div>
+    </div>
+  </div>
+
+  <div class="grid-b" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">La prueba de que es proceso y no economía</div>
+      <div id="corrChart"></div>
+      <p class="sub" style="margin-top:12px">Correlación de <b style="color:var(--text);font-weight:500">0,68</b> entre la capacidad de una sede para llevar leads a liquidación y su capacidad para cobrarlos. Si el problema fuera capacidad de pago del estudiante, las dos cosas serían independientes: llevar a alguien al recibo no lo haría más solvente. Que se muevan juntas dice que es una sola competencia de cierre, distribuida de forma muy desigual.</p>
+    </div>
+    <div class="stack">
+      <div class="card tight">
+        <div class="ctitle">Tasa de pago por sub estado de liquidación</div>
+        <div id="pagoSub"></div>
+      </div>
+      <div class="finding" style="margin:0">
+        <div class="fl">El caso terminal</div>
+        <p>«No tiene capacidad de pago» son 300 leads y pagan el <em class="bad">1,7%</em>. Ese sí es un no definitivo y hay que dejarlo salir rápido de la cola: hoy consume gestión igual que los demás. En el otro extremo, «Cesantías / Prima» paga al 80,3% y «Va a pagar de contado» al 77,1%: son colas que solo necesitan recordatorio, no venta.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="ctitle">«Recibo próximo a vencer» — 3.264 liquidaciones, 1.230 sin pagar — tasa de pago por edad</div>
+    <div id="reciboChart"></div>
+    <p class="sub" style="margin-top:12px">La edad predice el pago casi tan bien como predice la conversión: de 72,6% en menores de 18 a 49,4% en el rango 36–45. El adulto trabajador llega más lejos en el embudo y paga menos. Eso apunta a que la oferta financiera —plazos, convenios de nómina, cesantías— está diseñada para el perfil joven y no para el que financia con su salario.</p>
+  </div>
+</section>
+
+<!-- ============ 03 BENCHMARK INTERNO ============ -->
+<section id="s3">
+  <div class="eyebrow"><span>03</span> El hallazgo central</div>
+  <h2>Contaduría Pública convierte al 68,2% en una escuela<br>y al 54,8% en otra. Es el mismo programa.</h2>
+  <p class="lead">Este es el hallazgo que cambia la conversación, porque no requiere presupuesto ni hipótesis: el manual que funciona ya existe adentro. Comparé los tres programas de mayor volumen entre las escuelas que los ofrecen. La brecha es de 13 a 17 puntos, sobrevive al control por sede, modalidad, edad y canal, y su mecanismo es visible en dos indicadores.</p>
+
+  <div id="benchCards"></div>
+
+  <div class="finding jade">
+    <div class="fl">El mecanismo, no la correlación</div>
+    <p>La brecha no está en llevar gente a la liquidación —VA e IE mandan a liquidación proporciones parecidas, incluso IE manda más en Seguridad y Salud. Está en dos cosas concretas: <em class="good">contacto el mismo día</em> (VA 84–85%, IE 68–70%) y <em class="good">tasa de cobro</em> (VA 64–76%, IE 53–63%). Son las dos únicas variables donde la diferencia es sistemática en los tres programas. Eso convierte «mejorar la conversión» en dos rutinas transferibles y auditables.</p>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="ctitle">Las diez escuelas — velocidad, profundidad de embudo y cobro</div>
+    <div id="escTable"></div>
+    <p class="sub" style="margin-top:12px">Ordenadas por conversión. La columna de contacto el mismo día y la de tasa de pago se mueven casi en el mismo orden que la conversión; la de «llega a liquidación» no. Volumen mínimo de 150 registros para entrar en la tabla.</p>
+  </div>
+</section>
+<!-- ============ 04 VENTANA ============ -->
+<section id="s4">
+  <div class="eyebrow"><span>04</span> Velocidad</div>
+  <h2>El contacto el mismo día vale 8,4 puntos, y es la única variable<br>de la lista que depende de ti.</h2>
+  <p class="lead">53% de las matrículas se cierra en 14 días y 79% en 30. De 15.617 registros, 12.113 pasan a inscrito el mismo día y convierten al 58,1%; los 3.504 que tardan al menos un día convierten al 49,7%. El efecto llega a 12,2 puntos en el grupo de 18 a 21 años, que es el más grande de la base.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Conversión por tiempo entre creación de la solicitud e inscripción</div>
+      <div id="velChart"></div>
+      <p class="sub" style="margin-top:10px">Las dos barras de la derecha están atenuadas: 31–60 y más de 60 días suman 192 registros y su lectura no es estable.</p>
+    </div>
+    <div class="card">
+      <div class="ctitle">Brecha de velocidad por rectoría (puntos porcentuales)</div>
+      <div id="sedeGap"></div>
+      <p class="sub" style="margin-top:12px">Centro Occidente y Antioquia son las que más ganan al contactar el mismo día. Caribe casi no reacciona: ahí el cuello de botella está en el cobro, como muestra la sección 02.</p>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Cuándo llega el lead frente a la ventana real de matrícula</div>
+      <div id="calChart"></div>
+      <p class="sub" style="margin-top:10px">Derivé el inicio de cada ventana del percentil 10 de las fechas reales de matrícula por periodo, no del calendario nominal.</p>
+    </div>
+    <div class="card">
+      <div class="ctitle">Día de la semana en que entra la solicitud</div>
+      <div id="dowChart"></div>
+      <p class="sub" style="margin-top:10px">El sábado convierte mejor que cualquier día hábil (59,2%) sobre 1.021 registros y hoy no tiene turno formal. El domingo es el único día malo (40,7%) con 108 registros: señal débil.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fl">Lo que el calendario sí dice y lo que no</div>
+    <p>El lead que llega tarde —después de que abrió la ventana de matrícula— convierte al 58,7% y supera a su propio segmento por 6,5 puntos: es demanda de alta intención, ya decidió. El que llega con 30 a 60 días de anticipación convierte al 49,0%, pero <em class="hl">exactamente lo que su segmento predice</em>. Eso importa: el lead temprano no se está echando a perder, simplemente pertenece a perfiles menos convertibles. No hay una bolsa que rescatar ahí, y por eso no aparece en el libro de oportunidad. Lo que sí se desprende es que pautar más temprano no compra mejores leads, compra más leads del mismo tipo.</p>
+  </div>
+</section>
+
+<!-- ============ 05 DENOMINADOR ============ -->
+<section id="s5">
+  <div class="eyebrow"><span>05</span> El denominador</div>
+  <h2>Contar cada registro como un lead distinto<br>te resta 7,7 puntos de lectura.</h2>
+  <p class="lead">El 22,8% de los registros corresponde a personas que ya estaban en la base y solo uno de sus registros puede terminar en matrícula. Medido por persona la conversión es 63,9%, no 56,2%. Y el duplicado no es ruido de sistema: de las 1.632 personas con más de una solicitud, 968 cambiaron de periodo y solo 326 de programa. No comparan alternativas, aplazan.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Conversión según cómo se cuente</div>
+      <div id="dupChart"></div>
+    </div>
+    <div class="stack">
+      <div class="card tight" id="dupBox"></div>
+      <div class="finding rose" style="margin:0">
+        <div class="fl">Lo que esconde el duplicado</div>
+        <p id="dupMotivo"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding jade">
+    <div class="fl">Decisión que habilita</div>
+    <p>Publicar dos métricas separadas con criterio de uso explícito: <em class="good">conversión por persona</em> para medir calidad de base y proceso —la que va al comité— y <em class="hl">conversión por solicitud</em> para dimensionar carga operativa y dotación. Hoy hay un solo indicador respondiendo dos preguntas distintas, y en esa confusión el equipo comercial carga con una penalización que no le corresponde.</p>
+  </div>
+</section>
+
+<!-- ============ 06 MEZCLA O GESTIÓN ============ -->
+<section id="s6">
+  <div class="eyebrow"><span>06</span> Rigor</div>
+  <h2>2026 mejoró 12,9 puntos. El 88% es gestión real,<br>no recomposición de la base.</h2>
+  <p class="lead">Antes te afirmé que 2026 va mejor que 2025. Era una afirmación sin prueba, y era vulnerable: entre esos dos semestres la base se recompuso brutalmente —la escuela IE pasó de 46,3% a 10,3% del volumen y VA de 28,9% a 65,2%. Un escéptico podía decir que la mejora es aritmética. Hice la descomposición para responderle.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Descomposición de la variación 2025-S1 → 2026-S1 (+12,9 pp)</div>
+      <div id="decChart"></div>
+      <p class="sub" style="margin-top:12px">Método de Oaxaca: el efecto mezcla aplica los pesos nuevos a las tasas viejas; el efecto desempeño aplica las tasas nuevas a los pesos nuevos. A mayor granularidad, el efecto mezcla se desvanece — señal de que la recomposición por escuela venía acompañada de cambios de sede, modalidad y edad que se compensan entre sí.</p>
+    </div>
+    <div class="card">
+      <div class="ctitle">Recomposición del portafolio por escuela</div>
+      <div id="mixTable"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="ctitle" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <span>Cohorte mensual de creación del lead</span>
+      <span class="chips" id="cohToggle">
+        <span class="chip on" data-m="conv">Conversión final</span>
+        <span class="chip" data-m="c15">Conversión a 15 días</span>
+        <span class="chip" data-m="c30">Conversión a 30 días</span>
+        <span class="chip" data-m="sd">Contacto mismo día</span>
+      </span>
+    </div>
+    <div id="cohChart"></div>
+    <p class="sub" style="margin-top:12px">Las barras con trama diagonal son cohortes con menos de 90 días de historia: su conversión final todavía va a subir. Leerlas como caída de desempeño es el error más común de este tipo de reporte, y es la razón de usar la conversión a 15 días como indicador de gestión.</p>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Mezcla de alto valor — presencial o jornada nocturna, % del volumen</div>
+      <div id="valorChart"></div>
+    </div>
+    <div class="finding rose" style="margin:0">
+      <div class="fl">La tensión con la prima media</div>
+      <p>Comparando semestres equivalentes, la mezcla de alto valor está <em class="hl">estable</em>: 29,3% en 2025-S1 contra 28,9% en 2026-S1. La caída real ocurrió antes, entre 2024-S2 (36,7%) y 2025-S1, y no se ha recuperado. Es decir: la mejora de conversión de 2026 no se compró degradando el mix, pero el mix ya venía degradado de una decisión anterior. Traducido a tu objetivo de prima media, los 7,4 puntos de participación presencial y nocturna que se perdieron en 2025 siguen perdidos, y ninguna de las palancas de este diagnóstico los recupera: eso es portafolio y precio, no gestión comercial. Es una conversación distinta y hay que abrirla por separado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 CONCENTRACIÓN ============ -->
+<section id="s7">
+  <div class="eyebrow"><span>07</span> Concentración</div>
+  <h2>Bogotá concentra el 60% de la oportunidad total.</h2>
+  <p class="lead">Medir brechas en puntos porcentuales engaña: una celda pequeña con 25 puntos de brecha vale menos que una grande con 12. Reconstruí la tabla en matrículas absolutas, usando como referencia el percentil 80 de las sedes comparables para el mismo par modalidad-edad. Solo las celdas con 80 registros o más.</p>
+
+  <div class="card">
+    <div class="ctitle">Celdas ordenadas por matrículas sobre la mesa</div>
+    <div id="oportTable"></div>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Conversión por rectoría y rango de edad — el cursor muestra el volumen</div>
+      <div id="heat"></div>
+    </div>
+    <div class="stack">
+      <div class="card tight">
+        <div class="ctitle">Edad: conversión y efecto de la velocidad</div>
+        <div id="edadChart"></div>
+      </div>
+      <div class="finding" style="margin:0">
+        <div class="fl">El patrón que aparece al cruzar columnas</div>
+        <p>Los segmentos de mejor rendimiento contactan más rápido (85–89% mismo día contra 70–80%) y tienen menos duplicidad (8–18% contra 21–39%). <em class="hl">La duplicidad es un síntoma de sede, no un defecto de sistema.</em> Bogotá concentra simultáneamente la mayor duplicidad, la mayor tasa de no contacto, la menor tasa de cobro y la menor conversión: un problema de capacidad y asignación, no de calidad de la base que recibe.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Rectorías</div>
+      <div id="sedeTable"></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Programas con 100 registros o más</div>
+      <div id="progTable"></div>
+    </div>
+  </div>
+</section>
+<!-- ============ 08 BOLSA DORMIDA ============ -->
+<section id="s8">
+  <div class="eyebrow"><span>08</span> Demanda que ya es tuya</div>
+  <h2>1.500 personas volvieron solas a aplicar.<br>El 58,5% se matriculó. 4.315 nunca volvieron.</h2>
+  <p class="lead">Reconstruí la secuencia de solicitudes por documento. De las 5.815 personas cuya primera solicitud no terminó en matrícula, 1.500 volvieron a aplicar por su cuenta — sin campaña, sin gestión dirigida — y de esas, 878 matricularon. Una tasa de recaptura del 58,5%, prácticamente igual a la conversión de un lead nuevo, pero con costo de adquisición cero.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Qué pasó con las 5.815 personas que no matricularon en su primer intento</div>
+      <div id="reactChart"></div>
+      <div class="grid3" style="margin-top:18px">
+        <div class="tip"><b>Recaptura espontánea 58,5%.</b> El que vuelve solo convierte como un lead nuevo. La demanda no se destruye, se aplaza.</div>
+        <div class="tip"><b>Mediana de retorno: 47 días.</b> El percentil 75 está en 120. La ventana de reactivación es un trimestre, no un año.</div>
+        <div class="tip"><b>4.315 nunca volvieron.</b> Ninguna campaña las tocó. Es la bolsa más grande y más barata del diagnóstico.</div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card tight">
+        <div class="ctitle">La bolsa dormida por fase en que murió</div>
+        <div id="dormFase"></div>
+      </div>
+      <div class="card tight">
+        <div class="ctitle">Antigüedad de la bolsa dormida</div>
+        <div id="dormEdad"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding jade">
+    <div class="fl">El subconjunto que hay que atacar primero</div>
+    <p>De las 4.315 personas dormidas, <em class="good">1.910 murieron en la fase de liquidación</em>. Ese perfil ya eligió programa, ya pasó admisión, ya tuvo un recibo en la mano: lo único que faltó fue cerrar la plata. Es el público más cualificado que existe para una campaña de recuperación con oferta financiera, y hoy no recibe ninguna. A eso se suman 151 personas con señal explícita registrada de querer volver —interés en el siguiente periodo, en otra sede o en otro programa— que están literalmente pidiendo ser llamadas.</p>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="ctitle">Intervalo entre solicitudes de la misma persona y conversión del reintento</div>
+    <div id="gapChart"></div>
+    <p class="sub" style="margin-top:12px">El reintento convierte entre 42% y 61% sin importar mucho cuánto tardó. Lo que decide no es la frescura del lead sino que exista un segundo intento. Eso es exactamente lo contrario del supuesto que rige hoy la cola de trabajo, donde el lead viejo se descarta.</p>
+  </div>
+</section>
+
+<!-- ============ 09 RESIDUAL ============ -->
+<section id="s9">
+  <div class="eyebrow"><span>09</span> Ejecución</div>
+  <h2>Ya no comparo asesores por conversión.<br>Los comparo contra lo que su base predecía.</h2>
+  <p class="lead">Medir al asesor por conversión pura premia a quien recibe buena base. Puntué cada lead con el modelo de propensión —sede, modalidad, edad, canal y duplicidad, sin usar velocidad ni identidad del asesor— y sumé el esperado de cada cartera. El residual es la diferencia entre lo que produjo y lo que su base predecía: matrículas atribuibles a la gestión.</p>
+
+  <div class="grid-a">
+    <div class="card">
+      <div class="ctitle">Cada punto es un asesor con 30 o más registros — velocidad frente a residual</div>
+      <div id="resScatter"></div>
+    </div>
+    <div class="stack">
+      <div class="card tight">
+        <div class="ctitle">Cuartiles de desempeño ajustado</div>
+        <div id="resQuint"></div>
+      </div>
+      <div class="card tight" id="resBox"></div>
+    </div>
+  </div>
+
+  <div class="finding rose">
+    <div class="fl">El número que cambia la conversación de incentivos</div>
+    <p>El cuartil inferior —35 asesores, 3.945 leads— produjo <em class="bad">201 matrículas menos</em> de lo que su propia base predecía. El cuartil superior produjo 408 más. Un solo asesor con 321 registros gestionados quedó 57 matrículas por debajo de lo esperado: es el equivalente a perder una cohorte completa de un programa pequeño, y hoy no aparece en ningún reporte porque su conversión bruta del 31% se explica diciendo que le tocó base difícil. El residual dice que no: su base predecía 49%.</p>
+  </div>
+
+  <div class="grid-b" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Rendimiento según cuántas solicitudes gestiona el usuario en total</div>
+      <div id="gestorChart"></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Fragmentación de la operación</div>
+      <div id="gestorTable"></div>
+      <p class="sub" style="margin-top:12px">1.263 de los 1.558 usuarios que crearon solicitudes registraron menos de 5 en 22 meses. Esos 1.380 leads convierten al 45,3% cuando su perfil predecía 50,0%, y solo el <b style="color:var(--text);font-weight:500">43% recibe contacto el mismo día</b> contra 84–86% de los gestores regulares. No es un equipo comercial: son accesos ocasionales que no se pueden entrenar ni incentivar, tocando el 9% de la base.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fl">Diseño de incentivos que se desprende de esto</div>
+    <p>Tres componentes con funciones distintas. <em class="hl">Residual sobre propensión esperada</em> como base variable: neutraliza la lotería del lote y es el único indicador que un asesor no puede ganar por asignación. <em class="hl">Cumplimiento de SLA de 24 horas</em> como compuerta, no como bono: sin el umbral no se liquida, porque es la conducta que produce el residual. <em class="hl">Cierre sobre liquidaciones emitidas</em> como segundo variable, con peso propio, porque hoy nadie es dueño de los 2.901 leads que se caen en el recibo. La calidad de registro —origen, sub estado, cierre de caso— entra como requisito de elegibilidad, no como puntos: si no está el dato, no hay nada que liquidar.</p>
+  </div>
+</section>
+
+<!-- ============ 10 CANALES ============ -->
+<section id="s10">
+  <div class="eyebrow"><span>10</span> Atracción</div>
+  <h2>La recomendación es el canal más grande y el segundo más efectivo.<br>Y no está gestionada como canal.</h2>
+  <p class="lead">4.432 registros llegan por recomendación —28% del volumen— y convierten al 61,2%, once puntos sobre búsqueda en Google. Los canales de territorio de bajo volumen —volante, radio, visita empresarial, oficina móvil— están entre los mejores en efectividad y son los más pequeños en volumen.</p>
+
+  <div class="card">
+    <div class="ctitle">Volumen y efectividad por canal declarado — el tamaño del punto es el volumen</div>
+    <div id="canalChart"></div>
+  </div>
+
+  <div class="grid-b" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Detalle por canal</div>
+      <div id="canalTable"></div>
+    </div>
+    <div class="stack">
+      <div class="finding jade" style="margin:0">
+        <div class="fl">Palanca de volumen y de prima media a la vez</div>
+        <p>Un programa de referidos formal sobre los 8.776 matriculados actuales, con código y pago al referidor, ataca el canal más efectivo y más barato del histórico. Y tiene una ventaja que ningún otro canal ofrece: el referidor autoselecciona perfiles parecidos al suyo, así que si se prioriza el referido de matriculados en presencial y nocturna, es la única palanca del diagnóstico que puede mover la prima media hacia arriba en vez de hacia abajo. Hoy la recomendación ocurre sola, sin código, sin atribución y sin incentivo.</p>
+      </div>
+      <div class="finding rose" style="margin:0">
+        <div class="fl">El agujero de atribución</div>
+        <p>2.628 registros —16,8%— declaran canal «Otro» y convierten al 49,7%, el peor desempeño de la tabla. A eso se suma que «Origen del candidato» está vacío en 62,7% de la base. Sin cerrar esa brecha no existe costo por matrícula por canal, que es la entrada obligatoria de cualquier control presupuestal de mercadeo. Es la única sección de este diagnóstico donde no puedo darte un número: no está en el dato.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 11 PRIORIZADOR ============ -->
+<section id="s11">
+  <div class="eyebrow"><span>11</span> Herramienta</div>
+  <h2>Priorizador de bases.</h2>
+  <p class="lead">Modelo de propensión con las variables que ya vienen en la base el día que llega. Entrenado con 2024–2025 y validado contra 2026: AUC 0,675, y separa la base en cinco tramos que van del 27,8% al 76,0% de conversión. No predice individuos, ordena colas de trabajo.</p>
+
+  <div class="grid-b">
+    <div class="card">
+      <div class="ctitle">Atributos del lead</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div><label class="f" for="pSede">Rectoría</label><select id="pSede"></select></div>
+        <div><label class="f" for="pMod">Modalidad</label><select id="pMod"></select></div>
+        <div><label class="f" for="pEdad">Rango de edad</label><select id="pEdad"></select></div>
+        <div><label class="f" for="pCanal">Cómo se enteró</label><select id="pCanal"></select></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+        <div>
+          <label class="f">¿Documento ya en la base?</label>
+          <div class="chips" id="pDup"><span class="chip on" data-v="0">Lead nuevo</span><span class="chip" data-v="1">Ya registrado</span></div>
+        </div>
+        <div>
+          <label class="f">¿Contacto el mismo día?</label>
+          <div class="chips" id="pSd"><span class="chip on" data-v="1">Sí</span><span class="chip" data-v="0">No</span></div>
+        </div>
+      </div>
+      <p class="sub" style="margin-top:16px;font-size:12.5px">El interruptor de contacto el mismo día está para mostrar el costo de no cumplir el SLA: es la única variable de la lista que depende del equipo y no del lead.</p>
+    </div>
+    <div class="card" id="pOut"></div>
+  </div>
+
+  <div class="grid-a" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Calibración — propensión predicha frente a conversión observada, por decil</div>
+      <div id="calibChart"></div>
+      <p class="sub" style="margin-top:12px">Desviación media absoluta de <b style="color:var(--text);font-weight:500">1,24 puntos porcentuales</b> en los diez deciles. El modelo no solo ordena bien: los números se pueden usar como probabilidad y como línea base de meta por lote.</p>
+    </div>
+    <div class="card">
+      <div class="ctitle">Cómo se lee un lote puntuado</div>
+      <p style="font-size:13.5px;margin:0 0 14px">Al puntuar una base completa se obtiene la matrícula esperada del lote antes de trabajarlo. Ese número es la línea base contra la cual medir al equipo: si el lote esperaba 58% y cerró 64%, la gestión aportó 6 puntos. Si esperaba 72% y cerró 64%, restó 8, aunque el número absoluto se vea mejor.</p>
+      <div class="tip">Es exactamente el insumo que sostiene el esquema de incentivos de la sección 09: separa <b>calidad de base asignada</b> de <b>calidad de gestión</b>, que hoy están fundidas en un solo indicador de efectividad.</div>
+      <div id="quintChart" style="margin-top:16px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 SIMULADOR ============ -->
+<section id="s12">
+  <div class="eyebrow"><span>12</span> Herramienta</div>
+  <h2>Simulador de impacto.</h2>
+  <p class="lead">Cuatro palancas, cada una anclada en una cifra observada de este diagnóstico. Los valores por defecto son los del escenario base del libro de oportunidad. Mueve lo que quieras y mete tu prima media real.</p>
+
+  <div class="grid-b">
+    <div class="card">
+      <div class="ctitle">Palancas</div>
+      <div style="margin-bottom:20px">
+        <label class="f" for="l1">Tasa de cobro sobre liquidaciones — <b class="mono" id="l1v" style="color:var(--gold)"></b></label>
+        <input type="range" id="l1" min="648" max="810" value="701" step="2">
+        <p class="sub" style="font-size:12px;margin:6px 0 0">Actual 64,8% sobre 8.232 liquidaciones. El p75 de las sedes es 70,1% y Tolima ya está en 80,7%.</p>
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="f" for="l2">Contacto el mismo día — <b class="mono" id="l2v" style="color:var(--gold)"></b></label>
+        <input type="range" id="l2" min="776" max="980" value="900" step="2">
+        <p class="sub" style="font-size:12px;margin:6px 0 0">Actual 77,6%. Brecha observada de 8,4 pp; aplico un factor de captura del 55% por ser asociación y no efecto causal.</p>
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="f" for="l3">Reactivación de la bolsa dormida que murió en liquidación — <b class="mono" id="l3v" style="color:var(--gold)"></b></label>
+        <input type="range" id="l3" min="0" max="40" value="15" step="1">
+        <p class="sub" style="font-size:12px;margin:6px 0 0">% de las 1.910 personas que se contacta con éxito. Cierre asumido del 50%, por debajo del 58,5% de recaptura espontánea.</p>
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="f" for="l4">Recuperación del cuartil inferior de asesores — <b class="mono" id="l4v" style="color:var(--gold)"></b></label>
+        <input type="range" id="l4" min="0" max="100" value="60" step="5">
+        <p class="sub" style="font-size:12px;margin:6px 0 0">% de las 201 matrículas de déficit que se cierra vía coaching, reasignación y compuerta de SLA.</p>
+      </div>
+      <div>
+        <label class="f" for="prima">Prima media de matrícula (COP)</label>
+        <input type="number" id="prima" value="2200000" step="50000" min="0">
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card" id="simOut"></div>
+      <div class="card tight">
+        <div class="ctitle">Composición del resultado</div>
+        <div id="simChart"></div>
+      </div>
+      <div class="finding rose" style="margin:0">
+        <div class="fl">Advertencia metodológica, para que aguante revisión</div>
+        <p>Las palancas de velocidad y reactivación son <em class="bad">asociaciones observadas, no efectos causales</em>. Los leads contactados el mismo día probablemente ya eran más fáciles de contactar. La de cobro es la más sólida porque compara sedes dentro de la misma fase del embudo, y la de residual es la más sólida de todas porque ya está ajustada por composición. Valida con un piloto: dos rectorías con protocolo reforzado contra dos comparables durante un periodo de captación. Con 693 leads al mes, una diferencia de 5 puntos se detecta en un semestre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 LIBRO ============ -->
+<section id="s13">
+  <div class="eyebrow"><span>13</span> Conclusión</div>
+  <h2>El libro de oportunidad.</h2>
+  <p class="lead">Cada palanca con su tamaño en matrículas, su base de leads, el mecanismo que la activa y el esfuerzo que cuesta. Es la tabla que va al comité, y la que permite decidir en qué orden gastar el tiempo del equipo el próximo semestre.</p>
+
+  <div class="card">
+    <div id="libroTable"></div>
+  </div>
+
+  <div class="grid3" style="margin-top:16px">
+    <div class="card tight">
+      <div class="ctitle">Por qué el neto es 1.468 y no 2.259</div>
+      <p style="font-size:13.5px;margin:0">Las palancas se solapan: un lead rescatado por SLA puede ser el mismo que aparece en la brecha de celda y en el residual del asesor. Descuento 35% de forma uniforme. Es un supuesto grueso pero conservador y explícito; con el pipeline se puede calcular el solapamiento exacto lead por lead en vez de estimarlo.</p>
+    </div>
+    <div class="card tight">
+      <div class="ctitle">Sobre qué horizonte</div>
+      <p style="font-size:13.5px;margin:0">Las 1.468 están dimensionadas sobre los 22,5 meses de la base, equivalentes a 3,76 semestres. Eso da <b style="color:var(--gold);font-weight:500">390 matrículas por semestre</b> si todas las palancas estuvieran activas al mismo tiempo, que no va a pasar. Un plan realista captura el 40–50% en el primer año.</p>
+    </div>
+    <div class="card tight">
+      <div class="ctitle">Techo de conversión</div>
+      <p style="font-size:13.5px;margin:0">Con el neto completo la conversión por solicitud pasa de 56,2% a <b style="color:var(--jade);font-weight:500">65,6%</b>, y la conversión por persona superaría el 72%. Es exigente pero no fantasioso: Tolima Huila ya opera hoy en 75,1% con la misma base y el mismo convenio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 NO SOBREVIVIÓ ============ -->
+<section id="s14">
+  <div class="eyebrow"><span>14</span> Honestidad analítica</div>
+  <h2>Tres hipótesis que probé y descarté.</h2>
+  <p class="lead">Las incluyo porque son las que te van a preguntar en el comité, y porque un diagnóstico que solo trae hallazgos favorables no es creíble. Descartarlas también ahorra plata: cada una habría justificado una intervención.</p>
+
+  <div class="plan">
+    <div class="pitem"><div class="pn">✕</div><div><h3>«Los asesores se saturan y por eso caen»</h3><p>La versión cruda del dato lo sugería: el rendimiento ajustado bajaba de +7,7 pp con 5–10 leads al mes a −1,7 pp con 21–35. Pero eso compara asesores distintos. Al hacer la prueba limpia —variación dentro del mismo asesor, descontando el efecto del mes— la correlación entre su carga relativa y su residual es de <b class="mono" style="color:var(--rose)">−0,009</b>. Cero. Lo que sí cae con la carga es el contacto el mismo día (de 85% a 67%), así que la carga afecta la conducta pero el efecto en resultado no es detectable con este volumen. <b style="color:var(--text);font-weight:500">No justifica ampliar dotación con este argumento.</b></p></div><div class="pm">Descartada<br>94 asesores<br>893 observaciones</div></div>
+
+    <div class="pitem"><div class="pn">✕</div><div><h3>«Hay que pautar más temprano para llenar el embudo antes»</h3><p>Los leads que llegan 30 a 60 días antes de la ventana de matrícula convierten al 49,0% contra 58,7% de los que llegan tarde, lo que parecía una bolsa de leads que se enfrían. Pero al comparar cada tramo contra lo que su propia composición predice, el lead temprano rinde <b style="color:var(--text);font-weight:500">exactamente lo esperado</b> (+0,4 pp de residual). No se está enfriando: pertenece a perfiles menos convertibles. Pautar más temprano compra más leads del mismo tipo, no leads mejores.</p></div><div class="pm">Descartada<br>1.349 leads<br>en el tramo</div></div>
+
+    <div class="pitem"><div class="pn">✕</div><div><h3>«El estrato explica el problema de pago»</h3><p>Era la explicación intuitiva de los 2.901 leads que se caen en el recibo. No resiste: los estratos 1, 2 y 3 pagan al 61,1%, 62,0% y 63,8% respectivamente, un rango de 2,7 puntos. La misma variable en el eje de sede abre 23 puntos. El estrato tampoco discrimina conversión global (56,0% a 56,4%). Es una segmentación que consume tiempo de análisis y no aporta poder predictivo: la dejé fuera del priorizador por eso.</p></div><div class="pm">Descartada<br>15.617 registros<br>rango de 2,7 pp</div></div>
+  </div>
+
+  <div class="finding">
+    <div class="fl">Y una que quedó sin poder responder</div>
+    <p>No puedo calcular costo por matrícula por canal ni retorno de inversión de mercadeo, porque «Origen del candidato» está vacío en 62,7% de la base y «Nombre del convenio» tiene 168 variantes de texto libre para tres o cuatro convenios reales. Es la única pregunta importante de tu rol que este dataset no puede contestar hoy. Arreglar esos dos campos es prerequisito, no mejora.</p>
+  </div>
+</section>
+
+<!-- ============ 15 CALIDAD ============ -->
+<section id="s15">
+  <div class="eyebrow"><span>15</span> Cimiento</div>
+  <h2>Seis campos sostienen todo lo anterior.</h2>
+  <p class="lead">Estas brechas no son un anexo de higiene: son el motivo por el cual hoy no se puede calcular costo por matrícula por canal, ni liquidar incentivos por gestión, ni automatizar la reportería sin reprocesos manuales cada mes.</p>
+
+  <div class="card"><div id="calTable"></div></div>
+
+  <div class="grid3" style="margin-top:16px">
+    <div class="card tight">
+      <div class="ctitle" style="color:var(--jade)">Lo que sí está sano</div>
+      <p style="font-size:13.5px;margin:0">El dato de contacto es sólido: 100% de los celulares con 10 dígitos, 99,93% empieza en 3, 99,99% de los correos con estructura válida. Solo 9 teléfonos y 9 correos compartidos entre personas distintas. La contactabilidad baja <b style="color:var(--text);font-weight:500">no se explica por dato sucio de contacto</b>: hay que buscarla en el proceso.</p>
+    </div>
+    <div class="card tight">
+      <div class="ctitle" style="color:var(--rose)">El campo que engaña</div>
+      <p style="font-size:13.5px;margin:0">«Por gestionar» marca 1.258 registros de los cuales el <b style="color:var(--text);font-weight:500">62% ya matriculó</b>. El sub estado no se cierra cuando el caso avanza, así que no sirve como cola de trabajo. Es el arreglo de CRM de menor esfuerzo y mayor retorno de todo el diagnóstico, y sin él ninguna de las palancas de reactivación es operable.</p>
+    </div>
+    <div class="card tight">
+      <div class="ctitle">Lo que no sirve como está</div>
+      <p style="font-size:13.5px;margin:0">168 variantes de «Nombre del convenio» para lo que son tres o cuatro convenios: SENA, Sena, sena, CONVENIO SENA, DESCUENTO SENA. Con eso no se mide efectividad por convenio, que es justo lo que se necesita para negociar el siguiente y para defender el que ya existe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 16 PLAN ============ -->
+<section id="s16">
+  <div class="eyebrow"><span>16</span> Decisión</div>
+  <h2>Doce movimientos, con la matrícula que cada uno pone en juego.</h2>
+  <p class="lead">Ordenados por retorno sobre esfuerzo, no por tamaño. Los primeros cinco son reglas y definiciones que no requieren presupuesto ni desarrollo. La columna de la derecha trae la oportunidad estimada de la sección 13 cuando la palanca la tiene asignada.</p>
+
+  <div class="plan">
+    <div class="pitem"><div class="pn">01</div><div><h3>Transferir el manual de VA a IE, empezando por Contaduría y Administración</h3><p>Mismo programa, 13 a 17 puntos de brecha, mecanismo identificado en dos rutinas: contacto el mismo día y acompañamiento en el cobro. No es un proyecto de mejora, es una transferencia entre unidades que ya conviven en la misma institución. Es el movimiento de mayor impacto y menor riesgo del plan porque el resultado ya está probado adentro.</p></div><div class="pm">Esfuerzo medio<br><b style="color:var(--gold)">~340 matrículas</b><br>Mes 1–2</div></div>
+
+    <div class="pitem"><div class="pn">02</div><div><h3>Crear la figura de dueño del cierre financiero</h3><p>2.901 leads se caen con liquidación emitida y hoy nadie responde por ellos: el asesor comercial ya cumplió y el área financiera no los conoce. Cola propia, indicador propio —tasa de cobro sobre liquidaciones emitidas— y meta por sede al p75. Empezar por Bogotá, Caribe y Antioquia, que concentran 482 de las 543 matrículas de esta palanca.</p></div><div class="pm">Esfuerzo medio<br><b style="color:var(--gold)">543 matrículas</b><br>Mes 1</div></div>
+
+    <div class="pitem"><div class="pn">03</div><div><h3>Publicar la conversión por persona junto a la de solicitud</h3><p>Dos métricas con criterio de uso explícito. Recupera 7,7 puntos de lectura que hoy se pierden por encuadre y evita que el equipo defienda un número que no le corresponde. Sin costo y sin desarrollo: es una definición.</p></div><div class="pm">Esfuerzo bajo<br>Habilitador<br>Semana 1</div></div>
+
+    <div class="pitem"><div class="pn">04</div><div><h3>Deduplicar por documento antes de asignar</h3><p>Regla de precedencia: el registro nuevo se enruta al asesor que ya tiene el caso abierto. Elimina competencia interna sobre el mismo prospecto en 3.566 registros y libera capacidad real sin contratar.</p></div><div class="pm">Esfuerzo bajo<br>Habilitador<br>Semana 2</div></div>
+
+    <div class="pitem"><div class="pn">05</div><div><h3>SLA por tramo en lugar de promedio mensual</h3><p>24 horas para el primer toque, cadencia densa a día 21, degradación programada a día 45, salida de cola activa a día 60. Cada tramo con meta y reporte propio. El promedio actual esconde el 22% que nunca se toca a tiempo.</p></div><div class="pm">Esfuerzo bajo<br><b style="color:var(--gold)">161 matrículas</b><br>Semana 2</div></div>
+
+    <div class="pitem"><div class="pn">06</div><div><h3>Retirar la asignación a gestores ocasionales</h3><p>1.380 leads en manos de usuarios con menos de 5 solicitudes en 22 meses, con 43% de contacto el mismo día contra 85% del resto. Enrutar a cola gestionada. Es una regla de permisos, no un proyecto.</p></div><div class="pm">Esfuerzo bajo<br><b style="color:var(--gold)">65 matrículas</b><br>Semana 3</div></div>
+
+    <div class="pitem"><div class="pn">07</div><div><h3>Cerrar el sub estado cuando el caso avanza</h3><p>Requisito técnico y requisito de liquidación de incentivo a la vez. Sin esto no hay cola de reactivación operable ni medición de gestión confiable, y el 23% de la base seguirá sin trazabilidad.</p></div><div class="pm">Esfuerzo medio<br>Habilitador<br>Mes 1</div></div>
+
+    <div class="pitem"><div class="pn">08</div><div><h3>Campaña de recuperación sobre la bolsa dormida de liquidación</h3><p>1.910 personas que tuvieron recibo en la mano y nunca volvieron, más 151 con señal explícita de querer volver. Oferta financiera diferenciada y ventana de un trimestre, que es donde está el percentil 75 del retorno espontáneo. Recaptura espontánea de referencia: 58,5%.</p></div><div class="pm">Esfuerzo medio<br><b style="color:var(--gold)">210 matrículas</b><br>Mes 2</div></div>
+
+    <div class="pitem"><div class="pn">09</div><div><h3>Poner el priorizador en la asignación diaria</h3><p>La base entra puntuada, se trabaja en orden de propensión con intensidad diferenciada por tramo, y el esperado del lote queda registrado como línea base de la meta. El tramo P1 convierte 2,7 veces más que el P5.</p></div><div class="pm">Esfuerzo medio<br>Habilita 09 y 11<br>Mes 2</div></div>
+
+    <div class="pitem"><div class="pn">10</div><div><h3>Origen y convenio obligatorios con lista cerrada</h3><p>Prerequisito para calcular costo por matrícula por canal y evaluar convenios SENA. No es calidad de datos, es la condición de entrada del control presupuestal de mercadeo.</p></div><div class="pm">Esfuerzo medio<br>Habilitador<br>Mes 1–2</div></div>
+
+    <div class="pitem"><div class="pn">11</div><div><h3>Rediseñar el incentivo sobre el residual</h3><p>Residual sobre propensión esperada como variable principal, SLA de 24 horas como compuerta, cierre sobre liquidaciones como segundo variable, calidad de registro como elegibilidad. Recupera el déficit de 201 matrículas del cuartil inferior y hace autosostenible el dato.</p></div><div class="pm">Esfuerzo alto<br><b style="color:var(--gold)">121 matrículas</b><br>Mes 2–3</div></div>
+
+    <div class="pitem"><div class="pn">12</div><div><h3>Referidos con código y pago, sesgados a presencial y nocturna</h3><p>28% del volumen al 61,2% llegando solo. Es la única palanca del diagnóstico que puede subir la prima media en vez de bajarla, porque el referidor autoselecciona perfiles parecidos al suyo. Requiere decisión de portafolio y presupuesto de incentivo.</p></div><div class="pm">Esfuerzo alto<br>Volumen y prima<br>Mes 3–4</div></div>
+  </div>
+
+  <div class="foot">
+    Fuente: Reporte_SENA_2025-2026.xlsx · 15.622 registros, 15.617 analizados (5 sin fecha de nacimiento) · solicitudes creadas entre el 16 de septiembre de 2024 y el 3 de agosto de 2026<br>
+    Matrícula = etapa de admisión «Matriculado financieramente» · fase del embudo reconstruida desde el último sub estado registrado · esperado por regresión logística sobre rectoría, modalidad, edad, canal declarado y duplicidad<br>
+    Descomposición mezcla-desempeño por método de Oaxaca · residual de asesor calculado sin usar velocidad ni identidad como predictores, para no absorber la gestión dentro del esperado<br>
+    Las cohortes posteriores a mayo de 2026 están censuradas y subestiman su conversión final
+  </div>
+
+</main>
+</div>
+<script>
+const D={"kpi":{"registros":15617,"matriculas":8776,"conv_registro":0.562,"personas":13683,"conv_persona":0.6392,"regs_dup":3566,"inflacion":0.1413,"p50_dias":14.0,"p75_dias":27.0,"same_day":0.7756,"no_contactado":1146,"fecha_min":"2024-09-16","fecha_max":"2026-08-03"},"curva":[{"d":0,"pct":0.0057},{"d":1,"pct":0.0234},{"d":2,"pct":0.0483},{"d":3,"pct":0.0792},{"d":5,"pct":0.1511},{"d":7,"pct":0.2636},{"d":10,"pct":0.3935},{"d":14,"pct":0.5313},{"d":18,"pct":0.6217},{"d":21,"pct":0.6782},{"d":25,"pct":0.7321},{"d":30,"pct":0.7905},{"d":38,"pct":0.8466},{"d":45,"pct":0.883},{"d":60,"pct":0.9311},{"d":75,"pct":0.9588},{"d":90,"pct":0.9757},{"d":120,"pct":0.9951}],"curva_mod":{"A Distancia":[{"d":0,"pct":0.0059},{"d":3,"pct":0.0881},{"d":7,"pct":0.2782},{"d":14,"pct":0.5535},{"d":21,"pct":0.6991},{"d":30,"pct":0.8069},{"d":45,"pct":0.8921},{"d":60,"pct":0.9396},{"d":90,"pct":0.98},{"d":120,"pct":0.9952}],"Presencial":[{"d":0,"pct":0.0052},{"d":3,"pct":0.0571},{"d":7,"pct":0.2273},{"d":14,"pct":0.4764},{"d":21,"pct":0.6263},{"d":30,"pct":0.7497},{"d":45,"pct":0.8604},{"d":60,"pct":0.91},{"d":90,"pct":0.9651},{"d":120,"pct":0.9948}]},"velocidad":[{"lab":"Mismo día","n":12113,"mat":7034,"conv":0.5807},{"lab":"1 día","n":1235,"mat":651,"conv":0.5271},{"lab":"2-3 días","n":632,"mat":347,"conv":0.5491},{"lab":"4-7 días","n":639,"mat":348,"conv":0.5446},{"lab":"8-14 días","n":327,"mat":169,"conv":0.5168},{"lab":"15-30 días","n":205,"mat":98,"conv":0.478},{"lab":"31-60 días","n":133,"mat":65,"conv":0.4887},{"lab":"+60 días","n":59,"mat":37,"conv":0.6271}],"duplicidad":[{"n":1,"regs":12051,"conv_reg":0.6419,"personas":12051,"conv_per":0.6419},{"n":2,"regs":2790,"conv_reg":0.3122,"personas":1395,"conv_per":0.6108},{"n":3,"regs":564,"conv_reg":0.2465,"personas":188,"conv_per":0.6968},{"n":4,"regs":156,"conv_reg":0.1731,"personas":39,"conv_per":0.6154},{"n":5,"regs":56,"conv_reg":0.0536,"personas":10,"conv_per":0.3}],"dup_motivo":{"personas":1632,"cambia_periodo":968,"cambia_programa":326,"conv_cambia_periodo":0.5754,"conv_mismo_periodo":0.6822},"perdida":[{"lab":"Financiero / cierre","n":2879,"pct":0.4208},{"lab":"Sin gestión registrada","n":1608,"pct":0.2351},{"lab":"Contactabilidad","n":1398,"pct":0.2044},{"lab":"Oferta / timing","n":333,"pct":0.0487},{"lab":"Trámite / documentos","n":273,"pct":0.0399},{"lab":"Personal / administrativo","n":193,"pct":0.0282},{"lab":"Otros","n":157,"pct":0.0229}],"perdida_total":6841,"subestado":[{"lab":"Recibo de matricula próximo a vencer","n":1230},{"lab":"Evaluando forma de pago","n":886},{"lab":"No contactado","n":826},{"lab":"Por gestionar","n":473},{"lab":"No tiene capacidad de pago","n":295},{"lab":"En proceso Cooperativa / Icetex","n":169},{"lab":"Interés siguiente periodo","n":138},{"lab":"En proceso de aplicación de descuento","n":124},{"lab":"Pendiente entrega de documentos o completar  solicitud","n":103},{"lab":"Cliente ocupado/llamar más tarde","n":85},{"lab":"Retirado","n":79},{"lab":"Pendiente toma de decisión o información de tercero","n":68}],"cohortes":[{"mes":"2024-09","n":124,"conv":0.5081,"c15":0.0484,"c30":0.1935,"maduro":true,"sd":0.4677},{"mes":"2024-10","n":743,"conv":0.5653,"c15":0.1588,"c30":0.3244,"maduro":true,"sd":0.5114},{"mes":"2024-11","n":823,"conv":0.5541,"c15":0.1993,"c30":0.3937,"maduro":true,"sd":0.5626},{"mes":"2024-12","n":687,"conv":0.6215,"c15":0.313,"c30":0.4643,"maduro":true,"sd":0.6463},{"mes":"2025-01","n":1076,"conv":0.5669,"c15":0.3829,"c30":0.5418,"maduro":true,"sd":0.6822},{"mes":"2025-02","n":589,"conv":0.4907,"c15":0.3447,"c30":0.4109,"maduro":true,"sd":0.7317},{"mes":"2025-03","n":563,"conv":0.444,"c15":0.1314,"c30":0.2664,"maduro":true,"sd":0.6607},{"mes":"2025-04","n":757,"conv":0.4795,"c15":0.1797,"c30":0.2999,"maduro":true,"sd":0.6631},{"mes":"2025-05","n":829,"conv":0.4536,"c15":0.1894,"c30":0.2955,"maduro":true,"sd":0.7298},{"mes":"2025-06","n":791,"conv":0.488,"c15":0.2137,"c30":0.3388,"maduro":true,"sd":0.7876},{"mes":"2025-07","n":989,"conv":0.5794,"c15":0.3822,"c30":0.5319,"maduro":true,"sd":0.8554},{"mes":"2025-08","n":447,"conv":0.6063,"c15":0.5235,"c30":0.5973,"maduro":true,"sd":0.8993},{"mes":"2025-09","n":312,"conv":0.516,"c15":0.25,"c30":0.3333,"maduro":true,"sd":0.891},{"mes":"2025-10","n":719,"conv":0.5577,"c15":0.2629,"c30":0.3866,"maduro":true,"sd":0.8275},{"mes":"2025-11","n":837,"conv":0.6225,"c15":0.3704,"c30":0.4815,"maduro":true,"sd":0.8554},{"mes":"2025-12","n":712,"conv":0.6222,"c15":0.3511,"c30":0.4916,"maduro":true,"sd":0.8778},{"mes":"2026-01","n":952,"conv":0.6649,"c15":0.4674,"c30":0.6113,"maduro":true,"sd":0.8708},{"mes":"2026-02","n":603,"conv":0.5821,"c15":0.4129,"c30":0.5191,"maduro":true,"sd":0.8922},{"mes":"2026-03","n":425,"conv":0.5529,"c15":0.1835,"c30":0.3365,"maduro":true,"sd":0.8188},{"mes":"2026-04","n":582,"conv":0.61,"c15":0.3454,"c30":0.4656,"maduro":true,"sd":0.8763},{"mes":"2026-05","n":632,"conv":0.6297,"c15":0.3956,"c30":0.5222,"maduro":false,"sd":0.8623},{"mes":"2026-06","n":663,"conv":0.6501,"c15":0.454,"c30":0.5807,"maduro":false,"sd":0.8718},{"mes":"2026-07","n":726,"conv":0.5,"c15":0.405,"c30":0.4986,"maduro":false,"sd":0.9063},{"mes":"2026-08","n":36,"conv":0.0,"c15":0.0,"c30":0.0,"maduro":false,"sd":0.9167}],"edad":[{"lab":"<18","n":1003,"conv":0.652,"conv_sd":0.6687,"conv_no_sd":0.5838},{"lab":"18-21","n":4969,"conv":0.6319,"conv_sd":0.6594,"conv_no_sd":0.5378},{"lab":"22-25","n":3253,"conv":0.5478,"conv_sd":0.5609,"conv_no_sd":0.5007},{"lab":"26-30","n":2846,"conv":0.5257,"conv_sd":0.5389,"conv_no_sd":0.4796},{"lab":"31-35","n":1879,"conv":0.5024,"conv_sd":0.5149,"conv_no_sd":0.4614},{"lab":"36-45","n":1406,"conv":0.4531,"conv_sd":0.4715,"conv_no_sd":0.3947},{"lab":"46+","n":261,"conv":0.4713,"conv_sd":0.4824,"conv_no_sd":0.4355}],"sede":[{"lab":"Centro Occidente","n":1568,"conv":0.6263,"sd":0.8157,"dup":0.1276,"nc":0.0689,"p50":10.0,"gap":13.6},{"lab":"Antioquia y Chocó","n":1369,"conv":0.5091,"sd":0.74,"dup":0.2316,"nc":0.0504,"p50":14.0,"gap":10.7},{"lab":"Orinoquía Amazonía","n":920,"conv":0.6533,"sd":0.8424,"dup":0.1522,"nc":0.037,"p50":12.0,"gap":10.4},{"lab":"Tolima Huila","n":1513,"conv":0.7508,"sd":0.8764,"dup":0.1077,"nc":0.0555,"p50":10.0,"gap":9.4},{"lab":"Bogotá","n":5886,"conv":0.5014,"sd":0.7396,"dup":0.2948,"nc":0.0911,"p50":15.0,"gap":5.3},{"lab":"Santanderes","n":1217,"conv":0.6048,"sd":0.7256,"dup":0.1479,"nc":0.0485,"p50":14.0,"gap":4.5},{"lab":"Cundinamarca Boyacá","n":1254,"conv":0.5351,"sd":0.7648,"dup":0.2161,"nc":0.0797,"p50":15.0,"gap":4.4},{"lab":"Caribe","n":1890,"conv":0.5302,"sd":0.8069,"dup":0.2963,"nc":0.0825,"p50":17.0,"gap":2.5}],"canal":[{"lab":"Recomendación","n":4432,"conv":0.6117,"serie":{"2024-S2":612,"2025-S1":1238,"2025-S2":1032,"2026-S1":1293,"2026-S2":257}},{"lab":"Otro","n":2628,"conv":0.497,"serie":{"2024-S2":471,"2025-S1":1026,"2025-S2":627,"2026-S1":411,"2026-S2":93}},{"lab":"Redes Sociales","n":2500,"conv":0.5552,"serie":{"2024-S2":315,"2025-S1":659,"2025-S2":761,"2026-S1":657,"2026-S2":108}},{"lab":"Busqué en Google","n":2003,"conv":0.5177,"serie":{"2024-S2":159,"2025-S1":467,"2025-S2":619,"2026-S1":639,"2026-S2":119}},{"lab":"Página Web Institucional","n":1045,"conv":0.512,"serie":{"2024-S2":162,"2025-S1":415,"2025-S2":223,"2026-S1":218,"2026-S2":27}},{"lab":"Feria Universitaria Presencial","n":945,"conv":0.5947,"serie":{"2024-S2":230,"2025-S1":259,"2025-S2":322,"2026-S1":134,"2026-S2":0}},{"lab":"Visita Empresarial o Colegio","n":481,"conv":0.6424,"serie":{"2024-S2":111,"2025-S1":100,"2025-S2":121,"2026-S1":130,"2026-S2":19}},{"lab":"Oficina Móvil","n":357,"conv":0.577,"serie":{"2024-S2":145,"2025-S1":121,"2025-S2":53,"2026-S1":37,"2026-S2":1}},{"lab":"Acciones de Territorio","n":236,"conv":0.6356,"serie":{"2024-S2":0,"2025-S1":3,"2025-S2":11,"2026-S1":137,"2026-S2":85}},{"lab":"Aviso","n":233,"conv":0.5107,"serie":{"2024-S2":93,"2025-S1":105,"2025-S2":17,"2026-S1":16,"2026-S2":2}},{"lab":"Cine","n":171,"conv":0.5673,"serie":{"2024-S2":6,"2025-S1":13,"2025-S2":60,"2026-S1":72,"2026-S2":20}},{"lab":"Volante","n":143,"conv":0.6643,"serie":{"2024-S2":30,"2025-S1":50,"2025-S2":38,"2026-S1":22,"2026-S2":3}},{"lab":"Feria Universitaria Virtual","n":139,"conv":0.5252,"serie":{"2024-S2":13,"2025-S1":58,"2025-S2":43,"2026-S1":22,"2026-S2":3}},{"lab":"Radio","n":113,"conv":0.646,"serie":{"2024-S2":17,"2025-S1":33,"2025-S2":37,"2026-S1":19,"2026-S2":7}},{"lab":"Oficina móvil/ Carro Valla","n":69,"conv":0.6667,"serie":{"2024-S2":0,"2025-S1":20,"2025-S2":17,"2026-S1":28,"2026-S2":4}},{"lab":"Prensa","n":66,"conv":0.6364,"serie":{"2024-S2":4,"2025-S1":20,"2025-S2":19,"2026-S1":11,"2026-S2":12}},{"lab":"Televisión","n":47,"conv":0.4894,"serie":{"2024-S2":9,"2025-S1":15,"2025-S2":12,"2026-S1":9,"2026-S2":2}},{"lab":"Paradero","n":7,"conv":0.4286,"serie":{"2024-S2":0,"2025-S1":1,"2025-S2":4,"2026-S1":2,"2026-S2":0}},{"lab":"Sistema de Transporte","n":2,"conv":0.5,"serie":{"2024-S2":0,"2025-S1":2,"2025-S2":0,"2026-S1":0,"2026-S2":0}}],"matriz":{"sedes":["Antioquia y Chocó","Bogotá","Caribe","Centro Occidente","Cundinamarca Boyacá","Orinoquía Amazonía","Santanderes","Tolima Huila"],"edades":["<18","18-21","22-25","26-30","31-35","36-45","46+"],"conv":[[0.5366,0.59,0.4378,0.5,0.5064,0.4815,0.4],[0.5762,0.5633,0.5066,0.4556,0.4342,0.3988,0.4388],[0.6351,0.6056,0.4908,0.5558,0.5015,0.4638,0.4262],[0.6574,0.6706,0.6384,0.6391,0.5982,0.4532,0.619],[0.6142,0.6066,0.5322,0.4121,0.4649,0.4369,0.25],[0.689,0.7104,0.6486,0.5468,0.5273,0.6176,0.5],[0.5122,0.6856,0.594,0.6034,0.5899,0.4713,0.6667],[0.8212,0.7864,0.7425,0.6872,0.66,0.5977,0.6667]],"n":[[41,339,249,318,235,162,25],[269,1967,1354,1025,684,489,98],[74,360,379,448,333,235,61],[108,425,354,302,219,139,21],[127,483,233,182,114,103,12],[164,335,185,139,55,34,8],[41,353,266,237,139,157,24],[179,707,233,195,100,87,12]]},"seg_bajo":[{"lab":"Bogotá · Presencial · 26-30","n":236,"conv":0.3644,"sd":0.6992,"dup":0.2161,"nc":0.1059},{"lab":"Bogotá · A Distancia · 36-45","n":408,"conv":0.4044,"sd":0.7574,"dup":0.3529,"nc":0.1054},{"lab":"Bogotá · A Distancia · 31-35","n":571,"conv":0.4553,"sd":0.7653,"dup":0.3345,"nc":0.0928},{"lab":"Caribe · A Distancia · 36-45","n":217,"conv":0.4747,"sd":0.7972,"dup":0.3917,"nc":0.0829},{"lab":"Bogotá · A Distancia · 26-30","n":789,"conv":0.4829,"sd":0.7845,"dup":0.3194,"nc":0.0773},{"lab":"Bogotá · Presencial · 22-25","n":463,"conv":0.4924,"sd":0.7214,"dup":0.2635,"nc":0.1188},{"lab":"Caribe · A Distancia · 22-25","n":330,"conv":0.497,"sd":0.8303,"dup":0.2727,"nc":0.097},{"lab":"Caribe · A Distancia · 31-35","n":309,"conv":0.4984,"sd":0.7961,"dup":0.3172,"nc":0.0615}],"seg_alto":[{"lab":"Tolima Huila · A Distancia · 18-21","n":600,"conv":0.8083,"sd":0.89,"dup":0.1383,"nc":0.0567},{"lab":"Orinoquía Amazonía · Presencial · 18-21","n":153,"conv":0.7516,"sd":0.8758,"dup":0.085,"nc":0.0588},{"lab":"Tolima Huila · A Distancia · 22-25","n":208,"conv":0.75,"sd":0.8702,"dup":0.101,"nc":0.0721},{"lab":"Santanderes · A Distancia · 18-21","n":289,"conv":0.7024,"sd":0.7993,"dup":0.1176,"nc":0.0415},{"lab":"Tolima Huila · A Distancia · 26-30","n":191,"conv":0.6859,"sd":0.8482,"dup":0.1152,"nc":0.0524},{"lab":"Centro Occidente · A Distancia · 18-21","n":304,"conv":0.6809,"sd":0.8487,"dup":0.1053,"nc":0.0493},{"lab":"Orinoquía Amazonía · A Distancia · 18-21","n":182,"conv":0.6758,"sd":0.8407,"dup":0.1868,"nc":0.0275},{"lab":"Centro Occidente · A Distancia · 26-30","n":249,"conv":0.6546,"sd":0.7952,"dup":0.0884,"nc":0.0843}],"programas":[{"lab":"Administración De Empresas","n":3822,"conv":0.578,"nc":0.0693,"dup":0.2148},{"lab":"Contaduría Pública","n":3662,"conv":0.6313,"nc":0.0724,"dup":0.2381},{"lab":"Administración En Seguridad Y Salud En El Trabajo","n":2651,"conv":0.5175,"nc":0.0754,"dup":0.2916},{"lab":"Ingeniería Industrial","n":992,"conv":0.4637,"nc":0.1069,"dup":0.2238},{"lab":"Ingeniería De Sistemas","n":830,"conv":0.5867,"nc":0.0663,"dup":0.1952},{"lab":"Psicología","n":573,"conv":0.4276,"nc":0.075,"dup":0.1815},{"lab":"Licenciatura En Educacion Física Recreación Y Deporte","n":469,"conv":0.5586,"nc":0.0768,"dup":0.3177},{"lab":"Licenciatura En Educación Infantil","n":372,"conv":0.5726,"nc":0.0699,"dup":0.1237},{"lab":"Administración Financiera","n":287,"conv":0.5784,"nc":0.0627,"dup":0.2195},{"lab":"Trabajo Social","n":274,"conv":0.5474,"nc":0.0511,"dup":0.1606},{"lab":"Ingeniería Civil","n":206,"conv":0.5146,"nc":0.1214,"dup":0.1796},{"lab":"Licenciatura En Educación Física","n":165,"conv":0.5939,"nc":0.0788,"dup":0.303},{"lab":"Administración De Empresas Turísticas Y Hoteleras","n":153,"conv":0.6471,"nc":0.1046,"dup":0.1961},{"lab":"Licenciatura En Lenguas Extranjeras Con Énfasis En Inglés","n":122,"conv":0.541,"nc":0.082,"dup":0.1475},{"lab":"Licenciatura En Educación Física Recreación Y Deporte","n":103,"conv":0.5437,"nc":0.0583,"dup":0.2427}],"asesor":{"total":1558,"con30":137,"menos5":1263,"leads_menos5":1380,"top20_pct":0.2676,"p10":0.4158,"p50":0.596,"p90":0.7679,"corr_sd":0.3289,"scatter":[{"n":40,"conv":0.6,"sd":0.725},{"n":49,"conv":0.551,"sd":0.9796},{"n":124,"conv":0.4113,"sd":0.9194},{"n":41,"conv":0.6341,"sd":0.7317},{"n":32,"conv":0.4688,"sd":0.75},{"n":96,"conv":0.6042,"sd":0.9062},{"n":55,"conv":0.4545,"sd":0.9091},{"n":190,"conv":0.3632,"sd":0.7895},{"n":35,"conv":0.7143,"sd":0.9429},{"n":85,"conv":0.7529,"sd":0.9294},{"n":123,"conv":0.5935,"sd":0.7805},{"n":314,"conv":0.4363,"sd":0.965},{"n":33,"conv":0.6364,"sd":0.8182},{"n":41,"conv":0.5366,"sd":0.7805},{"n":71,"conv":0.662,"sd":0.662},{"n":97,"conv":0.6495,"sd":0.9278},{"n":111,"conv":0.7117,"sd":0.8378},{"n":55,"conv":0.6364,"sd":0.7273},{"n":177,"conv":0.3729,"sd":0.6893},{"n":42,"conv":0.5,"sd":1.0},{"n":127,"conv":0.5118,"sd":0.7087},{"n":105,"conv":0.6095,"sd":0.8571},{"n":41,"conv":0.3659,"sd":0.3659},{"n":74,"conv":0.4324,"sd":0.8784},{"n":37,"conv":0.7027,"sd":0.4324},{"n":81,"conv":0.5679,"sd":0.3827},{"n":31,"conv":0.6774,"sd":0.871},{"n":36,"conv":0.6944,"sd":0.9167},{"n":358,"conv":0.4385,"sd":0.7709},{"n":63,"conv":0.8254,"sd":0.9841},{"n":37,"conv":0.4865,"sd":0.6486},{"n":33,"conv":0.8788,"sd":1.0},{"n":37,"conv":0.6486,"sd":0.9459},{"n":55,"conv":0.4364,"sd":0.9273},{"n":49,"conv":0.6735,"sd":0.8367},{"n":67,"conv":0.597,"sd":0.8955},{"n":46,"conv":0.5435,"sd":0.9348},{"n":35,"conv":0.5429,"sd":0.9714},{"n":116,"conv":0.6121,"sd":0.6121},{"n":38,"conv":0.7895,"sd":1.0},{"n":51,"conv":0.5882,"sd":0.9216},{"n":202,"conv":0.5545,"sd":0.7772},{"n":84,"conv":0.631,"sd":0.9643},{"n":145,"conv":0.6552,"sd":0.9586},{"n":31,"conv":0.4194,"sd":0.8387},{"n":152,"conv":0.5724,"sd":0.8553},{"n":55,"conv":0.5818,"sd":0.9818},{"n":50,"conv":0.48,"sd":0.9},{"n":123,"conv":0.561,"sd":0.878},{"n":77,"conv":0.6753,"sd":1.0},{"n":108,"conv":0.4074,"sd":0.7407},{"n":57,"conv":0.5965,"sd":0.9298},{"n":50,"conv":0.34,"sd":0.92},{"n":76,"conv":0.6316,"sd":0.8816},{"n":124,"conv":0.5,"sd":0.3952},{"n":123,"conv":0.6585,"sd":0.9919},{"n":38,"conv":0.7632,"sd":0.8421},{"n":103,"conv":0.767,"sd":0.8252},{"n":206,"conv":0.4806,"sd":0.6796},{"n":47,"conv":0.617,"sd":0.9149},{"n":56,"conv":0.6429,"sd":0.8571},{"n":33,"conv":0.6061,"sd":0.9394},{"n":143,"conv":0.5664,"sd":0.986},{"n":68,"conv":0.6765,"sd":0.8824},{"n":77,"conv":0.8571,"sd":0.9481},{"n":38,"conv":0.2632,"sd":0.9737},{"n":33,"conv":0.6667,"sd":0.697},{"n":53,"conv":0.6604,"sd":0.9623},{"n":31,"conv":0.7742,"sd":0.9677},{"n":112,"conv":0.875,"sd":0.8929},{"n":52,"conv":0.7692,"sd":0.9423},{"n":150,"conv":0.54,"sd":0.9333},{"n":92,"conv":0.7935,"sd":0.9674},{"n":321,"conv":0.3115,"sd":0.7072},{"n":73,"conv":0.6164,"sd":0.9589},{"n":83,"conv":0.747,"sd":0.8554},{"n":214,"conv":0.472,"sd":0.9206},{"n":31,"conv":0.6774,"sd":0.9032},{"n":74,"conv":0.6622,"sd":0.4459},{"n":50,"conv":0.54,"sd":0.76},{"n":84,"conv":0.5833,"sd":0.9405},{"n":56,"conv":0.8036,"sd":0.8929},{"n":31,"conv":0.7097,"sd":0.7097},{"n":40,"conv":0.95,"sd":0.9},{"n":232,"conv":0.556,"sd":0.5862},{"n":181,"conv":0.5083,"sd":0.8177},{"n":133,"conv":0.4887,"sd":0.4511},{"n":168,"conv":0.5179,"sd":0.5774},{"n":85,"conv":0.8235,"sd":0.9176},{"n":117,"conv":0.6325,"sd":0.9744},{"n":46,"conv":0.7174,"sd":0.9565},{"n":64,"conv":0.5938,"sd":0.5625},{"n":37,"conv":0.3243,"sd":0.7838},{"n":44,"conv":0.4773,"sd":0.7273},{"n":46,"conv":0.587,"sd":0.7609},{"n":38,"conv":0.6842,"sd":0.9474},{"n":40,"conv":0.75,"sd":0.9},{"n":44,"conv":0.6818,"sd":0.9091},{"n":34,"conv":0.3235,"sd":0.8235},{"n":239,"conv":0.4184,"sd":0.4603},{"n":54,"conv":0.5185,"sd":0.9259},{"n":117,"conv":0.5726,"sd":0.8205},{"n":99,"conv":0.596,"sd":0.9091},{"n":33,"conv":0.697,"sd":0.9091},{"n":123,"conv":0.7561,"sd":0.9024},{"n":83,"conv":0.759,"sd":0.9639},{"n":65,"conv":0.5538,"sd":0.9692},{"n":113,"conv":0.4248,"sd":0.354},{"n":39,"conv":0.9231,"sd":0.9744},{"n":171,"conv":0.538,"sd":0.4561},{"n":94,"conv":0.5851,"sd":0.8617},{"n":40,"conv":0.7,"sd":1.0},{"n":62,"conv":0.8548,"sd":0.9839},{"n":115,"conv":0.4696,"sd":0.4609},{"n":56,"conv":0.3929,"sd":0.2679},{"n":65,"conv":0.5692,"sd":0.8923},{"n":216,"conv":0.588,"sd":0.8009},{"n":54,"conv":0.4444,"sd":0.9444},{"n":131,"conv":0.4275,"sd":0.9695},{"n":30,"conv":0.4667,"sd":0.9},{"n":55,"conv":0.6727,"sd":0.8727},{"n":43,"conv":0.6977,"sd":1.0},{"n":205,"conv":0.5366,"sd":0.7024},{"n":34,"conv":0.1471,"sd":0.8824},{"n":195,"conv":0.4359,"sd":0.7179},{"n":57,"conv":0.7018,"sd":0.9298},{"n":90,"conv":0.7222,"sd":0.9889},{"n":90,"conv":0.6889,"sd":0.7667},{"n":132,"conv":0.6515,"sd":0.9545},{"n":132,"conv":0.4924,"sd":0.8712},{"n":52,"conv":0.5577,"sd":0.6923},{"n":34,"conv":0.4118,"sd":1.0},{"n":90,"conv":0.8667,"sd":0.9222},{"n":55,"conv":0.4,"sd":0.6},{"n":30,"conv":0.6667,"sd":0.9},{"n":78,"conv":0.6795,"sd":0.6538},{"n":31,"conv":0.5484,"sd":0.9677}],"quintil":[{"lab":"Q1","conv":0.3932,"sd":0.761,"n":3095},{"lab":"Q2","conv":0.522,"sd":0.7782,"n":2964},{"lab":"Q3","conv":0.5975,"sd":0.8425,"n":2342},{"lab":"Q4","conv":0.6694,"sd":0.8636,"n":1652},{"lab":"Q5","conv":0.7878,"sd":0.9039,"n":1832}]},"calidad":[{"lab":"Origen del candidato sin registrar","n":9795,"pct":0.6272,"impacto":"No se puede atribuir efectividad por fuente de captación"},{"lab":"Nombre de convenio vacío","n":7303,"pct":0.4676,"impacto":"Convenios SENA no medibles; 168 variantes de texto libre"},{"lab":"Documento duplicado en la base","n":3566,"pct":0.2283,"impacto":"Infla el denominador y reparte al mismo prospecto entre asesores"},{"lab":"Sub estado de gestión vacío","n":3594,"pct":0.2301,"impacto":"No hay trazabilidad de la gestión comercial"},{"lab":"\"Cómo se enteró\" = Otro","n":2628,"pct":0.1683,"impacto":"16,8% del volumen sin canal identificable"},{"lab":"Programa con nombre no estandarizado","n":7,"pct":null,"impacto":"86 etiquetas para 77 programas reales; rompe agrupaciones"}],"pipeline":{"total":989,"reciente":399,"buckets":[{"lab":"0-30 días","n":299},{"lab":"30-60","n":100},{"lab":"60-90","n":79},{"lab":"90-180","n":90},{"lab":"180-365","n":130},{"lab":"+365","n":291}]},"dow":[{"lab":"Lunes","n":2620,"conv":0.5496},{"lab":"Martes","n":3307,"conv":0.5621},{"lab":"Miércoles","n":3024,"conv":0.5503},{"lab":"Jueves","n":2856,"conv":0.5672},{"lab":"Viernes","n":2681,"conv":0.5763},{"lab":"Sábado","n":1021,"conv":0.5916},{"lab":"Domingo","n":108,"conv":0.4074}],"auc":{"llegada":0.619,"velocidad":0.6905,"asesor":0.6982,"exportable_oot":0.6751,"quintil":[{"lab":"P5 (bajo)","conv":0.278},{"lab":"P4","conv":0.499},{"lab":"P3","conv":0.609},{"lab":"P2","conv":0.665},{"lab":"P1 (alto)","conv":0.76}]},"modelo":{"intercept":0.12755,"coef":{"sede_Antioquia y Chocó":-0.15155,"sede_Bogotá":-0.17079,"sede_Caribe":-0.0886,"sede_Centro Occidente":0.05435,"sede_Cundinamarca Boyacá":-0.18996,"sede_Orinoquía Amazonía":0.16365,"sede_Santanderes":0.0375,"sede_Tolima Huila":0.46849,"Modalidad_A Distancia":0.18191,"Modalidad_Presencial":-0.05882,"edad_g_18-21":0.41383,"edad_g_22-25":0.11085,"edad_g_26-30":-0.02775,"edad_g_31-35":-0.09061,"edad_g_36-45":-0.30338,"edad_g_46+":-0.29153,"edad_g_<18":0.31168,"canal_g_Acciones de Territorio":-0.05503,"canal_g_Aviso":-0.00807,"canal_g_Busqué en Google":-0.10699,"canal_g_Feria Universitaria Presencial":0.19638,"canal_g_Oficina Móvil":-0.01519,"canal_g_Otro":-0.11539,"canal_g_Otros canales":0.10795,"canal_g_Página Web Institucional":-0.12014,"canal_g_Recomendación":0.15589,"canal_g_Redes Sociales":-0.04532,"canal_g_Visita Empresarial o Colegio":0.12901,"dup":-1.42712,"same_day":0.31977}},"catalogos":{"sede":["Antioquia y Chocó","Bogotá","Caribe","Centro Occidente","Cundinamarca Boyacá","Orinoquía Amazonía","Santanderes","Tolima Huila"],"Modalidad":["A Distancia","Presencial"],"edad_g":["<18","18-21","22-25","26-30","31-35","36-45","46+"],"canal_g":["Acciones de Territorio","Aviso","Busqué en Google","Feria Universitaria Presencial","Oficina Móvil","Otro","Otros canales","Página Web Institucional","Recomendación","Redes Sociales","Visita Empresarial o Colegio"]},"sim":{"conv_sd1":0.5807,"conv_sd0":0.4971,"gap_sd":0.0836,"n_sd0":3504,"n_sd1":12113,"pool_contact":1398,"pool_singestion":1608,"conv_nocontact":0.2792,"conv_porgest":0.624,"meses":22.5,"leads_mes":692,"semestres":3.76},"calib":[{"d":1,"n":1562,"pr":0.228,"ob":0.2433},{"d":2,"n":1563,"pr":0.3145,"ob":0.3122},{"d":3,"n":1564,"pr":0.4704,"ob":0.4636},{"d":4,"n":1559,"pr":0.5482,"ob":0.535},{"d":5,"n":1599,"pr":0.5883,"ob":0.5985},{"d":6,"n":1537,"pr":0.6208,"ob":0.6207},{"d":7,"n":1567,"pr":0.6509,"ob":0.6299},{"d":8,"n":1568,"pr":0.6832,"ob":0.7003},{"d":9,"n":1558,"pr":0.7242,"ob":0.7054},{"d":10,"n":1540,"pr":0.7947,"ob":0.8143}],"calib_mae":0.0124,"embudo":[{"lab":"0·Sin registro","leads":3594,"mat":1986,"tasa":0.5526,"perd":1608},{"lab":"1·Contacto","leads":2526,"mat":1142,"tasa":0.4521,"perd":1384},{"lab":"2·Trámite / documentos","leads":1265,"mat":317,"tasa":0.2506,"perd":948},{"lab":"3·Liquidación","leads":8232,"mat":5331,"tasa":0.6476,"perd":2901}],"pago":{"bench":0.7013,"total_liq":8232,"total_pago":5331,"tasa":0.6476,"filas":[{"lab":"Antioquia y Chocó","llegaron":603,"pagaron":348,"tasa":0.5771,"perd":255,"llega_liq":0.4405,"oport":74},{"lab":"Caribe","llegaron":1050,"pagaron":617,"tasa":0.5876,"perd":433,"llega_liq":0.5556,"oport":119},{"lab":"Bogotá","llegaron":2971,"pagaron":1796,"tasa":0.6045,"perd":1175,"llega_liq":0.5048,"oport":287},{"lab":"Cundinamarca Boyacá","llegaron":605,"pagaron":374,"tasa":0.6182,"perd":231,"llega_liq":0.4825,"oport":50},{"lab":"Santanderes","llegaron":539,"pagaron":367,"tasa":0.6809,"perd":172,"llega_liq":0.4429,"oport":11},{"lab":"Centro Occidente","llegaron":977,"pagaron":685,"tasa":0.7011,"perd":292,"llega_liq":0.6231,"oport":0},{"lab":"Orinoquía Amazonía","llegaron":530,"pagaron":372,"tasa":0.7019,"perd":158,"llega_liq":0.5761,"oport":0},{"lab":"Tolima Huila","llegaron":957,"pagaron":772,"tasa":0.8067,"perd":185,"llega_liq":0.6325,"oport":0}],"oport_total":541,"corr":0.6755,"subs":[{"lab":"Recibo de matricula próximo a vencer","n":3264,"pag":2034,"tasa":0.6232},{"lab":"Evaluando forma de pago","n":2572,"pag":1686,"tasa":0.6555},{"lab":"Ya realizó el pago","n":610,"pag":588,"tasa":0.9639},{"lab":"En proceso Cooperativa / Icetex","n":454,"pag":285,"tasa":0.6278},{"lab":"En proceso de aplicación de descuento","n":399,"pag":275,"tasa":0.6892},{"lab":"No tiene capacidad de pago","n":300,"pag":5,"tasa":0.0167},{"lab":"Va a pagar de contado","n":280,"pag":216,"tasa":0.7714},{"lab":"En proceso Cooperativa","n":189,"pag":132,"tasa":0.6984},{"lab":"En proceso RAP","n":93,"pag":53,"tasa":0.5699},{"lab":"Cesantías / Prima","n":71,"pag":57,"tasa":0.8028}],"recibo_edad":[{"lab":"<18","n":259,"tasa":0.7259},{"lab":"18-21","n":1008,"tasa":0.6875},{"lab":"22-25","n":705,"tasa":0.6142},{"lab":"26-30","n":616,"tasa":0.5812},{"lab":"31-35","n":358,"tasa":0.5531},{"lab":"36-45","n":269,"tasa":0.4944},{"lab":"46+","n":49,"tasa":0.6327}]},"bench_int":[{"prog":"Contaduría Pública","filas":[{"esc":"CE","n":427,"conv":0.5504,"esp":0.4568,"res":0.0935,"liq":0.5621,"pago":0.6542,"sd":0.7073},{"esc":"IE","n":999,"conv":0.5475,"esp":0.4689,"res":0.0786,"liq":0.5245,"pago":0.6279,"sd":0.6967},{"esc":"VA","n":2167,"conv":0.682,"esp":0.5542,"res":0.1278,"liq":0.5473,"pago":0.7546,"sd":0.8348}]},{"prog":"Administración de Empresas","filas":[{"esc":"CE","n":929,"conv":0.5188,"esp":0.472,"res":0.0469,"liq":0.5167,"pago":0.5979,"sd":0.733},{"esc":"IE","n":712,"conv":0.4691,"esp":0.4527,"res":0.0164,"liq":0.4972,"pago":0.5282,"sd":0.6854},{"esc":"VA","n":2123,"conv":0.6387,"esp":0.5698,"res":0.0689,"liq":0.578,"pago":0.709,"sd":0.8497}]},{"prog":"Admin. en Seguridad y Salud en el Trabajo","filas":[{"esc":"IE","n":1152,"conv":0.4774,"esp":0.4837,"res":-0.0063,"liq":0.559,"pago":0.5714,"sd":0.7014},{"esc":"VA","n":1418,"conv":0.555,"esp":0.4847,"res":0.0703,"liq":0.4979,"pago":0.6346,"sd":0.847}]}],"escuelas":[{"lab":"VA","n":7082,"conv":0.6209,"sd":0.8399,"liq":0.5446,"pago":0.6935},{"lab":"VR","n":417,"conv":0.6019,"sd":0.7434,"liq":0.4652,"pago":0.7268},{"lab":"CS","n":167,"conv":0.5749,"sd":0.7485,"liq":0.5389,"pago":0.6667},{"lab":"ED","n":423,"conv":0.5343,"sd":0.7281,"liq":0.5106,"pago":0.5926},{"lab":"CE","n":1436,"conv":0.5286,"sd":0.7277,"liq":0.5404,"pago":0.6198},{"lab":"IN","n":1070,"conv":0.5168,"sd":0.7215,"liq":0.5,"pago":0.615},{"lab":"IE","n":4603,"conv":0.5012,"sd":0.72,"liq":0.5236,"pago":0.5946},{"lab":"CH","n":290,"conv":0.469,"sd":0.6759,"liq":0.3207,"pago":0.6237}],"react":{"no_conv_1a":5815,"volvieron":1500,"recapt":0.5853,"dormida":4315,"dorm_liq":1910,"p50_retorno":47,"p75_retorno":120,"senal":151,"fase_dorm":[{"lab":"3·Liquidación","n":1910},{"lab":"0·Sin registro","n":953},{"lab":"1·Contacto","n":882},{"lab":"2·Trámite / documentos","n":570}],"edad_dorm":[{"lab":"<90 d","n":632},{"lab":"90–180 d","n":431},{"lab":"180–365 d","n":926},{"lab":"365–540 d","n":1299},{"lab":"+540 d","n":1027}],"gap_dist":[{"lab":"0–30 d","n":763,"conv":0.4482},{"lab":"31–90 d","n":544,"conv":0.4779},{"lab":"91–180 d","n":353,"conv":0.4731},{"lab":"181–365 d","n":212,"conv":0.4764},{"lab":"+365 d","n":62,"conv":0.6129}]},"residual":{"n_asesores":137,"cobertura":0.761,"q":[{"lab":"Q1","asesores":35,"leads":3945,"res":-201,"res_pp":-0.0516,"sd":0.7704},{"lab":"Q2","asesores":34,"leads":3317,"res":188,"res_pp":0.054,"sd":0.82},{"lab":"Q3","asesores":34,"leads":2443,"res":296,"res_pp":0.1225,"sd":0.8588},{"lab":"Q4","asesores":34,"leads":2180,"res":412,"res_pp":0.1877,"sd":0.8722}],"scatter":[{"n":40,"res_pp":0.1362,"sd":0.725},{"n":49,"res_pp":0.045,"sd":0.9796},{"n":124,"res_pp":-0.0654,"sd":0.9194},{"n":41,"res_pp":0.1662,"sd":0.7317},{"n":32,"res_pp":-0.0155,"sd":0.75},{"n":96,"res_pp":0.133,"sd":0.9062},{"n":55,"res_pp":-0.0039,"sd":0.9091},{"n":190,"res_pp":-0.094,"sd":0.7895},{"n":35,"res_pp":0.1353,"sd":0.9429},{"n":85,"res_pp":0.147,"sd":0.9294},{"n":123,"res_pp":0.082,"sd":0.7805},{"n":314,"res_pp":-0.0319,"sd":0.965},{"n":33,"res_pp":0.0702,"sd":0.8182},{"n":41,"res_pp":-0.0032,"sd":0.7805},{"n":71,"res_pp":0.2029,"sd":0.662},{"n":97,"res_pp":0.0903,"sd":0.9278},{"n":111,"res_pp":0.1264,"sd":0.8378},{"n":55,"res_pp":0.0302,"sd":0.7273},{"n":177,"res_pp":-0.0753,"sd":0.6893},{"n":42,"res_pp":0.0373,"sd":1.0},{"n":127,"res_pp":0.0693,"sd":0.7087},{"n":105,"res_pp":0.1291,"sd":0.8571},{"n":41,"res_pp":-0.1785,"sd":0.3659},{"n":74,"res_pp":-0.0053,"sd":0.8784},{"n":37,"res_pp":0.1489,"sd":0.4324},{"n":81,"res_pp":0.1099,"sd":0.3827},{"n":31,"res_pp":0.1935,"sd":0.871},{"n":36,"res_pp":0.1568,"sd":0.9167},{"n":358,"res_pp":-0.022,"sd":0.7709},{"n":63,"res_pp":0.1049,"sd":0.9841},{"n":37,"res_pp":0.0539,"sd":0.6486},{"n":33,"res_pp":0.1516,"sd":1.0},{"n":37,"res_pp":0.137,"sd":0.9459},{"n":55,"res_pp":-0.0507,"sd":0.9273},{"n":49,"res_pp":0.1143,"sd":0.8367},{"n":67,"res_pp":0.1429,"sd":0.8955},{"n":46,"res_pp":0.0517,"sd":0.9348},{"n":35,"res_pp":0.0021,"sd":0.9714},{"n":116,"res_pp":0.145,"sd":0.6121},{"n":38,"res_pp":0.1019,"sd":1.0},{"n":51,"res_pp":0.0444,"sd":0.9216},{"n":202,"res_pp":0.0799,"sd":0.7772},{"n":84,"res_pp":0.0544,"sd":0.9643},{"n":145,"res_pp":0.2819,"sd":0.9586},{"n":31,"res_pp":-0.0223,"sd":0.8387},{"n":152,"res_pp":0.0873,"sd":0.8553},{"n":55,"res_pp":0.1461,"sd":0.9818},{"n":50,"res_pp":0.0179,"sd":0.9},{"n":123,"res_pp":0.082,"sd":0.878},{"n":77,"res_pp":0.1429,"sd":1.0},{"n":108,"res_pp":-0.0036,"sd":0.7407},{"n":57,"res_pp":0.1147,"sd":0.9298},{"n":50,"res_pp":-0.1265,"sd":0.92},{"n":76,"res_pp":0.1879,"sd":0.8816},{"n":124,"res_pp":0.0153,"sd":0.3952},{"n":123,"res_pp":0.1627,"sd":0.9919},{"n":38,"res_pp":0.1415,"sd":0.8421},{"n":103,"res_pp":0.1972,"sd":0.8252},{"n":206,"res_pp":-0.0061,"sd":0.6796},{"n":47,"res_pp":0.1741,"sd":0.9149},{"n":56,"res_pp":0.1622,"sd":0.8571},{"n":33,"res_pp":0.1908,"sd":0.9394},{"n":143,"res_pp":0.081,"sd":0.986},{"n":68,"res_pp":0.0903,"sd":0.8824},{"n":77,"res_pp":0.1262,"sd":0.9481},{"n":38,"res_pp":-0.1136,"sd":0.9737},{"n":33,"res_pp":0.2088,"sd":0.697},{"n":53,"res_pp":0.161,"sd":0.9623},{"n":31,"res_pp":0.1463,"sd":0.9677},{"n":112,"res_pp":0.1753,"sd":0.8929},{"n":52,"res_pp":0.1083,"sd":0.9423},{"n":150,"res_pp":0.056,"sd":0.9333},{"n":92,"res_pp":0.1739,"sd":0.9674},{"n":321,"res_pp":-0.1764,"sd":0.7072},{"n":73,"res_pp":0.0913,"sd":0.9589},{"n":83,"res_pp":0.1333,"sd":0.8554},{"n":214,"res_pp":-0.0392,"sd":0.9206},{"n":31,"res_pp":0.1621,"sd":0.9032},{"n":74,"res_pp":0.092,"sd":0.4459},{"n":50,"res_pp":0.0375,"sd":0.76},{"n":84,"res_pp":0.2529,"sd":0.9405},{"n":56,"res_pp":0.2107,"sd":0.8929},{"n":31,"res_pp":0.2458,"sd":0.7097},{"n":40,"res_pp":0.3421,"sd":0.9},{"n":232,"res_pp":0.0715,"sd":0.5862},{"n":181,"res_pp":0.0254,"sd":0.8177},{"n":133,"res_pp":0.0214,"sd":0.4511},{"n":168,"res_pp":0.0327,"sd":0.5774},{"n":85,"res_pp":0.1503,"sd":0.9176},{"n":117,"res_pp":0.0824,"sd":0.9744},{"n":46,"res_pp":0.0322,"sd":0.9565},{"n":64,"res_pp":0.1115,"sd":0.5625},{"n":37,"res_pp":-0.0924,"sd":0.7838},{"n":44,"res_pp":0.072,"sd":0.7273},{"n":46,"res_pp":0.202,"sd":0.7609},{"n":38,"res_pp":-0.0047,"sd":0.9474},{"n":40,"res_pp":0.1456,"sd":0.9},{"n":44,"res_pp":0.0628,"sd":0.9091},{"n":34,"res_pp":-0.0291,"sd":0.8235},{"n":239,"res_pp":-0.0696,"sd":0.4603},{"n":54,"res_pp":0.0438,"sd":0.9259},{"n":117,"res_pp":0.1077,"sd":0.8205},{"n":99,"res_pp":0.1381,"sd":0.9091},{"n":33,"res_pp":0.1602,"sd":0.9091},{"n":123,"res_pp":0.1575,"sd":0.9024},{"n":83,"res_pp":0.049,"sd":0.9639},{"n":65,"res_pp":0.0428,"sd":0.9692},{"n":113,"res_pp":-0.0482,"sd":0.354},{"n":39,"res_pp":0.209,"sd":0.9744},{"n":171,"res_pp":0.0335,"sd":0.4561},{"n":94,"res_pp":0.0684,"sd":0.8617},{"n":40,"res_pp":0.1316,"sd":1.0},{"n":62,"res_pp":0.1386,"sd":0.9839},{"n":115,"res_pp":-0.0143,"sd":0.4609},{"n":56,"res_pp":-0.0879,"sd":0.2679},{"n":65,"res_pp":0.1791,"sd":0.8923},{"n":216,"res_pp":0.1032,"sd":0.8009},{"n":54,"res_pp":0.0048,"sd":0.9444},{"n":131,"res_pp":-0.0334,"sd":0.9695},{"n":30,"res_pp":0.0305,"sd":0.9},{"n":55,"res_pp":0.0602,"sd":0.8727},{"n":43,"res_pp":0.1269,"sd":1.0},{"n":205,"res_pp":0.0426,"sd":0.7024},{"n":34,"res_pp":-0.259,"sd":0.8824},{"n":195,"res_pp":-0.0246,"sd":0.7179},{"n":57,"res_pp":0.1971,"sd":0.9298},{"n":90,"res_pp":0.0083,"sd":0.9889},{"n":90,"res_pp":0.1982,"sd":0.7667},{"n":132,"res_pp":0.1674,"sd":0.9545},{"n":132,"res_pp":-0.0016,"sd":0.8712},{"n":52,"res_pp":0.1238,"sd":0.6923},{"n":34,"res_pp":-0.0804,"sd":1.0},{"n":90,"res_pp":0.1357,"sd":0.9222},{"n":55,"res_pp":-0.0562,"sd":0.6},{"n":30,"res_pp":0.1596,"sd":0.9},{"n":78,"res_pp":0.0837,"sd":0.6538},{"n":31,"res_pp":0.1078,"sd":0.9677}],"peor":-57,"mejor":41},"gestor":[{"lab":"Ocasional (<5)","leads":1380,"conv":0.4529,"sd":0.4304,"res":-65,"res_pp":-0.0469},{"lab":"Bajo (5–29)","leads":2352,"conv":0.6076,"sd":0.8384,"res":215,"res_pp":0.0916},{"lab":"Medio (30–99)","leads":5194,"conv":0.6298,"sd":0.8585,"res":496,"res_pp":0.0955},{"lab":"Alto (100+)","leads":6691,"conv":0.5158,"sd":0.7604,"res":199,"res_pp":0.0297}],"descomp":{"a":"2025-S1","b":"2026-S1","conv_a":0.4938,"conv_b":0.623,"filas":[{"lab":"Escuela (10 celdas)","mezcla":0.0433,"desemp":0.0859},{"lab":"Modalidad × edad (14)","mezcla":0.0098,"desemp":0.1194},{"lab":"Sede × modalidad × edad (109)","mezcla":0.0158,"desemp":0.1135},{"lab":"Escuela × sede × edad (285)","mezcla":0.0147,"desemp":0.1146}]},"mix":[{"lab":"2024-S2","leads":2377,"alto":0.3673,"conv":0.5747},{"lab":"2025-S1","leads":4605,"alto":0.2925,"conv":0.4938},{"lab":"2025-S2","leads":4016,"alto":0.2824,"conv":0.5901},{"lab":"2026-S1","leads":3857,"alto":0.2891,"conv":0.623},{"lab":"2026-S2","leads":762,"alto":0.2454,"conv":0.4764}],"mix_esc":[{"lab":"VA","p2025":0.289,"p2026":0.6518,"conv":0.6209},{"lab":"CE","p2025":0.0849,"p2026":0.104,"conv":0.5286},{"lab":"IE","p2025":0.4625,"p2026":0.1027,"conv":0.5012},{"lab":"IN","p2025":0.074,"p2026":0.0591,"conv":0.5168},{"lab":"ED","p2025":0.028,"p2026":0.0241,"conv":0.5343},{"lab":"VR","p2025":0.0287,"p2026":0.0228,"conv":0.6019},{"lab":"CH","p2025":0.0169,"p2026":0.015,"conv":0.469},{"lab":"CS","p2025":0.0087,"p2026":0.0119,"conv":0.5749},{"lab":"CO","p2025":0.0039,"p2026":0.0052,"conv":0.4118},{"lab":"CL","p2025":0.0033,"p2026":0.0034,"conv":0.377}],"calend":[{"lab":"Llega tarde (+30 d)","leads":7329,"conv":0.5866,"esp":0.5216,"res":0.065,"sd":0.8241},{"lab":"Llega tarde (0–30 d)","leads":3880,"conv":0.558,"esp":0.5018,"res":0.0562,"sd":0.7521},{"lab":"0–15 d antes","leads":1639,"conv":0.5516,"esp":0.4975,"res":0.054,"sd":0.7224},{"lab":"15–30 d antes","leads":1420,"conv":0.5261,"esp":0.4861,"res":0.0399,"sd":0.7296},{"lab":"30–60 d antes","leads":1349,"conv":0.49,"esp":0.4857,"res":0.0043,"sd":0.6931}],"libro":[{"lab":"Conversión por celda sede×modalidad×edad al p80 comparable","mat":1079,"leads":13973,"esf":"Alta","mec":"Priorización + SLA + coaching focalizado"},{"lab":"Cierre financiero: llevar la tasa de pago de cada sede al p75 (70,1%)","mat":543,"leads":8232,"esf":"Alta","mec":"Proceso de acompañamiento en liquidación"},{"lab":"Ejecución: llevar el cuartil inferior de asesores a residual cero","mat":201,"leads":3945,"esf":"Media","mec":"Coaching, reasignación y compuerta de SLA"},{"lab":"SLA 24 h: llevar el contacto mismo día de 77,6% a 90%","mat":161,"leads":3504,"esf":"Baja","mec":"Regla operativa y alerta en CRM"},{"lab":"Reactivar bolsa dormida que murió en liquidación (15% contacto × 50% cierre)","mat":143,"leads":1910,"esf":"Media","mec":"Campaña de recuperación con oferta financiera"},{"lab":"Reactivar resto de bolsa dormida (8% × 35%)","mat":67,"leads":2405,"esf":"Media","mec":"Nutrición y reoferta de periodo"},{"lab":"Retirar la asignación a gestores ocasionales (<5 solicitudes)","mat":65,"leads":1380,"esf":"Baja","mec":"Regla de enrutamiento"}],"libro_tot":{"bruto":2259,"neto":1468,"solape":0.35,"semestres":3.76,"por_sem":390,"conv_final":0.656},"oport_celda":[{"lab":"Bogotá · A Distancia · 26-30","leads":789,"conv":0.4829,"bench":0.645,"gap":0.1621,"oport":128,"sd":0.7845,"dup":0.3194},{"lab":"Bogotá · A Distancia · 18-21","leads":976,"conv":0.5727,"bench":0.6938,"gap":0.1211,"oport":118,"sd":0.7357,"dup":0.3309},{"lab":"Bogotá · A Distancia · 22-25","leads":891,"conv":0.514,"bench":0.6435,"gap":0.1294,"oport":115,"sd":0.7609,"dup":0.3356},{"lab":"Bogotá · Presencial · 18-21","leads":991,"conv":0.554,"bench":0.656,"gap":0.102,"oport":101,"sd":0.6882,"dup":0.217},{"lab":"Bogotá · A Distancia · 31-35","leads":571,"conv":0.4553,"bench":0.6269,"gap":0.1716,"oport":98,"sd":0.7653,"dup":0.3345},{"lab":"Caribe · A Distancia · 22-25","leads":330,"conv":0.497,"bench":0.6435,"gap":0.1465,"oport":48,"sd":0.8303,"dup":0.2727},{"lab":"Caribe · A Distancia · 31-35","leads":309,"conv":0.4984,"bench":0.6269,"gap":0.1285,"oport":40,"sd":0.7961,"dup":0.3172},{"lab":"Bogotá · A Distancia · 36-45","leads":408,"conv":0.4044,"bench":0.4974,"gap":0.093,"oport":38,"sd":0.7574,"dup":0.3529},{"lab":"Caribe · A Distancia · 26-30","leads":395,"conv":0.5595,"bench":0.645,"gap":0.0855,"oport":34,"sd":0.8025,"dup":0.3013},{"lab":"Bogotá · Presencial · 22-25","leads":463,"conv":0.4924,"bench":0.5589,"gap":0.0664,"oport":31,"sd":0.7214,"dup":0.2635},{"lab":"Cundinamarca Boyacá · A Distancia · 26-30","leads":134,"conv":0.4104,"bench":0.645,"gap":0.2345,"oport":31,"sd":0.7015,"dup":0.2463},{"lab":"Antioquia y Chocó · A Distancia · 26-30","leads":193,"conv":0.5078,"bench":0.645,"gap":0.1372,"oport":26,"sd":0.7617,"dup":0.3212},{"lab":"Cundinamarca Boyacá · A Distancia · 18-21","leads":216,"conv":0.5833,"bench":0.6938,"gap":0.1105,"oport":24,"sd":0.7593,"dup":0.2407},{"lab":"Bogotá · Presencial · 26-30","leads":236,"conv":0.3644,"bench":0.4633,"gap":0.0989,"oport":23,"sd":0.6992,"dup":0.2161},{"lab":"Antioquia y Chocó · A Distancia · 22-25","leads":139,"conv":0.4748,"bench":0.6435,"gap":0.1686,"oport":23,"sd":0.7698,"dup":0.3309},{"lab":"Caribe · A Distancia · 18-21","leads":249,"conv":0.6024,"bench":0.6938,"gap":0.0914,"oport":23,"sd":0.8273,"dup":0.3092},{"lab":"Antioquia y Chocó · Presencial · 18-21","leads":182,"conv":0.5385,"bench":0.656,"gap":0.1175,"oport":21,"sd":0.7253,"dup":0.1484},{"lab":"Antioquia y Chocó · Presencial · 22-25","leads":110,"conv":0.3909,"bench":0.5589,"gap":0.168,"oport":18,"sd":0.7364,"dup":0.2818}],"oport_celda_tot":1078,"oport_celda_leads":13973,"oport_bogota":673,"funnel":{"tot":15622,"pasos":[{"lab":"Lead","n":15622,"pct":1.0,"paso":null},{"lab":"Inscrito","n":15609,"pct":0.9992,"paso":0.9992},{"lab":"Admitido","n":9573,"pct":0.6128,"paso":0.6133},{"lab":"Matriculado","n":8776,"pct":0.5618,"paso":0.9167}],"etapas":[{"lab":"Matriculado financieramente","n":8776},{"lab":"Desistido","n":4667},{"lab":"Retirado","n":1148},{"lab":"Admitido","n":797},{"lab":"Inscrito","n":101},{"lab":"Pre-Admitido","n":78},{"lab":"No Admitido","n":42},{"lab":"Pre-inscrito","n":13}],"anatomia":[{"lab":"Llegó hasta la liquidación","n":2435,"pct":0.4034,"c":"rose"},{"lab":"Sin ninguna gestión registrada","n":1548,"pct":0.2565,"c":"rose"},{"lab":"Murió en la fase de contacto","n":1151,"pct":0.1907,"c":"gold"},{"lab":"Trámite y documentos","n":902,"pct":0.1494,"c":"gold"}],"perdidos":6036,"trampa":{"paso_aparente":0.9167,"cierre_real":0.6476,"liq":8232,"pag":5331,"nopag":2901,"ocultos":2435,"desist_liq":2365,"desist":4667,"admitido_vivo":462},"nopago_donde":[{"lab":"Desistido","n":2365},{"lab":"Admitido","n":462},{"lab":"Retirado","n":43},{"lab":"Inscrito","n":22},{"lab":"Pre-Admitido","n":5},{"lab":"Pre-inscrito","n":4}]}};
+/* ============ utilidades ============ */
+const $ = s => document.querySelector(s);
+const C = { gold:'#E8B44A', ice:'#56C8E0', rose:'#D9556B', jade:'#4FBF9A', violet:'#9B8CE0',
+            muted:'#8494AC', dim:'#5E708C', line:'#1E2A40', line2:'#2A3A56', text:'#E6ECF4' };
+const pc  = (v,d=1) => v==null ? '—' : (v*100).toFixed(d).replace('.',',') + '%';
+const pp  = (v,d=1) => (v>=0?'+':'−') + Math.abs(v).toFixed(d).replace('.',',');
+const num = v => v==null ? '—' : Math.round(v).toLocaleString('es-CO');
+const cop = v => '$' + Math.round(v).toLocaleString('es-CO');
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+/* escala de color divergente centrada en la conversión global */
+function heatColor(v, lo, hi){
+  if(v==null) return 'rgba(30,42,64,.4)';
+  const t = Math.max(0, Math.min(1, (v-lo)/(hi-lo)));
+  const A=[176,44,72], B=[33,44,62], G=[232,180,74];  // rosa → pizarra → oro
+  const mix=(p,q,k)=>p.map((c,i)=>Math.round(c+(q[i]-c)*k));
+  const g=.58; // gamma: saturación más rápida en los extremos, menos zona lodosa
+  const c = t<.5 ? mix(B,A,Math.pow((.5-t)/.5,g)) : mix(B,G,Math.pow((t-.5)/.5,g));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+function svg(w,h,inner,extra=''){
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" ${extra}>${inner}</svg>`;
+}
+function gridY(x0,x1,y0,y1,n,fmt,max,min=0){
+  let o='';
+  for(let i=0;i<=n;i++){
+    const v = min + (max-min)*i/n, y = y1 - (y1-y0)*i/n;
+    o += `<line class="gl" x1="${x0}" x2="${x1}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+    o += `<text class="ax" x="${x0-8}" y="${(y+3.5).toFixed(1)}" text-anchor="end">${fmt(v)}</text>`;
+  }
+  return o;
+}
+
+/* ============ 1. reloj de cierre (hero) ============ */
+function drawClock(){
+  const d = D.curva, W=1080, H=300, x0=52, x1=W-14, y0=18, y1=H-42;
+  const maxD = 120;
+  const X = v => x0 + (x1-x0) * Math.pow(v/maxD, .55);
+  const Y = v => y1 - (y1-y0) * v;
+  let o = '';
+  // bandas de decisión
+  const bands = [[0,7,'rgba(79,191,154,.10)','0–7 d'],[7,30,'rgba(232,180,74,.075)','8–30 d'],[30,120,'rgba(217,85,107,.05)','+30 d']];
+  bands.forEach(([a,b,f,l])=>{
+    o += `<rect x="${X(a)}" y="${y0}" width="${X(b)-X(a)}" height="${y1-y0}" fill="${f}"/>`;
+    o += `<text class="ax" x="${(X(a)+X(b))/2}" y="${y0+13}" text-anchor="middle" fill="${C.dim}">${l}</text>`;
+  });
+  o += gridY(x0,x1,y0,y1,5,v=>Math.round(v*100)+'%',1);
+  // area
+  let path = d.map(p=>`${X(p.d).toFixed(1)},${Y(p.pct).toFixed(1)}`).join(' L');
+  o += `<path d="M${X(0)},${y1} L${path} L${X(maxD)},${y1} Z" fill="url(#gr)"/>`;
+  o += `<path d="M${path}" fill="none" stroke="${C.gold}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  // hitos
+  [[7,'26,4%'],[14,'53,1%'],[30,'79,0%']].forEach(([dd,lab])=>{
+    const p = d.find(z=>z.d===dd);
+    o += `<line x1="${X(dd)}" x2="${X(dd)}" y1="${Y(p.pct)}" y2="${y1}" stroke="${C.line2}" stroke-dasharray="2 3"/>`;
+    o += `<circle cx="${X(dd)}" cy="${Y(p.pct)}" r="4.5" fill="${C.ink||'#0B1220'}" stroke="${C.gold}" stroke-width="2"/>`;
+    o += `<text class="vlabel" x="${X(dd)+9}" y="${Y(p.pct)-7}" fill="${C.gold}">${lab}</text>`;
+  });
+  // eje x
+  [0,3,7,14,21,30,45,60,90,120].forEach(v=>{
+    o += `<text class="axb" x="${X(v)}" y="${y1+20}" text-anchor="middle">${v}</text>`;
+  });
+  o += `<text class="ax" x="${x1}" y="${y1+36}" text-anchor="end">días desde la creación del lead</text>`;
+  const defs = `<defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="${C.gold}" stop-opacity=".26"/><stop offset="100%" stop-color="${C.gold}" stop-opacity="0"/></linearGradient></defs>`;
+  $('#clock').innerHTML = svg(W,H,defs+o);
+}
+
+/* ============ barras horizontales genéricas ============ */
+function hBars(sel, rows, opt={}){
+  const { color=C.gold, labelW=150, valFmt=v=>pc(v), max=null, h=26, sub=null, W=560 } = opt;
+  const H = rows.length*h + 12, x0 = labelW, x1 = W-58;
+  const mx = max ?? Math.max(...rows.map(r=>r.v))*1.02;
+  let o = '';
+  rows.forEach((r,i)=>{
+    const y = 6 + i*h, bw = Math.max(1,(x1-x0)*r.v/mx);
+    o += `<text class="axb" x="${x0-10}" y="${y+h/2+3.5}" text-anchor="end" fill="${r.hi?C.text:C.muted}">${esc(r.k)}</text>`;
+    o += `<rect x="${x0}" y="${y+3}" width="${bw.toFixed(1)}" height="${h-9}" fill="${r.c||color}" opacity="${r.hi?1:.82}" rx="1"/>`;
+    o += `<text class="vlabel" x="${x0+bw+8}" y="${y+h/2+3.5}">${valFmt(r.v)}</text>`;
+    if(sub && r.n!=null) o += `<text class="ax" x="${x1+52}" y="${y+h/2+3.5}" text-anchor="end">${num(r.n)}</text>`;
+  });
+  $(sel).innerHTML = svg(W,H,o);
+}
+
+/* ============ barras verticales genéricas ============ */
+function vBars(sel, rows, opt={}){
+  const { W=560, H=230, color=C.gold, valFmt=v=>pc(v,0), max=null, rot=0, band=null, pctAxis=true } = opt;
+  const x0=44, x1=W-8, y0=16, y1=H-(rot?46:30);
+  let mx = max ?? Math.max(...rows.map(r=>r.v))*1.12, gridN = 4;
+  if(pctAxis){ mx = Math.min(1, Math.ceil(mx/0.2)*0.2); gridN = Math.round(mx/0.2); }
+  const bw = (x1-x0)/rows.length;
+  let o = gridY(x0,x1,y0,y1,gridN,v=>pctAxis?Math.round(v*100)+'%':num(v),mx);
+  if(band!=null) o += `<line x1="${x0}" x2="${x1}" y1="${(y1-(y1-y0)*band/mx).toFixed(1)}" y2="${(y1-(y1-y0)*band/mx).toFixed(1)}" stroke="${C.ice}" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
+  rows.forEach((r,i)=>{
+    const bh = (y1-y0)*r.v/mx, x = x0+i*bw+bw*.18, w = bw*.64;
+    const fill = r.hatch ? 'url(#hatch)' : (r.c||color);
+    o += `<rect x="${x.toFixed(1)}" y="${(y1-bh).toFixed(1)}" width="${w.toFixed(1)}" height="${bh.toFixed(1)}" fill="${fill}" rx="1" opacity="${r.dim?.5:.92}"><title>${esc(r.k)}: ${valFmt(r.v)}${r.n?' · '+num(r.n)+' registros':''}</title></rect>`;
+    if(rows.length<=14) o += `<text class="vlabel" x="${(x+w/2).toFixed(1)}" y="${(y1-bh-6).toFixed(1)}" text-anchor="middle" font-size="9.5">${valFmt(r.v)}</text>`;
+    const tx = x0+i*bw+bw/2;
+    o += rot
+      ? `<text class="ax" x="${tx}" y="${y1+8}" text-anchor="end" transform="rotate(-42 ${tx} ${y1+8})">${esc(r.k)}</text>`
+      : `<text class="axb" x="${tx}" y="${y1+17}" text-anchor="middle">${esc(r.k)}</text>`;
+  });
+  const defs = `<defs><pattern id="hatch" width="5" height="5" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+    <rect width="5" height="5" fill="rgba(232,180,74,.13)"/><line x1="0" y1="0" x2="0" y2="5" stroke="${C.gold}" stroke-width="1.4" opacity=".55"/></pattern></defs>`;
+  $(sel).innerHTML = svg(W,H,defs+o);
+}
+
+/* ============ tabla genérica ============ */
+function table(sel, cols, rows, opt={}){
+  const { barCol=null, barMax=1 } = opt;
+  let h = '<thead><tr>' + cols.map(c=>`<th${c.w?` style="width:${c.w}"`:''}>${c.t}</th>`).join('') + '</tr></thead>';
+  let b = rows.map(r=>'<tr>' + cols.map((c,i)=>{
+    const v = c.f(r);
+    if(i===barCol){
+      const w = Math.max(0,Math.min(100, (c.raw(r)/barMax)*100));
+      return `<td class="bar-cell"><i style="width:${w.toFixed(1)}%"></i><span>${v}</span></td>`;
+    }
+    return `<td${c.st?` style="${c.st(r)}"`:''}>${v}</td>`;
+  }).join('') + '</tr>').join('');
+  $(sel).innerHTML = `<table>${h}<tbody>${b}</tbody></table>`;
+}
+
+/* ============ HERO ============ */
+function renderHero(){
+  const k=D.kpi, L=D.libro_tot;
+  $('#thesis').textContent = 'Ocho palancas cuantificadas sobre la base actual. La más grande no está en atraer más leads: está en cobrar los recibos que ya se emitieron.';
+  $('#fmeta').innerHTML = `${num(k.registros)} registros<br>${num(k.matriculas)} matrículas<br>${String(D.sim.meses).replace('.',',')} meses de historia`;
+  const cards=[
+    ['g','Oportunidad neta identificada', num(L.neto), `${num(L.por_sem)} por semestre`],
+    ['j','Techo de conversión', pc(L.conv_final), `desde ${pc(k.conv_registro)} actual`],
+    ['r','Se caen con recibo emitido', num(D.pago.total_liq-D.pago.total_pago), `de ${num(D.pago.total_liq)} liquidaciones`],
+    ['r','Personas dormidas sin recontacto', num(D.react.dormida), `${num(D.react.dorm_liq)} llegaron a liquidación`],
+    ['i','Conversión por persona', pc(k.conv_persona), `${num(k.personas)} personas únicas`],
+    ['j','Recaptura espontánea', pc(D.react.recapt), 'sin campaña ni gestión']
+  ];
+  $('#kpis').innerHTML = cards.map(([c,kk,v,n])=>
+    `<div class="kpi ${c}"><div class="k">${kk}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join('');
+  drawClock(); drawWaterfall();
+}
+
+const CORTO={'Conversión por celda':'Brecha por celda','Cierre financiero':'Cierre financiero',
+  'Ejecución':'Cuartil inferior','SLA 24':'SLA 24 horas','Reactivar bolsa dormida':'Dormida · liquidación',
+  'Reactivar resto':'Dormida · resto','Retirar la asignación':'Gestores ocasionales'};
+function corto(s){ for(const k in CORTO) if(s.startsWith(k)) return CORTO[k]; return s.slice(0,18); }
+
+function drawWaterfall(){
+  const L=D.libro, W=1080, H=290, y0=26, y1=H-58;
+  const x0=64, x1=W-104;
+  const tot=D.libro_tot.bruto, mx=tot*1.04, Y=v=>y1-(y1-y0)*v/mx;
+  const n=L.length+1, bw=(x1-x0)/n;
+  let o=gridY(x0,x1,y0,y1,4,v=>num(v),mx), acc=0;
+  L.forEach((r,i)=>{
+    const x=x0+i*bw+bw*.15, w=bw*.70;
+    const yT=Y(acc+r.mat), yB=Y(acc);
+    o+=`<rect x="${x.toFixed(1)}" y="${yT.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(2,yB-yT).toFixed(1)}" fill="${C.gold}" opacity="${(.95-i*.06).toFixed(2)}" rx="1"><title>${esc(r.lab)}: ${num(r.mat)} matrículas</title></rect>`;
+    o+=`<text class="vlabel" x="${(x+w/2).toFixed(1)}" y="${(yT-7).toFixed(1)}" text-anchor="middle" font-size="11">${num(r.mat)}</text>`;
+    if(i<L.length-1) o+=`<line x1="${(x+w).toFixed(1)}" x2="${(x+bw).toFixed(1)}" y1="${yT.toFixed(1)}" y2="${yT.toFixed(1)}" stroke="${C.line2}" stroke-dasharray="2 2"/>`;
+    o+=`<text class="ax" x="${(x+w/2).toFixed(1)}" y="${y1+16}" text-anchor="middle" fill="${C.muted}">${esc(corto(r.lab))}</text>`;
+    acc+=r.mat;
+  });
+  const xn=x0+L.length*bw+bw*.15, wn=bw*.70, yn=Y(D.libro_tot.neto);
+  o+=`<rect x="${xn.toFixed(1)}" y="${yn.toFixed(1)}" width="${wn.toFixed(1)}" height="${(y1-yn).toFixed(1)}" fill="${C.jade}" rx="1"><title>Neto tras 35% de solapamiento</title></rect>`;
+  o+=`<text class="vlabel" x="${(xn+wn/2).toFixed(1)}" y="${(yn-7).toFixed(1)}" text-anchor="middle" font-size="12" fill="${C.jade}">${num(D.libro_tot.neto)}</text>`;
+  o+=`<text class="ax" x="${(xn+wn/2).toFixed(1)}" y="${y1+16}" text-anchor="middle" fill="${C.jade}">NETO</text>`;
+  o+=`<line x1="${x0}" x2="${x1}" y1="${Y(tot).toFixed(1)}" y2="${Y(tot).toFixed(1)}" stroke="${C.gold}" stroke-dasharray="4 3" opacity=".55"/>`;
+  o+=`<text class="ax" x="${x1+8}" y="${(Y(tot)+4).toFixed(1)}" fill="${C.gold}">bruto ${num(tot)}</text>`;
+  o+=`<text class="ax" x="${x1+8}" y="${(Y(D.libro_tot.neto)+4).toFixed(1)}" fill="${C.jade}">neto ${num(D.libro_tot.neto)}</text>`;
+  o+=`<text class="ax" x="${x0}" y="${y1+34}" fill="${C.dim}">acumulado de matrículas identificadas · detalle metodológico en la sección 13</text>`;
+  $('#waterfall').innerHTML=svg(W,H,o);
+}
+
+/* ============ 01 EMBUDO ============ */
+function renderFunnel(){
+  const F=D.funnel, p=F.pasos, W=560,H=290,x0=8,x1=W-14,y0=24,y1=H-40;
+  const bh=(y1-y0)/p.length, mx=F.tot;
+  let o='';
+  p.forEach((r,i)=>{
+    const y=y0+i*bh, h=bh*.56, w=(x1-x0-206)*r.n/mx;
+    o+=`<text class="axb" x="${x0}" y="${(y+h/2+4).toFixed(1)}" fill="${C.text}" font-size="12">${esc(r.lab)}</text>`;
+    o+=`<rect x="${x0+96}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${i===p.length-1?C.jade:C.gold}" opacity="${(.95-i*.08).toFixed(2)}" rx="1"><title>${num(r.n)} · ${pc(r.pct)} de los leads</title></rect>`;
+    o+=`<text class="vlabel" x="${(x0+104)}" y="${(y+h/2+4).toFixed(1)}" font-size="12" fill="#0B1220" font-weight="600">${num(r.n)}</text>`;
+    o+=`<text class="ax" x="${(x0+96+w+8).toFixed(1)}" y="${(y+h/2+4).toFixed(1)}" fill="${C.muted}">${pc(r.pct,2)} de los leads</text>`;
+    if(r.paso!=null){
+      const yp=y-bh*.22;
+      const col = r.paso<.70 ? C.rose : C.dim;
+      o+=`<text class="vlabel" x="${x0+96}" y="${yp.toFixed(1)}" font-size="10" fill="${col}">paso ${pc(r.paso,2)} · pierde ${num(p[i-1].n-r.n)}</text>`;
+    }
+  });
+  o+=`<text class="ax" x="${x0}" y="${y1+20}" fill="${C.dim}">Retirado, Desistido, No Admitido y Pre-Admitido son estados de salida,</text>`;
+  o+=`<text class="ax" x="${x0}" y="${y1+34}" fill="${C.dim}">no eslabones de la cadena. El % es sobre el total de leads.</text>`;
+  $('#funnelChart').innerHTML=svg(W,H,o);
+
+  table('#etapaTable',[
+    {t:'Etapa',f:r=>esc(r.lab)},
+    {t:'Registros',f:r=>num(r.n),raw:r=>r.n},
+    {t:'% base',f:r=>pc(r.n/D.funnel.tot,1)}
+  ], D.funnel.etapas, {barCol:1, barMax:Math.max(...D.funnel.etapas.map(r=>r.n))});
+
+  const t=D.funnel.trampa;
+  $('#funnelTable').innerHTML=`<div class="ctitle">Los dos cierres</div><table><tbody>
+    <tr><td>Admitido → Matriculado</td><td style="color:var(--ice)">${pc(t.paso_aparente,1)}</td></tr>
+    <tr><td>Liquidaciones emitidas</td><td>${num(t.liq)}</td></tr>
+    <tr><td>Pagaron</td><td>${num(t.pag)}</td></tr>
+    <tr><td><b style="font-weight:500">Cierre real sobre liquidaciones</b></td><td style="color:var(--rose)">${pc(t.cierre_real,1)}</td></tr>
+    <tr><td>Brecha entre los dos</td><td style="color:var(--gold)">${((t.paso_aparente-t.cierre_real)*100).toFixed(1).replace('.',',')} pp</td></tr>
+    <tr><td>Caídos con recibo en mano</td><td style="color:var(--rose)">${num(t.nopag)}</td></tr></tbody></table>`;
+
+  $('#trampaTxt').innerHTML=`Cuando un lead se cae, el CRM lo reclasifica a Desistido y <em class="bad">pierde la etiqueta de Admitido</em>. Así sale del denominador del paso de cierre. De los ${num(t.desist)} Desistidos, <em class="bad">${num(t.desist_liq)} —el ${pc(t.desist_liq/t.desist,1)}— ya tenían liquidación emitida</em>, y 1.134 de ellos con el recibo próximo a vencer. Sumando los ${num(t.admitido_vivo)} que siguen vivos en Admitido sin pagar y los que quedaron en Retirado e Inscrito, el total es ${num(t.nopag)} leads que llegaron al recibo y no pagaron. El cierre verdadero sobre liquidaciones emitidas es del <em class="bad">${pc(t.cierre_real,1)}</em>, no del ${pc(t.paso_aparente,1)}: una diferencia de ${((t.paso_aparente-t.cierre_real)*100).toFixed(1).replace('.',',')} puntos que apunta el esfuerzo del equipo al lugar equivocado.`;
+
+  const A=D.funnel.anatomia;
+  hBars('#anatChart', A.map(r=>({k:r.lab,v:r.n,n:r.n,c:r.c==='rose'?C.rose:C.gold,hi:r.c==='rose'})),
+    {labelW:214,W:560,valFmt:v=>num(v),h:30});
+
+  table('#nopagoTable',[
+    {t:'Etapa actual',f:r=>esc(r.lab)},
+    {t:'Registros',f:r=>num(r.n),raw:r=>r.n},
+    {t:'%',f:r=>pc(r.n/D.funnel.trampa.nopag,1)}
+  ], D.funnel.nopago_donde, {barCol:1, barMax:Math.max(...D.funnel.nopago_donde.map(r=>r.n))});
+}
+
+/* ============ 02 CIERRE FINANCIERO ============ */
+function renderPago(){
+  const f=D.pago.filas, rows=f.map(r=>({k:r.lab,v:r.tasa,n:r.llegaron,
+    c:r.tasa>=D.pago.bench?C.jade:C.rose,hi:r.tasa>=D.pago.bench}));
+  vBars('#pagoChart', rows, {W:560,H:260,rot:1,max:.90,band:D.pago.bench});
+  table('#pagoTable',[
+    {t:'Rectoría',f:r=>esc(r.lab)},
+    {t:'Liquid.',f:r=>num(r.llegaron)},
+    {t:'Pagaron',f:r=>num(r.pagaron)},
+    {t:'Tasa',f:r=>pc(r.tasa),st:r=>`color:${r.tasa>=D.pago.bench?'var(--jade)':'var(--rose)'}`},
+    {t:'Oportunidad',f:r=>r.oport>0?`<b style="color:var(--gold)">${num(r.oport)}</b>`:'—',raw:r=>r.oport}
+  ], f, {barCol:4, barMax:Math.max(...f.map(r=>r.oport))});
+
+  // correlación llega a liquidación vs tasa de pago
+  const W=520,H=250,x0=52,x1=W-14,y0=18,y1=H-40;
+  const X=v=>x0+(x1-x0)*(v-.40)/.28, Y=v=>y1-(y1-y0)*(v-.54)/.32;
+  let o='';
+  for(let v=.55;v<=.851;v+=.05){o+=`<line class="gl" x1="${x0}" x2="${x1}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;
+    o+=`<text class="ax" x="${x0-8}" y="${(Y(v)+3.5).toFixed(1)}" text-anchor="end">${Math.round(v*100)}%</text>`;}
+  for(let v=.42;v<=.661;v+=.06){o+=`<text class="axb" x="${X(v).toFixed(1)}" y="${y1+17}" text-anchor="middle">${Math.round(v*100)}%</text>`;}
+  f.forEach(r=>{
+    o+=`<circle cx="${X(r.llega_liq).toFixed(1)}" cy="${Y(r.tasa).toFixed(1)}" r="6" fill="${r.tasa>=D.pago.bench?C.jade:C.rose}" opacity=".8"><title>${esc(r.lab)}</title></circle>`;
+    o+=`<text class="ax" x="${(X(r.llega_liq)+9).toFixed(1)}" y="${(Y(r.tasa)+4).toFixed(1)}" fill="${C.muted}" font-size="9.5">${esc(r.lab.length>15?r.lab.slice(0,14)+'…':r.lab)}</text>`;
+  });
+  o+=`<text class="ax" x="${x1}" y="${y1+33}" text-anchor="end">horizontal: % que llega a liquidación · vertical: % que paga</text>`;
+  o+=`<text class="vlabel" x="${x0+6}" y="${y0+10}" fill="${C.gold}">r = ${String(D.pago.corr).replace('.',',')}</text>`;
+  $('#corrChart').innerHTML=svg(W,H,o);
+
+  hBars('#pagoSub', D.pago.subs.map(r=>({k:r.lab.length>34?r.lab.slice(0,32)+'…':r.lab,v:r.tasa,n:r.n,
+    c:r.tasa>.7?C.jade:(r.tasa<.4?C.rose:C.gold),hi:r.tasa<.4})),
+    {labelW:196,W:520,h:24,sub:1});
+  vBars('#reciboChart', D.pago.recibo_edad.map(r=>({k:r.lab,v:r.tasa,n:r.n,
+    c:r.tasa>.68?C.jade:(r.tasa<.55?C.rose:C.gold)})), {W:1080,H:220,max:.80});
+}
+
+/* ============ 03 BENCHMARK INTERNO ============ */
+const ESCN={VA:'VA · Virtual y a Distancia',IE:'IE',CE:'CE',IN:'IN',ED:'ED',VR:'VR',CH:'CH',CS:'CS',CO:'CO',CL:'CL'};
+function renderBench(){
+  let html='';
+  D.bench_int.forEach(b=>{
+    const mx=Math.max(...b.filas.map(r=>r.conv));
+    const best=b.filas.reduce((a,c)=>c.conv>a.conv?c:a), worst=b.filas.reduce((a,c)=>c.conv<a.conv?c:a);
+    html+=`<div class="card" style="margin-bottom:16px">
+      <div class="ctitle" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span>${esc(b.prog)}</span>
+        <span style="color:var(--gold)">brecha de ${((best.conv-worst.conv)*100).toFixed(1).replace('.',',')} pp entre ${esc(best.esc)} y ${esc(worst.esc)}</span>
+      </div>
+      <table><thead><tr><th>Escuela</th><th>Registros</th><th>Conversión</th><th>Esperado</th><th>Residual</th><th>Llega a liquid.</th><th>Tasa de pago</th><th>Mismo día</th></tr></thead><tbody>
+      ${b.filas.map(r=>`<tr${r.esc===best.esc?' style="background:rgba(79,191,154,.06)"':''}>
+        <td>${esc(ESCN[r.esc]||r.esc)}</td><td>${num(r.n)}</td>
+        <td style="color:${r.esc===best.esc?'var(--jade)':(r.esc===worst.esc?'var(--rose)':'inherit')}">${pc(r.conv)}</td>
+        <td style="color:var(--dim)">${pc(r.esp)}</td>
+        <td style="color:${r.res>0.05?'var(--jade)':(r.res<0.02?'var(--rose)':'inherit')}">${pp(r.res*100)} pp</td>
+        <td>${pc(r.liq,0)}</td>
+        <td style="color:${r.pago>.68?'var(--jade)':(r.pago<.58?'var(--rose)':'inherit')}">${pc(r.pago)}</td>
+        <td style="color:${r.sd>.80?'var(--jade)':'var(--rose)'}">${pc(r.sd,0)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  });
+  $('#benchCards').innerHTML=html;
+  table('#escTable',[
+    {t:'Escuela',f:r=>esc(ESCN[r.lab]||r.lab)},
+    {t:'Registros',f:r=>num(r.n),raw:r=>r.n},
+    {t:'Conversión',f:r=>pc(r.conv),st:r=>`color:${r.conv>.60?'var(--jade)':(r.conv<.52?'var(--rose)':'inherit')}`},
+    {t:'Mismo día',f:r=>pc(r.sd,0),st:r=>`color:${r.sd>.80?'var(--jade)':'var(--rose)'}`},
+    {t:'Llega a liquid.',f:r=>pc(r.liq,0)},
+    {t:'Tasa de pago',f:r=>pc(r.pago),st:r=>`color:${r.pago>.68?'var(--jade)':(r.pago<.58?'var(--rose)':'inherit')}`}
+  ], D.escuelas, {barCol:1, barMax:Math.max(...D.escuelas.map(r=>r.n))});
+}
+
+/* ============ 04 VENTANA ============ */
+function renderVel(){
+  vBars('#velChart', D.velocidad.map(r=>({k:r.lab,v:r.conv,n:r.n,
+    c:r.lab==='Mismo día'?C.jade:C.gold,dim:r.n<150})),{W:560,H:250,rot:1,max:.70,band:D.kpi.conv_registro});
+  hBars('#sedeGap', D.sede.map(r=>({k:r.lab,v:r.gap,hi:r.gap>9})),
+    {labelW:158,W:520,color:C.jade,valFmt:v=>pp(v,1)+' pp',h:27});
+  const rows=D.calend.map(r=>({k:r.lab,v:r.conv,n:r.leads,c:r.res>.05?C.jade:C.gold}));
+  vBars('#calChart', rows, {W:520,H:240,rot:1,max:.70,band:D.kpi.conv_registro});
+  vBars('#dowChart', D.dow.map(r=>({k:r.lab.slice(0,3),v:r.conv,n:r.n,
+    c:r.lab==='Sábado'?C.jade:(r.lab==='Domingo'?C.rose:C.gold),dim:r.lab==='Domingo'})),
+    {W:520,H:240,max:.70,band:D.kpi.conv_registro});
+}
+
+/* ============ 06 MEZCLA ============ */
+function renderDesc(){
+  const f=D.descomp.filas, W=560,H=250,x0=8,x1=W-14,y0=26,y1=H-30;
+  const bw=(y1-y0)/f.length, mx=.145;
+  let o='';
+  f.forEach((r,i)=>{
+    const y=y0+i*bw, h=bw*.44, lw=x1-x0-190;
+    const wm=lw*Math.max(0,r.mezcla)/mx, wd=lw*Math.max(0,r.desemp)/mx;
+    o+=`<text class="axb" x="${x0}" y="${(y+h/2+4).toFixed(1)}" fill="${C.text}" font-size="10.5">${esc(r.lab)}</text>`;
+    o+=`<rect x="${x0+186}" y="${y.toFixed(1)}" width="${wm.toFixed(1)}" height="${h.toFixed(1)}" fill="${C.ice}" rx="1"><title>mezcla ${pp(r.mezcla*100,2)} pp</title></rect>`;
+    o+=`<rect x="${(x0+186+wm).toFixed(1)}" y="${y.toFixed(1)}" width="${wd.toFixed(1)}" height="${h.toFixed(1)}" fill="${C.gold}" rx="1"><title>desempeño ${pp(r.desemp*100,2)} pp</title></rect>`;
+    o+=`<text class="ax" x="${(x0+186+wm+wd+8).toFixed(1)}" y="${(y+h/2+4).toFixed(1)}" fill="${C.muted}">mezcla ${Math.round(r.mezcla/(r.mezcla+r.desemp)*100)}% · gestión ${Math.round(r.desemp/(r.mezcla+r.desemp)*100)}%</text>`;
+  });
+  o+=`<rect x="${x0+186}" y="${y0-18}" width="9" height="9" fill="${C.ice}"/><text class="ax" x="${x0+200}" y="${y0-10}">efecto mezcla</text>`;
+  o+=`<rect x="${x0+296}" y="${y0-18}" width="9" height="9" fill="${C.gold}"/><text class="ax" x="${x0+310}" y="${y0-10}">efecto desempeño</text>`;
+  $('#decChart').innerHTML=svg(W,H,o);
+
+  table('#mixTable',[
+    {t:'Escuela',f:r=>esc(ESCN[r.lab]||r.lab)},
+    {t:'2025-S1',f:r=>pc(r.p2025,1)},
+    {t:'2026-S1',f:r=>pc(r.p2026,1)},
+    {t:'Δ peso',f:r=>pp((r.p2026-r.p2025)*100,1)+' pp',st:r=>`color:${r.p2026>r.p2025?'var(--jade)':'var(--rose)'}`},
+    {t:'Conv. hist.',f:r=>pc(r.conv)}
+  ], D.mix_esc.slice(0,8));
+
+  vBars('#valorChart', D.mix.map(r=>({k:r.lab,v:r.alto,n:r.leads,
+    c:r.alto>.32?C.jade:C.rose})),{W:520,H:220,max:.40});
+}
+let cohMode='conv';
+function renderCoh(){
+  const rows=D.cohortes.filter(c=>c.n>=100).map(c=>({k:c.mes.slice(2).replace('-','/'),v:c[cohMode],n:c.n,
+    hatch:cohMode!=='sd'&&!c.maduro, c:cohMode==='sd'?C.jade:C.gold}));
+  vBars('#cohChart',rows,{W:1080,H:280,rot:1,band:cohMode==='sd'?D.kpi.same_day:D.kpi.conv_registro});
+}
+function bindCoh(){
+  $('#cohToggle').addEventListener('click',e=>{
+    const c=e.target.closest('.chip'); if(!c) return;
+    [...$('#cohToggle').children].forEach(x=>x.classList.remove('on'));
+    c.classList.add('on'); cohMode=c.dataset.m; renderCoh();
+  });
+}
+
+/* ============ 05 DUPLICIDAD ============ */
+function renderDup(){
+  const d=D.duplicidad, W=520,H=250,x0=44,x1=W-8,y0=16,y1=H-46;
+  const mx=.80, bw=(x1-x0)/d.length;
+  let o=gridY(x0,x1,y0,y1,4,v=>Math.round(v*100)+'%',mx);
+  d.forEach((r,i)=>{
+    const x=x0+i*bw;
+    [['conv_per',C.gold,.22],['conv_reg',C.ice,.55]].forEach(([f,c,off])=>{
+      const bh=(y1-y0)*r[f]/mx, w=bw*.30;
+      o+=`<rect x="${(x+bw*off).toFixed(1)}" y="${(y1-bh).toFixed(1)}" width="${w.toFixed(1)}" height="${bh.toFixed(1)}" fill="${c}" rx="1" opacity=".92"><title>${pc(r[f])}</title></rect>`;
+      o+=`<text class="vlabel" x="${(x+bw*off+w/2).toFixed(1)}" y="${(y1-bh-5).toFixed(1)}" text-anchor="middle" font-size="9">${pc(r[f],0)}</text>`;
+    });
+    o+=`<text class="axb" x="${(x+bw/2).toFixed(1)}" y="${y1+16}" text-anchor="middle">${r.n===5?'5+':r.n}</text>`;
+    o+=`<text class="ax" x="${(x+bw/2).toFixed(1)}" y="${y1+29}" text-anchor="middle">${num(r.regs)}</text>`;
+  });
+  o+=`<text class="ax" x="${x0}" y="${y1+42}">solicitudes por documento · registros</text>`;
+  o+=`<rect x="${x1-152}" y="${y0-4}" width="9" height="9" fill="${C.gold}"/><text class="ax" x="${x1-138}" y="${y0+4}">por persona</text>`;
+  o+=`<rect x="${x1-72}" y="${y0-4}" width="9" height="9" fill="${C.ice}"/><text class="ax" x="${x1-58}" y="${y0+4}">por solicitud</text>`;
+  $('#dupChart').innerHTML=svg(W,H,o);
+  const k=D.kpi,m=D.dup_motivo;
+  $('#dupBox').innerHTML=`<div class="ctitle">Reencuadre del denominador</div><table><tbody>
+    <tr><td>Registros en la base</td><td>${num(k.registros)}</td></tr>
+    <tr><td>Personas únicas</td><td>${num(k.personas)}</td></tr>
+    <tr><td>Registros duplicados</td><td style="color:var(--rose)">${num(k.regs_dup)}</td></tr>
+    <tr><td>Conversión por solicitud</td><td style="color:var(--ice)">${pc(k.conv_registro)}</td></tr>
+    <tr><td>Conversión por persona</td><td style="color:var(--gold)">${pc(k.conv_persona)}</td></tr>
+    <tr><td><b style="font-weight:500">Diferencia de lectura</b></td><td style="color:var(--jade)">${pp((k.conv_persona-k.conv_registro)*100)} pp</td></tr></tbody></table>`;
+  $('#dupMotivo').innerHTML=`De las ${num(m.personas)} personas con más de una solicitud, <em class="hl">${num(m.cambia_periodo)} cambiaron de periodo</em> y solo ${num(m.cambia_programa)} de programa. Y aplazar cuesta: quien cambia de periodo convierte al ${pc(m.conv_cambia_periodo)} contra el ${pc(m.conv_mismo_periodo)} de quien no. El duplicado es la huella de una decisión postergada que el proceso no captura como tal — y es justo la población de la sección 08.`;
+}
+
+/* ============ 07 CONCENTRACIÓN ============ */
+function renderConc(){
+  const oc=D.oport_celda;
+  table('#oportTable',[
+    {t:'Celda',f:r=>esc(r.lab)},
+    {t:'Leads',f:r=>num(r.leads)},
+    {t:'Conversión',f:r=>pc(r.conv)},
+    {t:'Referencia p80',f:r=>pc(r.bench)},
+    {t:'Brecha',f:r=>pp(r.gap*100,1)+' pp'},
+    {t:'Matrículas',f:r=>`<b style="color:var(--gold)">${num(r.oport)}</b>`,raw:r=>r.oport},
+    {t:'Mismo día',f:r=>pc(r.sd,0)},
+    {t:'Duplic.',f:r=>pc(r.dup,0),st:r=>`color:${r.dup>.30?'var(--rose)':'inherit'}`}
+  ], oc, {barCol:5, barMax:Math.max(...oc.map(r=>r.oport))});
+
+  const m=D.matriz, lo=.36, hi=.82;
+  let o=`<div class="hm" style="grid-template-columns:150px repeat(${m.edades.length},1fr)">`;
+  o+=`<div class="hh"></div>`+m.edades.map(e=>`<div class="hh">${e}</div>`).join('');
+  m.sedes.forEach((s,i)=>{
+    o+=`<div class="hr">${esc(s)}</div>`;
+    m.conv[i].forEach((v,j)=>{
+      o+=`<div class="hc" style="background:${heatColor(v,lo,hi)};color:${v!=null&&v>.615?'#0B1220':'#F0F4F9'}" title="${esc(s)} · ${m.edades[j]} · ${num(m.n[i][j])} registros">${v==null?'—':pc(v,0)}</div>`;
+    });
+  });
+  $('#heat').innerHTML=o+'</div>';
+
+  const e=D.edad, W=520,H=230,x0=44,x1=W-8,y0=16,y1=H-44, mx=.80, bw=(x1-x0)/e.length;
+  let s=gridY(x0,x1,y0,y1,4,v=>Math.round(v*100)+'%',mx);
+  e.forEach((r,i)=>{
+    const x=x0+i*bw;
+    [['conv_sd',C.jade,.16],['conv_no_sd',C.rose,.52]].forEach(([f,c,off])=>{
+      const bh=(y1-y0)*r[f]/mx, w=bw*.32;
+      s+=`<rect x="${(x+bw*off).toFixed(1)}" y="${(y1-bh).toFixed(1)}" width="${w.toFixed(1)}" height="${bh.toFixed(1)}" fill="${c}" rx="1" opacity=".9"><title>${pc(r[f])}</title></rect>`;
+    });
+    s+=`<text class="axb" x="${(x+bw/2).toFixed(1)}" y="${y1+16}" text-anchor="middle">${r.lab}</text>`;
+    s+=`<text class="ax" x="${(x+bw/2).toFixed(1)}" y="${y1+29}" text-anchor="middle">${num(r.n)}</text>`;
+  });
+  s+=`<rect x="${x1-176}" y="${y0-4}" width="9" height="9" fill="${C.jade}"/><text class="ax" x="${x1-162}" y="${y0+4}">mismo día</text>`;
+  s+=`<rect x="${x1-84}" y="${y0-4}" width="9" height="9" fill="${C.rose}"/><text class="ax" x="${x1-70}" y="${y0+4}">tardío</text>`;
+  $('#edadChart').innerHTML=svg(W,H,s);
+
+  table('#sedeTable',[
+    {t:'Rectoría',f:r=>esc(r.lab)},{t:'Regs',f:r=>num(r.n)},
+    {t:'Conv.',f:r=>pc(r.conv),st:r=>`color:${r.conv>.6?'var(--jade)':(r.conv<.53?'var(--rose)':'inherit')}`},
+    {t:'24 h',f:r=>pc(r.sd,0)},{t:'Duplic.',f:r=>pc(r.dup,0),st:r=>`color:${r.dup>.3?'var(--rose)':'inherit'}`},
+    {t:'No cont.',f:r=>pc(r.nc,0),st:r=>`color:${r.nc>.08?'var(--rose)':'inherit'}`}
+  ], [...D.sede].sort((a,b)=>b.conv-a.conv));
+  table('#progTable',[
+    {t:'Programa',f:r=>esc(r.lab)},{t:'Regs',f:r=>num(r.n),raw:r=>r.n},
+    {t:'Conversión',f:r=>pc(r.conv),st:r=>`color:${r.conv>.62?'var(--jade)':(r.conv<.50?'var(--rose)':'inherit')}`},
+    {t:'Duplic.',f:r=>pc(r.dup,0)}
+  ], D.programas.slice(0,14), {barCol:1, barMax:Math.max(...D.programas.map(r=>r.n))});
+}
+
+/* ============ 08 BOLSA DORMIDA ============ */
+function renderReact(){
+  const r=D.react, W=560,H=250;
+  const vuelveConv=Math.round(r.volvieron*r.recapt);
+  const segs=[
+    {lab:'Volvieron y matricularon',n:vuelveConv,c:C.jade},
+    {lab:'Volvieron y no matricularon',n:r.volvieron-vuelveConv,c:C.gold},
+    {lab:'Nunca volvieron — bolsa dormida',n:r.dormida,c:C.rose}
+  ];
+  const tot=r.no_conv_1a; let o='', x=8;
+  const bw=W-16;
+  segs.forEach(s=>{
+    const w=bw*s.n/tot;
+    o+=`<rect x="${x.toFixed(1)}" y="30" width="${w.toFixed(1)}" height="46" fill="${s.c}" opacity=".88"/>`;
+    if(w>70) o+=`<text class="vlabel" x="${(x+w/2).toFixed(1)}" y="59" text-anchor="middle" font-size="13" fill="#0B1220" font-weight="600">${num(s.n)}</text>`;
+    x+=w;
+  });
+  o+=`<text class="ax" x="8" y="20">${num(tot)} personas cuya primera solicitud no matriculó</text>`;
+  segs.forEach((s,i)=>{
+    o+=`<rect x="8" y="${96+i*26}" width="10" height="10" fill="${s.c}"/>`;
+    o+=`<text class="axb" x="24" y="${105+i*26}" fill="${C.text}">${esc(s.lab)}</text>`;
+    o+=`<text class="vlabel" x="${W-16}" y="${105+i*26}" text-anchor="end">${num(s.n)} · ${pc(s.n/tot,1)}</text>`;
+  });
+  o+=`<text class="ax" x="8" y="188" fill="${C.jade}">Tasa de recaptura del que vuelve: ${pc(r.recapt)} — igual a un lead nuevo, con costo de adquisición cero</text>`;
+  o+=`<text class="ax" x="8" y="206" fill="${C.muted}">Mediana de retorno: ${r.p50_retorno} días · percentil 75: ${r.p75_retorno} días</text>`;
+  o+=`<text class="ax" x="8" y="224" fill="${C.muted}">${num(r.senal)} personas con señal explícita registrada de querer volver</text>`;
+  $('#reactChart').innerHTML=svg(W,H-10,o);
+
+  hBars('#dormFase', r.fase_dorm.map(x2=>({k:x2.lab,v:x2.n,
+    c:x2.lab.startsWith('3')?C.gold:C.rose,hi:x2.lab.startsWith('3')})),
+    {labelW:150,W:430,valFmt:v=>num(v),h:26});
+  hBars('#dormEdad', r.edad_dorm.map(x2=>({k:x2.lab,v:x2.n,
+    c:/90|180/.test(x2.lab)?C.jade:C.muted})),{labelW:150,W:430,valFmt:v=>num(v),h:24,color:C.muted});
+  vBars('#gapChart', r.gap_dist.map(x2=>({k:x2.lab,v:x2.conv,n:x2.n,c:C.gold})),
+    {W:1080,H:220,max:.70,band:D.kpi.conv_registro});
+}
+
+/* ============ 09 RESIDUAL ============ */
+function renderRes(){
+  const R2=D.residual, W=560,H=300,x0=52,x1=W-14,y0=18,y1=H-40;
+  const X=v=>x0+(x1-x0)*(v-.20)/.80, Y=v=>y1-(y1-y0)*(v+.35)/.75;
+  let o='';
+  for(let v=.2;v<=1.001;v+=.2){o+=`<line class="gl" x1="${X(v)}" x2="${X(v)}" y1="${y0}" y2="${y1}"/>`;
+    o+=`<text class="axb" x="${X(v)}" y="${y1+17}" text-anchor="middle">${Math.round(v*100)}%</text>`;}
+  for(let v=-.3;v<=.401;v+=.1){o+=`<line class="gl" x1="${x0}" x2="${x1}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;
+    o+=`<text class="ax" x="${x0-8}" y="${(Y(v)+3.5).toFixed(1)}" text-anchor="end">${pp(v*100,0)}</text>`;}
+  o+=`<line x1="${x0}" x2="${x1}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="${C.ice}" stroke-width="1.3" stroke-dasharray="4 3"/>`;
+  o+=`<text class="ax" x="${x1}" y="${(Y(0)-6).toFixed(1)}" text-anchor="end" fill="${C.ice}">lo que su base predecía</text>`;
+  R2.scatter.forEach(p=>{
+    const rad=2.8+6.5*Math.pow(p.n/360,.5);
+    o+=`<circle cx="${X(p.sd).toFixed(1)}" cy="${Y(p.res_pp).toFixed(1)}" r="${rad.toFixed(1)}" fill="${p.res_pp>.10?C.jade:(p.res_pp<0?C.rose:C.gold)}" opacity=".58"><title>${num(p.n)} registros · residual ${pp(p.res_pp*100)} pp · ${pc(p.sd,0)} mismo día</title></circle>`;
+  });
+  o+=`<text class="ax" x="${x1}" y="${y1+33}" text-anchor="end">horizontal: % de contactos el mismo día · vertical: residual · tamaño: volumen</text>`;
+  $('#resScatter').innerHTML=svg(W,H,o);
+
+  vBars('#resQuint', R2.q.map((q,i)=>({k:q.lab,v:q.res_pp+.35,n:q.leads,
+    c:i===0?C.rose:(i>=2?C.jade:C.gold)})),{W:430,H:200,max:.60,valFmt:v=>pp((v-.35)*100,0),pctAxis:false});
+  const q1=R2.q[0], q4=R2.q[3];
+  $('#resBox').innerHTML=`<div class="ctitle">El costo de la dispersión</div><table><tbody>
+    <tr><td>Asesores evaluados</td><td>${num(R2.n_asesores)}</td></tr>
+    <tr><td>Cobertura de la base</td><td>${pc(R2.cobertura)}</td></tr>
+    <tr><td>Q1 · ${num(q1.leads)} leads</td><td style="color:var(--rose)">${num(q1.res)} matrículas</td></tr>
+    <tr><td>Q4 · ${num(q4.leads)} leads</td><td style="color:var(--jade)">+${num(q4.res)} matrículas</td></tr>
+    <tr><td>Peor asesor individual</td><td style="color:var(--rose)">${num(R2.peor)}</td></tr>
+    <tr><td>Mejor asesor individual</td><td style="color:var(--jade)">+${num(R2.mejor)}</td></tr>
+    <tr><td><b style="font-weight:500">Mismo día Q1 vs Q4</b></td><td>${pc(q1.sd,0)} → ${pc(q4.sd,0)}</td></tr></tbody></table>`;
+
+  vBars('#gestorChart', D.gestor.map(g=>({k:g.lab,v:g.conv,n:g.leads,
+    c:g.res<0?C.rose:C.gold})),{W:520,H:230,rot:1,max:.70,band:D.kpi.conv_registro});
+  table('#gestorTable',[
+    {t:'Tipo de gestor',f:r=>esc(r.lab)},
+    {t:'Leads',f:r=>num(r.leads),raw:r=>r.leads},
+    {t:'Conv.',f:r=>pc(r.conv)},
+    {t:'Mismo día',f:r=>pc(r.sd,0),st:r=>`color:${r.sd<.6?'var(--rose)':'var(--jade)'}`},
+    {t:'Residual',f:r=>`<b style="color:${r.res<0?'var(--rose)':'var(--jade)'}">${r.res>0?'+':''}${num(r.res)}</b>`}
+  ], D.gestor, {barCol:1, barMax:Math.max(...D.gestor.map(r=>r.leads))});
+}
+
+/* ============ 10 CANALES ============ */
+function renderCanal(){
+  const c=D.canal, W=1080,H=320,x0=56,x1=W-16,y0=20,y1=H-42;
+  const mxN=Math.max(...c.map(r=>r.n));
+  const X=v=>x0+(x1-x0)*Math.pow(v/mxN,.42), Y=v=>y1-(y1-y0)*(v-.40)/.30;
+  let o='';
+  for(let v=.40;v<=.70001;v+=.05){
+    o+=`<line class="gl" x1="${x0}" x2="${x1}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;
+    o+=`<text class="ax" x="${x0-8}" y="${(Y(v)+3.5).toFixed(1)}" text-anchor="end">${Math.round(v*100)}%</text>`;}
+  o+=`<line x1="${x0}" x2="${x1}" y1="${Y(D.kpi.conv_registro).toFixed(1)}" y2="${Y(D.kpi.conv_registro).toFixed(1)}" stroke="${C.ice}" stroke-dasharray="4 3" opacity=".75"/>`;
+  o+=`<text class="ax" x="${x1}" y="${(Y(D.kpi.conv_registro)-6).toFixed(1)}" text-anchor="end" fill="${C.ice}">promedio ${pc(D.kpi.conv_registro)}</text>`;
+  c.forEach(r=>{
+    const cx=X(r.n), cy=Y(Math.max(.40,Math.min(.70,r.conv))), rad=6+18*Math.pow(r.n/mxN,.5);
+    const good=r.conv>D.kpi.conv_registro;
+    o+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="${good?C.gold:C.rose}" opacity=".2"/>`;
+    o+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="none" stroke="${good?C.gold:C.rose}" stroke-width="1.4"><title>${esc(r.lab)} · ${num(r.n)} registros · ${pc(r.conv)}</title></circle>`;
+    if(r.n>300){
+      const a=cx>x1-90?'end':(cx<x0+90?'start':'middle');
+      o+=`<text class="ax" x="${cx.toFixed(1)}" y="${(cy-rad-7).toFixed(1)}" text-anchor="${a}" fill="${C.text}" font-size="10">${esc(r.lab.length>26?r.lab.slice(0,24)+'…':r.lab)}</text>`;
+    }
+  });
+  [100,500,1000,2500,4432].forEach(v=>{if(v<=mxN) o+=`<text class="axb" x="${X(v).toFixed(1)}" y="${y1+18}" text-anchor="middle">${num(v)}</text>`;});
+  o+=`<text class="ax" x="${x1}" y="${y1+34}" text-anchor="end">volumen de registros (escala comprimida)</text>`;
+  $('#canalChart').innerHTML=svg(W,H,o);
+  table('#canalTable',[
+    {t:'Canal declarado',f:r=>esc(r.lab)},
+    {t:'Registros',f:r=>num(r.n),raw:r=>r.n},
+    {t:'% base',f:r=>pc(r.n/D.kpi.registros,1)},
+    {t:'Conversión',f:r=>pc(r.conv),st:r=>`color:${r.conv>.60?'var(--jade)':(r.conv<.52?'var(--rose)':'inherit')}`},
+    {t:'Δ vs prom.',f:r=>pp((r.conv-D.kpi.conv_registro)*100)+' pp',st:r=>`color:${r.conv>D.kpi.conv_registro?'var(--jade)':'var(--rose)'}`}
+  ], D.canal, {barCol:1, barMax:Math.max(...D.canal.map(r=>r.n))});
+}
+
+/* ============ 11 PRIORIZADOR ============ */
+let pState={dup:0,sd:1};
+function fillSelects(){
+  const cat=D.catalogos, opt=a=>a.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  $('#pSede').innerHTML=opt(cat.sede); $('#pMod').innerHTML=opt(cat.Modalidad);
+  $('#pEdad').innerHTML=opt(cat.edad_g); $('#pCanal').innerHTML=opt(cat.canal_g);
+  $('#pSede').value='Bogotá'; $('#pMod').value='A Distancia'; $('#pEdad').value='18-21'; $('#pCanal').value='Recomendación';
+}
+function score(){
+  const m=D.modelo, c=m.coef; let z=m.intercept;
+  const add=k=>{if(c[k]!=null) z+=c[k];};
+  add('sede_'+$('#pSede').value); add('Modalidad_'+$('#pMod').value);
+  add('edad_g_'+$('#pEdad').value); add('canal_g_'+$('#pCanal').value);
+  z+=c.dup*pState.dup; z+=c.same_day*pState.sd;
+  return 1/(1+Math.exp(-z));
+}
+function tierOf(p){
+  if(p>=.696) return {t:'P1 · Prioridad máxima',c:C.jade,i:0};
+  if(p>=.631) return {t:'P2 · Prioridad alta',c:C.gold,i:1};
+  if(p>=.570) return {t:'P3 · Prioridad media',c:C.gold,i:2};
+  if(p>=.377) return {t:'P4 · Prioridad baja',c:C.rose,i:3};
+  return {t:'P5 · Nutrición automatizada',c:C.rose,i:4};
+}
+const PLAY=[
+  ['Toque en menos de 2 horas por llamada, con asesor senior asignado','Cadencia de 6 intentos en los primeros 7 días','Liquidación acompañada: agendar el pago en la misma llamada','Escalar a coordinación si no hay contacto en 24 horas'],
+  ['Toque el mismo día, llamada más WhatsApp','Cadencia de 5 intentos hasta el día 14','Ofrecer alternativa de financiación en el primer contacto','Revisión semanal del caso hasta el día 21'],
+  ['Toque el mismo día por el canal disponible','Cadencia de 4 intentos hasta el día 14, luego semanal','Liquidación con recordatorio automatizado','Salida de cola activa al día 45'],
+  ['Toque en 24 horas, después de P1–P3','Cadencia de 3 intentos en 10 días','Apoyo digital antes que telefónico: costo por contacto más bajo','Salida de cola activa al día 30'],
+  ['Sin asignación telefónica individual','Campaña automatizada: correo, WhatsApp y remarketing','Reactivar solo ante señal de interés entrante','Reevaluar en la siguiente ventana de captación']
+];
+function renderScore(){
+  const p=score(), t=tierOf(p), base=D.kpi.conv_registro, lift=p/base;
+  const alt=(()=>{const s=pState.sd; pState.sd=1-s; const o=score(); pState.sd=s; return o;})();
+  const cost=pState.sd===1?(p-alt):(alt-p);
+  $('#pOut').innerHTML=`<div class="ctitle">Propensión estimada a matrícula</div>
+    <div class="gauge"><div class="gnum" style="color:${t.c}">${pc(p,1)}</div>
+    <div><div class="tier" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}55">${t.t}</div>
+    <div class="mono" style="font-size:11.5px;color:var(--muted);margin-top:9px">
+    ×${lift.toFixed(2).replace('.',',')} frente al promedio de la base (${pc(base)})<br>
+    Costo de no contactar el mismo día: <span style="color:var(--rose)">−${(cost*100).toFixed(1).replace('.',',')} pp</span></div></div></div>
+    <div class="ctitle" style="margin-top:22px">Protocolo sugerido para este tramo</div>
+    <ul class="playbook">${PLAY[t.i].map(x=>`<li>${x}</li>`).join('')}</ul>`;
+}
+function bindScore(){
+  ['#pSede','#pMod','#pEdad','#pCanal'].forEach(s=>$(s).addEventListener('change',renderScore));
+  [['#pDup','dup'],['#pSd','sd']].forEach(([sel,key])=>{
+    $(sel).addEventListener('click',e=>{
+      const c=e.target.closest('.chip'); if(!c) return;
+      [...$(sel).children].forEach(x=>x.classList.remove('on')); c.classList.add('on');
+      pState[key]=+c.dataset.v; renderScore();
+    });
+  });
+  vBars('#quintChart', D.auc.quintil.map((q,i)=>({k:q.lab,v:q.conv,c:i>=3?C.jade:(i<=1?C.rose:C.gold)})),
+    {W:520,H:200,max:.80,band:D.kpi.conv_registro});
+}
+function renderCalib(){
+  const c=D.calib, W=560,H=250,x0=46,x1=W-14,y0=18,y1=H-38;
+  const X=v=>x0+(x1-x0)*(v-.15)/.75, Y=v=>y1-(y1-y0)*(v-.15)/.75;
+  let o='';
+  for(let v=.2;v<=.9001;v+=.1){
+    o+=`<line class="gl" x1="${x0}" x2="${x1}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;
+    o+=`<text class="ax" x="${x0-8}" y="${(Y(v)+3.5).toFixed(1)}" text-anchor="end">${Math.round(v*100)}%</text>`;
+    o+=`<text class="axb" x="${X(v).toFixed(1)}" y="${y1+17}" text-anchor="middle">${Math.round(v*100)}%</text>`;}
+  o+=`<line x1="${X(.15)}" y1="${Y(.15)}" x2="${X(.9)}" y2="${Y(.9)}" stroke="${C.line2}" stroke-dasharray="4 4"/>`;
+  o+=`<text class="ax" x="${X(.84).toFixed(1)}" y="${(Y(.84)+17).toFixed(1)}" text-anchor="end" fill="${C.dim}">calibración perfecta</text>`;
+  o+=`<path d="M${c.map(r=>`${X(r.pr).toFixed(1)},${Y(r.ob).toFixed(1)}`).join(' L')}" fill="none" stroke="${C.violet}" stroke-width="1.6" opacity=".8"/>`;
+  c.forEach(r=>o+=`<circle cx="${X(r.pr).toFixed(1)}" cy="${Y(r.ob).toFixed(1)}" r="5" fill="${C.violet}" stroke="#0B1220" stroke-width="1.5"><title>Decil ${r.d} · ${num(r.n)} registros · predicho ${pc(r.pr)} · observado ${pc(r.ob)}</title></circle>`);
+  o+=`<text class="ax" x="${x1}" y="${y1+33}" text-anchor="end">horizontal: predicho · vertical: observado</text>`;
+  $('#calibChart').innerHTML=svg(W,H,o);
+}
+
+/* ============ 12 SIMULADOR ============ */
+function renderSim(){
+  const cobro=+$('#l1').value/1000, sd=+$('#l2').value/1000;
+  const reac=+$('#l3').value/100, resc=+$('#l4').value/100;
+  const prima=+$('#prima').value||0;
+  $('#l1v').textContent=pc(cobro,1); $('#l2v').textContent=pc(sd,1);
+  $('#l3v').textContent=(reac*100).toFixed(0)+'%'; $('#l4v').textContent=(resc*100).toFixed(0)+'%';
+
+  const mCobro=Math.max(0,(cobro-D.pago.tasa)*D.pago.total_liq);
+  const movidos=Math.max(0,(sd-D.kpi.same_day)*D.kpi.registros);
+  const mSla=movidos*D.sim.gap_sd*0.55;
+  const mReac=D.react.dorm_liq*reac*0.50;
+  const mRes=Math.abs(D.residual.q[0].res)*resc;
+  const bruto=mCobro+mSla+mReac+mRes, neto=bruto*0.65;
+  const conv=(D.kpi.matriculas+neto)/D.kpi.registros;
+  const porSem=neto/D.libro_tot.semestres;
+
+  $('#simOut').innerHTML=`<div class="ctitle">Resultado sobre los ${String(D.sim.meses).replace('.',',')} meses de la base</div>
+    <div class="gauge" style="gap:26px">
+      <div><div class="gnum" style="color:var(--gold)">${num(neto)}</div>
+      <div class="mono" style="font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:4px">matrículas netas</div></div>
+      <div><div class="gnum" style="font-size:38px;color:var(--jade)">${pc(conv)}</div>
+      <div class="mono" style="font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:4px">conversión · desde ${pc(D.kpi.conv_registro)}</div></div>
+    </div>
+    <table style="margin-top:20px"><tbody>
+      <tr><td>Cierre financiero</td><td>${num(mCobro)} matrículas</td></tr>
+      <tr><td>SLA de 24 horas</td><td>${num(mSla)} matrículas</td></tr>
+      <tr><td>Reactivación de bolsa dormida</td><td>${num(mReac)} matrículas</td></tr>
+      <tr><td>Recuperación del cuartil inferior</td><td>${num(mRes)} matrículas</td></tr>
+      <tr><td>Suma bruta</td><td style="color:var(--muted)">${num(bruto)}</td></tr>
+      <tr><td>Neto tras 35% de solapamiento</td><td style="color:var(--gold)">${num(neto)}</td></tr>
+      <tr><td>Equivalente por semestre</td><td style="color:var(--gold)">${num(porSem)} matrículas</td></tr>
+      <tr><td><b style="font-weight:500">Ingreso incremental total</b></td><td style="color:var(--jade)">${cop(neto*prima)}</td></tr>
+      <tr><td><b style="font-weight:500">Ingreso por semestre</b></td><td style="color:var(--jade)">${cop(porSem*prima)}</td></tr>
+    </tbody></table>`;
+
+  const W=430,H=170, segs=[['Cierre financiero',mCobro,C.violet],['SLA 24 h',mSla,C.jade],
+    ['Reactivación',mReac,C.gold],['Cuartil inferior',mRes,C.ice]];
+  const tot=Math.max(1,bruto); let x=10,o='';
+  segs.forEach(([k,v,c])=>{
+    const w=(W-20)*v/tot;
+    o+=`<rect x="${x.toFixed(1)}" y="26" width="${Math.max(0,w).toFixed(1)}" height="30" fill="${c}" opacity=".88"><title>${k}: ${num(v)}</title></rect>`;
+    if(w>46) o+=`<text class="vlabel" x="${(x+w/2).toFixed(1)}" y="45" text-anchor="middle" font-size="10.5" fill="#0B1220">${num(v)}</text>`;
+    x+=w;
+  });
+  o+=`<text class="ax" x="10" y="17">composición de las ${num(bruto)} matrículas brutas</text>`;
+  segs.forEach(([k,v,c],i)=>{
+    o+=`<rect x="10" y="${74+i*23}" width="9" height="9" fill="${c}"/>`;
+    o+=`<text class="ax" x="24" y="${82+i*23}">${k} — ${num(v)} (${pc(v/tot,0)})</text>`;
+  });
+  $('#simChart').innerHTML=svg(W,H,o);
+}
+function bindSim(){['#l1','#l2','#l3','#l4','#prima'].forEach(s=>$(s).addEventListener('input',renderSim));}
+
+/* ============ 13 LIBRO ============ */
+function renderLibro(){
+  table('#libroTable',[
+    {t:'Palanca',f:r=>esc(r.lab)},
+    {t:'Matrículas',f:r=>`<b style="color:var(--gold)">${num(r.mat)}</b>`,raw:r=>r.mat},
+    {t:'Base de leads',f:r=>num(r.leads)},
+    {t:'Esfuerzo',f:r=>`<span style="font-family:var(--body);font-size:12.5px;color:${r.esf==='Baja'?'var(--jade)':(r.esf==='Alta'?'var(--rose)':'var(--muted)')}">${esc(r.esf)}</span>`},
+    {t:'Mecanismo',f:r=>`<span style="font-family:var(--body);font-size:12.5px;color:var(--muted)">${esc(r.mec)}</span>`}
+  ], D.libro, {barCol:1, barMax:Math.max(...D.libro.map(r=>r.mat))});
+}
+
+/* ============ 15 CALIDAD ============ */
+function renderCal(){
+  table('#calTable',[
+    {t:'Brecha detectada',f:r=>esc(r.lab)},
+    {t:'Registros',f:r=>num(r.n),raw:r=>r.n},
+    {t:'% base',f:r=>r.pct==null?'—':pc(r.pct,1),st:r=>`color:${r.pct>.4?'var(--rose)':'inherit'}`},
+    {t:'Consecuencia',f:r=>`<span style="font-family:var(--body);font-size:12.5px;color:var(--muted)">${esc(r.impacto)}</span>`}
+  ], D.calidad, {barCol:1, barMax:D.kpi.registros});
+}
+
+/* ============ NAV ============ */
+function bindNav(){
+  const links=[...document.querySelectorAll('nav a')];
+  const secs=links.map(a=>$('#'+a.dataset.s)).filter(Boolean);
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+    links.forEach(l=>l.classList.toggle('on',l.dataset.s===e.target.id));}});},
+    {rootMargin:'-12% 0px -78% 0px'});
+  secs.forEach(s=>io.observe(s));
+}
+
+/* ============ ARRANQUE ============ */
+renderHero(); renderFunnel(); renderPago(); renderBench(); renderVel();
+renderDup(); renderDesc(); renderCoh(); bindCoh(); renderConc();
+renderReact(); renderRes(); renderCanal();
+fillSelects(); renderScore(); bindScore(); renderCalib();
+renderSim(); bindSim(); renderLibro(); renderCal(); bindNav();
+window.addEventListener('resize',()=>{drawClock(); drawWaterfall(); renderCoh();});
+</script>
+</body></html>

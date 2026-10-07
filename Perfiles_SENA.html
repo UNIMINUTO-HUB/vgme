@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perfiles de matrícula · Segmentación de bases SENA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1220;--panel:#111A29;--panel2:#0E1624;--line:#1E2A40;--line2:#2A3A56;
+  --text:#E6ECF4;--muted:#8494AC;--dim:#5E708C;
+  --gold:#E8B44A;--ice:#56C8E0;--rose:#D9556B;--jade:#4FBF9A;--violet:#9B8CE0;
+  --display:'Familjen Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --body:'Instrument Sans',ui-sans-serif,system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 82% -10%,rgba(86,200,224,.09),transparent 46%),
+                   radial-gradient(circle at 2% 104%,rgba(232,180,74,.05),transparent 40%);
+  background-attachment:fixed}
+main{max-width:1220px;margin:0 auto;padding:56px 32px 100px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,4.6vw,56px);line-height:1;letter-spacing:-.035em;margin:0 0 18px}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(22px,2.5vw,30px);line-height:1.1;letter-spacing:-.025em;margin:0 0 10px}
+h3{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:-.01em;margin:0}
+p{max-width:80ch}
+.lead{font-size:16.5px;color:#BFCBDC;max-width:76ch;margin:0 0 26px}
+.sub{color:var(--muted);font-size:13px;max-width:82ch}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.eyebrow span{color:var(--gold)}
+section{padding:52px 0 0;border-top:1px solid var(--line);margin-top:44px}
+.tag{display:inline-flex;gap:8px;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);border-radius:100px;padding:5px 13px;margin-bottom:22px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--jade);box-shadow:0 0 8px var(--jade)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:20px 22px}
+.ctitle{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gridT{display:grid;grid-template-columns:1.05fr 1fr;gap:16px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.ax{font-family:var(--mono);font-size:9.5px;fill:var(--dim)}
+.axb{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+.vlabel{font-family:var(--mono);font-size:10px;fill:var(--text)}
+.gl{stroke:var(--line);stroke-width:1}
+
+/* perfiles */
+.plist{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.prow{background:var(--panel);padding:16px 20px;display:grid;grid-template-columns:38px 1fr 96px 82px 82px 82px;
+  gap:16px;align-items:center;cursor:pointer;transition:background .15s}
+.prow:hover{background:#16202F}
+.prow.open{background:#16202F}
+.pid{font-family:var(--mono);font-size:11px;font-weight:600;text-align:center;padding:5px 0;border-radius:3px}
+.pnom{font-family:var(--display);font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+.preg{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+.pm{font-family:var(--mono);font-size:13px;text-align:right}
+.pmk{font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:2px}
+.pdet{background:var(--panel2);padding:0 20px;max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s}
+.pdet.open{max-height:360px;padding:18px 20px 20px}
+.pdet .acc{font-size:13.5px;color:#C6D2E2;border-left:2px solid var(--gold);padding-left:14px;margin:0 0 14px}
+.pbars{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.pb{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.pb b{display:block;font-size:15px;color:var(--text);font-weight:500;margin-top:3px}
+.hdr{background:var(--panel2);padding:9px 20px;display:grid;grid-template-columns:38px 1fr 96px 82px 82px 82px;gap:16px;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.hdr div:nth-child(n+3){text-align:right}
+
+/* controles */
+label.f{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+select,input{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line2);border-radius:3px;
+  padding:9px 10px;font-family:var(--body);font-size:13.5px}
+select:focus,input:focus{outline:2px solid var(--ice);outline-offset:1px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:10.5px;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);
+  padding:6px 12px;border-radius:100px;cursor:pointer;transition:.15s}
+.chip:hover{color:var(--text)}
+.chip.on{background:rgba(232,180,74,.13);border-color:var(--gold);color:var(--gold)}
+.gnum{font-family:var(--display);font-weight:700;font-size:56px;letter-spacing:-.045em;line-height:.9}
+.badge{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:100px;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:right;
+  padding:0 8px 8px;border-bottom:1px solid var(--line2);font-weight:500}
+th:first-child{text-align:left;padding-left:0}
+td{padding:8px;border-bottom:1px solid rgba(30,42,64,.6);text-align:right;font-family:var(--mono);font-size:12px}
+td:first-child{text-align:left;font-family:var(--body);font-size:13px;padding-left:0}
+.note{border:1px solid var(--line2);background:var(--panel2);border-radius:3px;padding:13px 15px;font-size:12.5px;color:var(--muted)}
+.note b{color:var(--text);font-weight:500}
+.foot{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.9}
+@media(max-width:900px){
+  main{padding:36px 18px 70px}
+  .grid2,.gridT{grid-template-columns:1fr}
+  .prow,.hdr{grid-template-columns:34px 1fr 76px;gap:10px}
+  .prow>div:nth-child(n+5),.hdr>div:nth-child(n+5){display:none}
+}
+</style>
+<style id="vgme-auth-lock">
+html{background:#061a3a!important}
+html.vgme-auth-pending{visibility:hidden!important}
+</style>
+<script>
+(function(){
+  // En vista local (file://) permitir la previsualizacion sin depender de auth-vgme.js.
+  if(location.protocol==='file:'){
+    document.documentElement.classList.remove('vgme-auth-pending');
+    document.documentElement.style.setProperty('visibility','visible','important');
+    return;
+  }
+  // En GitHub / servidor se conserva el bloqueo de acceso.
+  document.documentElement.classList.add('vgme-auth-pending');
+  var s=document.createElement('script');
+  s.src='./auth-vgme.js';
+  s.defer=true;
+  s.onload=function(){
+    // auth-vgme.js administra el acceso; si por algo no quita la clase, la quitamos
+    // igual al terminar de cargar para evitar pantallas bloqueadas.
+    setTimeout(function(){document.documentElement.classList.remove('vgme-auth-pending')},50);
+  };
+  s.onerror=function(){
+    // Evita una pantalla azul permanente si el archivo de auth no esta disponible.
+    document.documentElement.classList.remove('vgme-auth-pending');
+  };
+  document.head.appendChild(s);
+})();
+</script>
+</head>
+<body>
+<main>
+
+<div class="tag"><span class="dot"></span> Segmentación de bases · convenio SENA</div>
+<h1>Ocho perfiles.<br>Sesenta puntos de diferencia.</h1>
+<p class="lead">Los perfiles salen de un árbol de decisión sobre los 15.617 registros, usando solo atributos que vienen en la base el día que llega. Son excluyentes y cubren el 100%: cada lead cae en uno y solo uno. El mejor convierte al 83,5% y el peor al 23,1%.</p>
+
+<div class="card">
+  <div class="ctitle">Los ocho perfiles — el ancho es el volumen, la altura es la conversión</div>
+  <div id="mapa"></div>
+</div>
+
+<div class="grid2" style="margin-top:16px">
+  <div class="note"><b>La primera pregunta no es quién es el lead, es si ya estaba.</b> El corte más fuerte del árbol es la duplicidad: los leads nuevos convierten al 63,9% y los reingresos al 29,2%. Todo lo demás —edad, sede, modalidad— viene después.</div>
+  <div class="note"><b>Los cuatro mejores perfiles son el 36,9% del volumen y el 46,3% de las matrículas.</b> El peor es el 13,8% del volumen y aporta el 5,7%. Ahí está el margen de reasignación de esfuerzo.</div>
+</div>
+
+<!-- ============ PERFILES ============ -->
+<section id="perfiles">
+  <div class="eyebrow"><span>01</span> Los perfiles</div>
+  <h2>Cada uno con su regla, su tamaño y qué hacer con él.</h2>
+  <p class="lead">Clic en cualquiera para ver el protocolo y el detalle. «Velocidad» es cuánto sube la conversión de ese perfil al contactarlo el mismo día: no es igual en todos, y ahí está la clave para repartir el esfuerzo.</p>
+  <div id="lista"></div>
+</section>
+
+<!-- ============ CLASIFICADOR ============ -->
+<section id="clasificador">
+  <div class="eyebrow"><span>02</span> Clasificador</div>
+  <h2>A qué perfil pertenece un lead.</h2>
+  <p class="lead">Las mismas cinco preguntas del árbol, en el mismo orden. Sirve para clasificar a mano, y es la lógica exacta que hay que replicar en el CRM.</p>
+  <div class="gridT">
+    <div class="card">
+      <div class="ctitle">Atributos del lead</div>
+      <div style="margin-bottom:16px">
+        <label class="f">1 · ¿El documento ya existe en la base?</label>
+        <div class="chips" id="cDup"><span class="chip on" data-v="0">Lead nuevo</span><span class="chip" data-v="1">Ya registrado</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div><label class="f" for="cEdad">2 · Edad</label><input type="number" id="cEdad" value="20" min="15" max="70"></div>
+        <div><label class="f" for="cSede">3 · Rectoría</label><select id="cSede"></select></div>
+        <div><label class="f" for="cMod">4 · Modalidad</label><select id="cMod"><option>A Distancia</option><option>Presencial</option></select></div>
+        <div><label class="f" for="cEsc">5 · Escuela</label><select id="cEsc"><option value="VA">VA · Virtual y a distancia</option><option value="OTRA">Otra escuela</option></select></div>
+      </div>
+      <p class="sub" style="margin-top:14px;font-size:12px">La modalidad solo decide entre P2 y P4. La escuela solo importa si el documento ya está en la base.</p>
+    </div>
+    <div class="card" id="cOut"></div>
+  </div>
+</section>
+
+<!-- ============ REPARTO ============ -->
+<section id="reparto">
+  <div class="eyebrow"><span>03</span> Reparto</div>
+  <h2>Cómo repartir la base que llega.</h2>
+  <p class="lead">Con la mezcla histórica, una base de <span class="mono" id="nEcho">2.000</span> leads se descompone así. La columna de intentos reparte una capacidad fija de contactos según lo que rinde cada perfil, no según su tamaño.</p>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:220px 220px 1fr;gap:18px;align-items:end">
+      <div><label class="f" for="nLeads">Leads que llegan</label><input type="number" id="nLeads" value="2000" step="100" min="100"></div>
+      <div><label class="f" for="nCap">Capacidad de contactos</label><input type="number" id="nCap" value="6000" step="500" min="500"></div>
+      <div class="note" style="margin:0">Reparto proporcional a <b>volumen × conversión × sensibilidad a la velocidad</b>. Los perfiles que responden a la velocidad reciben más intentos porque ahí el contacto extra cambia el resultado.</div>
+    </div>
+  </div>
+  <div class="card"><div id="repTable"></div></div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card" id="repOut"></div>
+    <div class="card">
+      <div class="ctitle">Reparto de intentos frente a reparto por volumen</div>
+      <div id="repChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTAS ============ -->
+<section id="notas">
+  <div class="eyebrow"><span>04</span> Tres cosas que hay que saber al usar esto</div>
+  <h2>Los límites del modelo.</h2>
+  <div class="grid2" style="margin-top:20px">
+    <div class="card">
+      <h3 style="color:var(--gold)">El reingreso no es un lead malo</h3>
+      <p style="font-size:13.5px;margin:10px 0 0;color:#C6D2E2">P7 y P8 convierten bajo, pero son los perfiles <b style="color:var(--text);font-weight:500">más sensibles a la velocidad de todo el modelo</b>: +23,3 pp y +8,0 pp contra +5 o +6 del resto. Un reingreso contactado el mismo día por el asesor que ya tenía el caso se comporta muy distinto a uno que entra a una cola nueva. Baja conversión promedio no significa baja recuperabilidad.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--rose)">El pago es parte del perfil</h3>
+      <p style="font-size:13.5px;margin:10px 0 0;color:#C6D2E2">La tasa de pago sobre liquidaciones emitidas va de 87% en P1 a 29% en P8, y sigue el mismo orden que la conversión. Es decir: los perfiles buenos no solo llegan más lejos, además <b style="color:var(--text);font-weight:500">cierran mejor la plata</b>. Priorizar por conversión y priorizar por cobro dan el mismo orden, así que no hay conflicto entre las dos metas.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--ice)">Tolima Huila aparece como regla, pero no es geografía</h3>
+      <p style="font-size:13.5px;margin:10px 0 0;color:#C6D2E2">El árbol separa Tolima porque es la sede con mejor desempeño, no porque la región tenga algo especial. Lo que hay detrás es <b style="color:var(--text);font-weight:500">90% de contacto el mismo día y 87% de tasa de cobro</b>. Si otra sede adopta esas dos rutinas, sus leads deberían migrar hacia el comportamiento de P1 y P3. La regla es un marcador de práctica, no de mercado.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--violet)">Qué falta para afinar la segmentación</h3>
+      <p style="font-size:13.5px;margin:10px 0 0;color:#C6D2E2">El canal declarado no entró en ningún corte del árbol pese a tener señal, porque «Origen del candidato» está vacío en 62,7% de la base y 16,8% declara «Otro». Con ese campo completo probablemente aparecerían perfiles más finos dentro de P5, que hoy es un bloque de 5.119 leads —un tercio de todo— con una conversión de 59,9% muy cercana al promedio.</p>
+    </div>
+  </div>
+</section>
+
+<div class="foot">
+  Fuente: Reporte_SENA_2025-2026.xlsx · 15.617 registros con edad válida · solicitudes de septiembre 2024 a agosto 2026<br>
+  Perfiles derivados de un árbol de decisión de profundidad 4 con mínimo 400 registros por hoja, agrupado en 8 segmentos operables · variables: duplicidad, edad, rectoría, modalidad y escuela<br>
+  Conversión = etapa «Matriculado financieramente» · Tasa de pago = matriculados sobre liquidaciones emitidas · Velocidad = diferencia de conversión entre contacto el mismo día y contacto posterior
+</div>
+
+</main>
+<script>
+const P={"perfiles":[{"id":"P1","nom":"Joven Tolima","regla":"Lead nuevo · hasta 22 años · Tolima Huila","acc":"Contacto en menos de 2 horas. Cerrar el pago en la misma llamada. Es el perfil que más rinde por minuto invertido.","n":828,"pct":0.053,"conv":0.8345,"lift":1.4851,"pago":0.8685,"liq":0.6703,"sd":0.8998,"vel":0.0304,"mat":691,"edad":19.4},{"id":"P3","nom":"Adulto Tolima","regla":"Lead nuevo · 23 años o más · Tolima Huila","acc":"Mismo día. Ofrecer financiación desde el primer contacto: el adulto llega lejos pero paga menos.","n":522,"pct":0.0334,"conv":0.7184,"lift":1.2784,"pago":0.7803,"liq":0.6015,"sd":0.8448,"vel":0.0758,"mat":375,"edad":28.6},{"id":"P2","nom":"Joven a distancia","regla":"Lead nuevo · hasta 22 años · fuera de Tolima · a distancia","acc":"Mismo día sin excepción. Es el segundo mejor perfil y el tercero en volumen: aquí se decide el grueso del resultado.","n":2270,"pct":0.1454,"conv":0.7101,"lift":1.2637,"pago":0.7714,"liq":0.5722,"sd":0.7846,"vel":0.058,"mat":1612,"edad":20.3},{"id":"P4","nom":"Joven presencial","regla":"Lead nuevo · hasta 22 años · fuera de Tolima · presencial","acc":"Mismo día. Alta sensibilidad a la velocidad (+7,3 pp) y mejor prima media que el perfil a distancia.","n":2138,"pct":0.1369,"conv":0.6492,"lift":1.1553,"pago":0.7191,"liq":0.5412,"sd":0.7339,"vel":0.0728,"mat":1388,"edad":19.5},{"id":"P5","nom":"Adulto pleno","regla":"Lead nuevo · de 23 a 35 años · fuera de Tolima","acc":"Mismo día. Es un tercio de toda la base: un punto aquí vale más que diez en cualquier perfil pequeño.","n":5119,"pct":0.3278,"conv":0.5987,"lift":1.0655,"pago":0.676,"liq":0.5427,"sd":0.7595,"vel":0.0535,"mat":3065,"edad":27.7},{"id":"P6","nom":"Adulto mayor","regla":"Lead nuevo · 36 años o más · fuera de Tolima","acc":"Mismo día y ruta financiera diferenciada: llega a liquidación igual que los demás pero solo paga el 61%.","n":1174,"pct":0.0752,"conv":0.5153,"lift":0.917,"pago":0.6089,"liq":0.5358,"sd":0.7487,"vel":0.059,"mat":605,"edad":40.2},{"id":"P7","nom":"Reingreso virtual","regla":"Documento ya en base · escuela virtual y a distancia","acc":"Enrutar al asesor que ya tiene el caso, nunca a uno nuevo. La velocidad vale +23 pp aquí: es donde más rinde el SLA.","n":1413,"pct":0.0905,"conv":0.3836,"lift":0.6826,"pago":0.4171,"liq":0.4225,"sd":0.8705,"vel":0.2335,"mat":542,"edad":25.7},{"id":"P8","nom":"Reingreso presencial","regla":"Documento ya en base · resto de escuelas","acc":"No asignar cola telefónica individual. Campaña de reactivación con oferta financiera y reoferta de periodo.","n":2153,"pct":0.1379,"conv":0.2313,"lift":0.4116,"pago":0.2879,"liq":0.4194,"sd":0.7339,"vel":0.0798,"mat":498,"edad":24.6}],"base":{"n":15617,"mat":8776,"conv":0.562,"sd":0.7756,"pago":0.6476,"liq":8232},"comp":{"P1":[{"lab":"Tolima Huila","n":828}],"P2":[{"lab":"Bogotá","n":781},{"lab":"Centro Occidente","n":375},{"lab":"Santanderes","n":305},{"lab":"Caribe","n":234}],"P3":[{"lab":"Tolima Huila","n":522}],"P4":[{"lab":"Bogotá","n":999},{"lab":"Cundinamarca Boyacá","n":325},{"lab":"Orinoquía Amazonía","n":261},{"lab":"Antioquia y Chocó","n":193}],"P5":[{"lab":"Bogotá","n":1965},{"lab":"Caribe","n":767},{"lab":"Centro Occidente","n":700},{"lab":"Antioquia y Chocó","n":542}],"P6":[{"lab":"Bogotá","n":406},{"lab":"Caribe","n":197},{"lab":"Antioquia y Chocó","n":162},{"lab":"Centro Occidente","n":144}],"P7":[{"lab":"Bogotá","n":346},{"lab":"Caribe","n":333},{"lab":"Cundinamarca Boyacá","n":152},{"lab":"Tolima Huila","n":146}],"P8":[{"lab":"Bogotá","n":1389},{"lab":"Caribe","n":227},{"lab":"Antioquia y Chocó","n":187},{"lab":"Cundinamarca Boyacá","n":119}]}};
+const $=s=>document.querySelector(s);
+const C={gold:'#E8B44A',ice:'#56C8E0',rose:'#D9556B',jade:'#4FBF9A',violet:'#9B8CE0',
+  muted:'#8494AC',dim:'#5E708C',line:'#1E2A40',line2:'#2A3A56',text:'#E6ECF4'};
+const pc=(v,d=1)=>v==null?'—':(v*100).toFixed(d).replace('.',',')+'%';
+const pp=(v,d=1)=>(v>=0?'+':'−')+Math.abs(v).toFixed(d).replace('.',',');
+const num=v=>v==null?'—':Math.round(v).toLocaleString('es-CO');
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const COL=p=>p.conv>=.70?C.jade:(p.conv>=.58?C.gold:(p.conv>=.35?C.violet:C.rose));
+const svg=(w,h,i)=>`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${i}</svg>`;
+
+/* ===== mapa: ancho = volumen, alto = conversión ===== */
+function mapa(){
+  const L=P.perfiles, W=1120,H=280,x0=44,x1=W-12,y0=20,y1=H-52;
+  const tot=L.reduce((a,b)=>a+b.n,0), mx=.90;
+  let o='',x=x0;
+  for(let v=0;v<=.9001;v+=.15){
+    const y=y1-(y1-y0)*v/mx;
+    o+=`<line class="gl" x1="${x0}" x2="${x1}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+    o+=`<text class="ax" x="${x0-8}" y="${(y+3.5).toFixed(1)}" text-anchor="end">${Math.round(v*100)}%</text>`;
+  }
+  const yb=y1-(y1-y0)*P.base.conv/mx;
+  o+=`<line x1="${x0}" x2="${x1}" y1="${yb.toFixed(1)}" y2="${yb.toFixed(1)}" stroke="${C.ice}" stroke-dasharray="4 3" opacity=".8"/>`;
+  o+=`<text class="ax" x="${x1}" y="${(yb-6).toFixed(1)}" text-anchor="end" fill="${C.ice}">promedio de la base ${pc(P.base.conv)}</text>`;
+  L.forEach(p=>{
+    const w=(x1-x0)*p.n/tot, h=(y1-y0)*p.conv/mx, c=COL(p);
+    o+=`<rect x="${(x+1).toFixed(1)}" y="${(y1-h).toFixed(1)}" width="${(w-2).toFixed(1)}" height="${h.toFixed(1)}" fill="${c}" opacity=".9" rx="1"><title>${p.id} ${p.nom} · ${num(p.n)} leads · ${pc(p.conv)}</title></rect>`;
+    if(w>44){
+      o+=`<text class="vlabel" x="${(x+w/2).toFixed(1)}" y="${(y1-h-8).toFixed(1)}" text-anchor="middle" font-size="11" fill="${c}">${pc(p.conv,0)}</text>`;
+      o+=`<text x="${(x+w/2).toFixed(1)}" y="${(y1-h+16).toFixed(1)}" text-anchor="middle" font-size="10" font-family="var(--mono)" font-weight="600" fill="#0B1220">${p.id}</text>`;
+    }
+    o+=`<text class="ax" x="${(x+w/2).toFixed(1)}" y="${y1+15}" text-anchor="middle" fill="${C.muted}" font-size="${w>70?'9.5':'8.5'}">${w>52?esc(p.nom):''}</text>`;
+    o+=`<text class="ax" x="${(x+w/2).toFixed(1)}" y="${y1+28}" text-anchor="middle">${w>44?num(p.n):''}</text>`;
+    x+=w;
+  });
+  o+=`<text class="ax" x="${x0}" y="${y1+46}" fill="${C.dim}">15.617 leads ordenados de mayor a menor conversión · el ancho es proporcional al volumen del perfil</text>`;
+  $('#mapa').innerHTML=svg(W,H,o);
+}
+
+/* ===== lista de perfiles ===== */
+function lista(){
+  let h=`<div class="plist"><div class="hdr"><div></div><div>Perfil y regla</div><div>Leads</div><div>Conversión</div><div>Tasa pago</div><div>Velocidad</div></div>`;
+  P.perfiles.forEach((p,i)=>{
+    const c=COL(p);
+    const comp=(P.comp[p.id]||[]).map(x=>`${esc(x.lab)} ${num(x.n)}`).join(' · ');
+    h+=`<div class="prow" data-i="${i}">
+      <div class="pid" style="background:${c}22;color:${c};border:1px solid ${c}55">${p.id}</div>
+      <div><div class="pnom">${esc(p.nom)}</div><div class="preg">${esc(p.regla)}</div></div>
+      <div class="pm">${num(p.n)}<span class="pmk" style="margin-top:3px">${pc(p.pct,1)} base</span></div>
+      <div class="pm" style="color:${c}">${pc(p.conv)}<span class="pmk" style="margin-top:3px">×${p.lift.toFixed(2).replace('.',',')}</span></div>
+      <div class="pm">${pc(p.pago,0)}</div>
+      <div class="pm" style="color:${p.vel>.15?C.jade:C.muted}">${pp(p.vel*100)}</div>
+    </div>
+    <div class="pdet" data-i="${i}">
+      <p class="acc">${esc(p.acc)}</p>
+      <div class="pbars">
+        <div class="pb">Matrículas aportadas<b>${num(p.mat)}</b></div>
+        <div class="pb">Llega a liquidación<b>${pc(p.liq,0)}</b></div>
+        <div class="pb">Contacto mismo día hoy<b>${pc(p.sd,0)}</b></div>
+        <div class="pb">Edad mediana<b>${String(p.edad).replace('.',',')} años</b></div>
+        <div class="pb" style="grid-column:1/-1">Dónde vive<b style="font-size:12px;font-family:var(--mono);font-weight:400">${comp}</b></div>
+      </div>
+    </div>`;
+  });
+  $('#lista').innerHTML=h+'</div>';
+  document.querySelectorAll('.prow').forEach(r=>r.addEventListener('click',()=>{
+    const i=r.dataset.i, d=document.querySelector(`.pdet[data-i="${i}"]`);
+    const open=d.classList.contains('open');
+    document.querySelectorAll('.pdet').forEach(x=>x.classList.remove('open'));
+    document.querySelectorAll('.prow').forEach(x=>x.classList.remove('open'));
+    if(!open){d.classList.add('open'); r.classList.add('open');}
+  }));
+}
+
+/* ===== clasificador: replica exacta del árbol ===== */
+let cDup=0;
+function clasificar(){
+  const e=+$('#cEdad').value||0, sede=$('#cSede').value, mod=$('#cMod').value, esc2=$('#cEsc').value;
+  if(cDup===1) return esc2==='VA'?'P7':'P8';
+  if(e<=22.55) return sede==='Tolima Huila'?'P1':(mod==='Presencial'?'P4':'P2');
+  return sede==='Tolima Huila'?'P3':(e<=35.85?'P5':'P6');
+}
+function renderClas(){
+  const id=clasificar(), p=P.perfiles.find(x=>x.id===id), c=COL(p);
+  const rank=P.perfiles.findIndex(x=>x.id===id)+1;
+  $('#cOut').innerHTML=`<div class="ctitle">Perfil asignado</div>
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div class="gnum" style="color:${c}">${pc(p.conv,1)}</div>
+      <div><div class="badge" style="background:${c}22;color:${c};border:1px solid ${c}55">${p.id} · ${esc(p.nom)}</div>
+      <div class="mono" style="font-size:11.5px;color:var(--muted);margin-top:9px">
+        Puesto ${rank} de 8 · ×${p.lift.toFixed(2).replace('.',',')} frente al promedio<br>
+        ${num(p.n)} leads históricos · tasa de pago ${pc(p.pago,0)}</div></div>
+    </div>
+    <div style="border-left:2px solid ${c};padding-left:14px;margin-top:20px;font-size:13.5px;color:#C6D2E2">${esc(p.acc)}</div>
+    <div class="note" style="margin-top:16px">Contactarlo el mismo día vale <b>${pp(p.vel*100)} puntos</b> en este perfil. ${p.vel>.15?'Es de los más sensibles del modelo: aquí el SLA es lo que decide.':'Sensibilidad media: importa, pero no es la palanca principal de este perfil.'}</div>`;
+}
+function bindClas(){
+  const sedes=['Antioquia y Chocó','Bogotá','Caribe','Centro Occidente','Cundinamarca Boyacá','Orinoquía Amazonía','Santanderes','Tolima Huila'];
+  $('#cSede').innerHTML=sedes.map(s=>`<option>${s}</option>`).join('');
+  $('#cSede').value='Bogotá';
+  ['#cEdad','#cSede','#cMod','#cEsc'].forEach(s=>$(s).addEventListener('input',renderClas));
+  $('#cDup').addEventListener('click',ev=>{
+    const c=ev.target.closest('.chip'); if(!c) return;
+    [...$('#cDup').children].forEach(x=>x.classList.remove('on')); c.classList.add('on');
+    cDup=+c.dataset.v; renderClas();
+  });
+  renderClas();
+}
+
+/* ===== reparto ===== */
+function renderRep(){
+  const N=+$('#nLeads').value||0, CAP=+$('#nCap').value||0;
+  $('#nEcho').textContent=num(N);
+  const rows=P.perfiles.map(p=>{
+    const leads=N*p.pct;
+    const peso=leads*p.conv*(1+p.vel*4);   // volumen × rendimiento × sensibilidad al contacto
+    return {...p,leads,peso};
+  });
+  const sp=rows.reduce((a,b)=>a+b.peso,0);
+  rows.forEach(r=>{r.int=CAP*r.peso/sp; r.ipl=r.leads?r.int/r.leads:0; r.mat=r.leads*r.conv;});
+  const totMat=rows.reduce((a,b)=>a+b.mat,0);
+  let h=`<table><thead><tr><th>Perfil</th><th>Leads</th><th>% base</th><th>Conv.</th><th>Matrículas</th><th>Intentos</th><th>Por lead</th><th>Prioridad</th></tr></thead><tbody>`;
+  rows.forEach((r,i)=>{
+    const c=COL(r);
+    h+=`<tr><td><span style="color:${c};font-family:var(--mono);font-size:11px">${r.id}</span> ${esc(r.nom)}</td>
+      <td>${num(r.leads)}</td><td>${pc(r.pct,1)}</td>
+      <td style="color:${c}">${pc(r.conv,0)}</td><td>${num(r.mat)}</td>
+      <td>${num(r.int)}</td><td style="color:${r.ipl>3?C.jade:C.muted}">${r.ipl.toFixed(1).replace('.',',')}</td>
+      <td style="font-family:var(--body);font-size:12px;color:${c}">${i<2?'Máxima':(i<5?'Alta':(i<7?'Media':'Campaña'))}</td></tr>`;
+  });
+  h+=`<tr style="border-top:1px solid var(--line2)"><td><b style="font-weight:500">Total</b></td><td>${num(N)}</td><td>100%</td>
+    <td style="color:var(--gold)">${pc(totMat/N,1)}</td><td style="color:var(--gold)">${num(totMat)}</td>
+    <td>${num(CAP)}</td><td>${(CAP/N).toFixed(1).replace('.',',')}</td><td></td></tr></tbody></table>`;
+  $('#repTable').innerHTML=h;
+
+  const top4=rows.slice(0,4);
+  $('#repOut').innerHTML=`<div class="ctitle">Lectura del reparto</div>
+    <table><tbody>
+      <tr><td>Matrículas esperadas del lote</td><td style="color:var(--gold)">${num(totMat)}</td></tr>
+      <tr><td>Conversión esperada</td><td>${pc(totMat/N,1)}</td></tr>
+      <tr><td>Los 4 mejores perfiles</td><td>${pc(top4.reduce((a,b)=>a+b.leads,0)/N,1)} del lote</td></tr>
+      <tr><td>…y aportan</td><td style="color:var(--jade)">${pc(top4.reduce((a,b)=>a+b.mat,0)/totMat,1)} de la matrícula</td></tr>
+      <tr><td>P8 · reingreso presencial</td><td style="color:var(--rose)">${pc(rows[7].mat/totMat,1)} de la matrícula</td></tr>
+      <tr><td><b style="font-weight:500">Intentos por lead: mejor vs peor</b></td><td>${rows[0].ipl.toFixed(1).replace('.',',')} vs ${rows[7].ipl.toFixed(1).replace('.',',')}</td></tr>
+    </tbody></table>
+    <div class="note" style="margin-top:16px">Este número —matrículas esperadas del lote— es la <b>línea base contra la cual medir al equipo</b>. Si el lote esperaba ${num(totMat)} y cerró más, la gestión aportó; si cerró menos, restó, aunque el número absoluto se vea bien.</div>`;
+
+  // barras comparadas
+  const W=520,H=230,x0=8,x1=W-14,y0=26,y1=H-26;
+  const bh=(y1-y0)/rows.length;
+  let o='';
+  rows.forEach((r,i)=>{
+    const y=y0+i*bh, h2=bh*.34;
+    const wv=(x1-x0-118)*r.pct/.35, wi=(x1-x0-118)*(r.int/CAP)/.35;
+    o+=`<text class="ax" x="${x0}" y="${(y+bh*.45).toFixed(1)}" fill="${COL(r)}">${r.id}</text>`;
+    o+=`<rect x="${x0+26}" y="${y.toFixed(1)}" width="${Math.max(1,wv).toFixed(1)}" height="${h2.toFixed(1)}" fill="${C.dim}" rx="1"><title>volumen ${pc(r.pct,1)}</title></rect>`;
+    o+=`<rect x="${x0+26}" y="${(y+h2+2).toFixed(1)}" width="${Math.max(1,wi).toFixed(1)}" height="${h2.toFixed(1)}" fill="${COL(r)}" rx="1"><title>intentos ${pc(r.int/CAP,1)}</title></rect>`;
+    o+=`<text class="ax" x="${(x0+26+Math.max(wv,wi)+8).toFixed(1)}" y="${(y+bh*.45).toFixed(1)}">${pc(r.pct,0)} → ${pc(r.int/CAP,0)}</text>`;
+  });
+  o+=`<rect x="${x0+26}" y="4" width="9" height="9" fill="${C.dim}"/><text class="ax" x="${x0+40}" y="12">% del volumen</text>`;
+  o+=`<rect x="${x0+140}" y="4" width="9" height="9" fill="${C.gold}"/><text class="ax" x="${x0+154}" y="12">% de los intentos asignados</text>`;
+  $('#repChart').innerHTML=svg(W,H,o);
+}
+function bindRep(){['#nLeads','#nCap'].forEach(s=>$(s).addEventListener('input',renderRep));}
+
+mapa(); lista(); bindClas(); bindRep(); renderRep();
+window.addEventListener('resize',()=>{mapa(); renderRep();});
+
+</script>
+
+</body>
+</html>
