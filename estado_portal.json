@@ -1,6 +1,10 @@
 {
- "actualizado": "2026-11-27T09:09:52-05:00",
+ "actualizado": "2026-11-27T09:10:02-05:00",
  "archivos": {
+  "Analisis_Contactabilidad_SENA.html": {
+   "bytes": 160271,
+   "publicado": "2026-11-27T09:10:02-05:00"
+  },
   "Avance_Mercadeo_y_Experiencia_2026_Visor_VGME.html": {
    "bytes": 727090,
    "publicado": "2026-11-27T09:09:22-05:00"
@@ -24,6 +28,14 @@
   "Informe_Matriculas_Unificado.html": {
    "bytes": 13252725,
    "publicado": "2026-11-27T09:08:27-05:00"
+  },
+  "Informe_Origen_Ventas_2026.html": {
+   "bytes": 2739658,
+   "publicado": "2026-11-27T09:10:02-05:00"
+  },
+  "Perfiles_SENA.html": {
+   "bytes": 45496,
+   "publicado": "2026-11-27T09:10:02-05:00"
   },
   "Portal_Promotores_Antioquia.html": {
    "bytes": 336241,
@@ -72,6 +84,10 @@
   "Portal_Promotores_Tolima_Huila.html": {
    "bytes": 336141,
    "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Repositorio_Normativo.html": {
+   "bytes": 80745,
+   "publicado": "2026-11-27T09:10:02-05:00"
   },
   "SNIES_Mercadeo_2025.html": {
    "bytes": 11289556,
