@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-27T09:09:04-05:00",
+ "actualizado": "2026-11-27T09:09:13-05:00",
  "archivos": {
   "Funnels_VGME.html": {
    "bytes": 74953,
@@ -80,6 +80,10 @@
   "VGME_Index.html": {
    "bytes": 42086,
    "publicado": "2026-11-27T09:09:04-05:00"
+  },
+  "Vista_Vicerrectoria.html": {
+   "bytes": 9007980,
+   "publicado": "2026-11-27T09:09:13-05:00"
   }
  }
 }
