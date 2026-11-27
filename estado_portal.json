@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-27T09:08:07-05:00",
+ "actualizado": "2026-11-27T09:08:17-05:00",
  "archivos": {
   "Informe_Matriculas_Analisis_Interanual.html": {
    "bytes": 4503509,
@@ -8,6 +8,10 @@
   "Informe_Matriculas_Seguimiento_Metas.html": {
    "bytes": 13635779,
    "publicado": "2026-11-27T09:08:07-05:00"
+  },
+  "SNIES_Mercadeo_2025.html": {
+   "bytes": 11289556,
+   "publicado": "2026-11-27T09:08:17-05:00"
   }
  }
 }
