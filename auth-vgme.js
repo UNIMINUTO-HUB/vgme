@@ -63,9 +63,10 @@
     const style=document.createElement('style');
     style.id='vgme-auth-style';
     style.textContent=`
-      .vgme-auth-overlay{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(780px 460px at 18% -10%,rgba(28,88,174,.42),transparent 65%),linear-gradient(145deg,#0a234b,#031022 72%);font-family:Inter,Arial,sans-serif}
+      .vgme-auth-overlay{position:fixed;inset:0;overflow-y:auto;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(780px 460px at 18% -10%,rgba(28,88,174,.42),transparent 65%),linear-gradient(145deg,#0a234b,#031022 72%);font-family:Inter,Arial,sans-serif}
       .vgme-auth-card{width:min(410px,100%);text-align:center}
-      .vgme-auth-logo{display:block;width:min(310px,82%);max-height:82px;object-fit:contain;margin:0 auto 23px}
+      .vgme-auth-logo-wrap{background:#fff;border-radius:18px;padding:14px 18px;margin:0 auto 22px;width:min(360px,94%);box-shadow:0 18px 40px rgba(0,0,0,.28)}
+      .vgme-auth-logo{display:block;width:100%;height:auto;max-height:240px;object-fit:contain;margin:0 auto}
       .vgme-auth-card h2{margin:0 0 7px;color:#fff;font-size:26px;line-height:1.12;font-weight:800}
       .vgme-auth-card p{margin:0 0 20px;color:#b9c6d9;font-size:12.5px;line-height:1.55}
       .vgme-auth-card input{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:13px 14px;outline:none;text-align:center;font-size:14px}
@@ -76,7 +77,7 @@
     document.head.appendChild(style);
     const o=document.createElement('div');
     o.className='vgme-auth-overlay';
-    o.innerHTML=`<div class="vgme-auth-card"><img class="vgme-auth-logo" src="https://www.uniminuto.edu/sites/default/files/2023-02/uniminuto%20blanco_1.png" alt="UNIMINUTO"><h2>Portal VGME</h2><p>Acceso interno · Vicerrectoría de Mercadeo y Experiencia</p><input type="password" autocomplete="current-password" placeholder="Clave de acceso" aria-label="Clave de acceso"><button type="button">Entrar</button><div class="vgme-auth-error" aria-live="polite"></div></div>`;
+    o.innerHTML=`<div class="vgme-auth-card"><div class="vgme-auth-logo-wrap"><img class="vgme-auth-logo" src="logo_vgme.png" alt="Vicerrectoría de Mercadeo y Experiencia · UNIMINUTO" onerror="this.parentNode.style.display='none'"></div><h2>Portal VGME</h2><p>Acceso interno · Vicerrectoría de Mercadeo y Experiencia</p><input type="password" autocomplete="current-password" placeholder="Clave de acceso" aria-label="Clave de acceso"><button type="button">Entrar</button><div class="vgme-auth-error" aria-live="polite"></div></div>`;
     document.body.appendChild(o);
     const input=o.querySelector('input'),btn=o.querySelector('button'),err=o.querySelector('.vgme-auth-error');
     let busy=false;
