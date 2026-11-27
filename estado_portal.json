@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-27T09:08:36-05:00",
+ "actualizado": "2026-11-27T09:08:43-05:00",
  "archivos": {
   "Funnels_VGME.html": {
    "bytes": 74953,
@@ -17,9 +17,65 @@
    "bytes": 13252725,
    "publicado": "2026-11-27T09:08:27-05:00"
   },
+  "Portal_Promotores_Antioquia.html": {
+   "bytes": 336241,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Bogota.html": {
+   "bytes": 454210,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Caribe.html": {
+   "bytes": 300179,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Centro_Occidente.html": {
+   "bytes": 329373,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Contact_Center.html": {
+   "bytes": 720495,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Cundinamarca_Boyaca.html": {
+   "bytes": 362056,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Mi_Funnel.html": {
+   "bytes": 326907,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Orinoquia_Amazonia.html": {
+   "bytes": 323268,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Profesionales.html": {
+   "bytes": 288333,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Rectorias.html": {
+   "bytes": 872930,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Santanderes.html": {
+   "bytes": 327032,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Portal_Promotores_Tolima_Huila.html": {
+   "bytes": 336141,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
   "SNIES_Mercadeo_2025.html": {
    "bytes": 11289556,
    "publicado": "2026-11-27T09:08:17-05:00"
+  },
+  "Tablero_Coordinadores_Contact_Center.html": {
+   "bytes": 146545,
+   "publicado": "2026-11-27T09:08:43-05:00"
+  },
+  "Tablero_Coordinadores_Rectorias.html": {
+   "bytes": 173702,
+   "publicado": "2026-11-27T09:08:43-05:00"
   }
  }
 }
