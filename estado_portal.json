@@ -1,6 +1,10 @@
 {
- "actualizado": "2026-11-27T09:09:13-05:00",
+ "actualizado": "2026-11-27T09:09:22-05:00",
  "archivos": {
+  "Avance_Mercadeo_y_Experiencia_2026_Visor_VGME.html": {
+   "bytes": 727090,
+   "publicado": "2026-11-27T09:09:22-05:00"
+  },
   "Funnels_VGME.html": {
    "bytes": 74953,
    "publicado": "2026-11-27T09:08:36-05:00"
@@ -84,6 +88,18 @@
   "Vista_Vicerrectoria.html": {
    "bytes": 9007980,
    "publicado": "2026-11-27T09:09:13-05:00"
+  },
+  "presentacion-avance-mercadeo.html": {
+   "bytes": 910383,
+   "publicado": "2026-11-27T09:09:22-05:00"
+  },
+  "presentacion-semanal-q3.html": {
+   "bytes": 1271103,
+   "publicado": "2026-11-27T09:09:22-05:00"
+  },
+  "presentacion-semanal-s2.html": {
+   "bytes": 1294767,
+   "publicado": "2026-11-27T09:09:22-05:00"
   }
  }
 }
